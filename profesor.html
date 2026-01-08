@@ -67,6 +67,86 @@
             background: #FBBF24;
             border-radius: 10px;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background-color: rgba(74, 14, 28, 0.95);
+            border: 1px solid rgba(251, 191, 36, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(251, 191, 36, 0.1), 0 0 40px rgba(251, 191, 36, 0.05);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-input {
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            width: 100%;
+            color: white;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-input::placeholder {
+            color: rgba(251, 191, 36, 0.6);
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: #FBBF24;
+            background-color: rgba(0, 0, 0, 0.6);
+            box-shadow: 0 0 0 3px rgba(251, 191, 36, 0.1);
+        }
+
+        .modal-input option {
+            background-color: #4A0E1C;
+            color: white;
+        }
     </style>
 </head>
 
@@ -86,104 +166,150 @@
             <a href="index.html" class="hover:text-cbuh-gold transition">INICIO</a>
             <a href="#" class="text-cbuh-gold">PANEL DOCENTE</a>
         </div>
-        <a href="#"
+        <a href="index.html"
             class="hidden md:block px-6 py-2 border border-white/20 rounded hover:bg-white/10 transition text-sm font-bold tracking-wide">
             CERRAR SESIÓN
         </a>
     </nav>
 
     <section class="max-w-7xl mx-auto px-6 mt-10 w-full mb-12">
-        <div
-            class="glass-panel rounded-3xl p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 relative overflow-hidden shadow-2xl shadow-black/30 items-center">
+        <div class="glass-panel rounded-3xl p-8 lg:p-12 relative overflow-hidden shadow-2xl shadow-black/30">
             <div
                 class="absolute top-0 right-0 w-96 h-96 bg-cbuh-gold/10 blur-[100px] -z-10 rounded-full pointer-events-none">
             </div>
 
-            <div class="flex flex-col items-center lg:items-start text-center lg:text-left">
-                <div
-                    class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-cbuh-gold p-1 overflow-hidden bg-black/50 flex items-center justify-center shadow-lg shadow-cbuh-gold/20 mb-4">
-                    <span class="text-6xl md:text-7xl">👤</span>
-                </div>
-                <h2 class="text-3xl md:text-4xl font-heading text-white uppercase leading-tight">SAMUEL<br>DÍAZ</h2>
-                <p class="text-cbuh-gold tracking-widest text-sm font-bold mt-2">PROFESOR DE TEOLOGÍA</p>
-            </div>
+            <!-- Changed layout from stacked to side-by-side with flex -->
+            <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
 
-            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
-                    <p
-                        class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                            <path fill-rule="evenodd"
-                                d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 100-12 6 6 0 000 12zm0-10a1 1 0 100 2 1 1 0 000-2z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Cédula
-                    </p>
-                    <p class="text-white font-bold text-xl tracking-wide">V-12.345.678</p>
+                <!-- Left: Profile section -->
+                <div class="flex flex-col items-center lg:items-start flex-shrink-0">
+                    <div
+                        class="w-40 h-40 rounded-full border-4 border-cbuh-gold p-1 overflow-hidden bg-black/50 flex items-center justify-center shadow-lg shadow-cbuh-gold/20 mb-6">
+                        <span class="text-7xl">👤</span>
+                    </div>
+                    <h2
+                        class="text-3xl lg:text-4xl font-heading text-white uppercase leading-tight text-center lg:text-left">
+                        SAMUEL<br>DÍAZ</h2>
+                    <p class="text-cbuh-gold tracking-widest text-sm font-bold mt-2">PROFESOR DE TEOLOGÍA</p>
                 </div>
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
-                    <p
-                        class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Edad
-                    </p>
-                    <p class="text-white font-bold text-xl">45 Años</p>
+
+                <!-- Right: Information cards in grid -->
+                <div class="flex-grow w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- Card: Cédula -->
+                        <div class="bg-black/40 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path fill-rule="evenodd"
+                                        d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 100-12 6 6 0 000 12zm0-10a1 1 0 100 2 1 1 0 000-2z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Cédula
+                            </p>
+                            <p class="text-white font-bold text-lg tracking-wide">V-12.345.678</p>
+                        </div>
+
+                        <!-- Card: Edad -->
+                        <div class="bg-black/40 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Edad
+                            </p>
+                            <p class="text-white font-bold text-lg">45 Años</p>
+                        </div>
+
+                        <!-- Card: Teléfono -->
+                        <div class="bg-black/40 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path
+                                        d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+                                </svg>
+                                Número de Teléfono
+                            </p>
+                            <p class="text-white font-bold text-lg tracking-wide">0412-1234567</p>
+                        </div>
+
+                        <!-- Card: Lugar y Fecha de Nacimiento -->
+                        <div
+                            class="bg-black/40 p-5 rounded-2xl border border-white/10 flex flex-col justify-center md:col-span-1">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path fill-rule="evenodd"
+                                        d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                Lugar y Fecha
+                            </p>
+                            <p class="text-white font-bold flex flex-col leading-tight">
+                                <span class="text-sm">Valencia, Carabobo</span>
+                                <span class="text-xs text-gray-400 mt-1">📅 20/08/1978</span>
+                            </p>
+                        </div>
+
+                        <!-- Card: Año Cursando (highlighted) -->
+                        <div
+                            class="bg-black/40 p-5 rounded-2xl border-2 border-cbuh-gold flex flex-col justify-center md:col-span-1">
+                            <p
+                                class="text-cbuh-gold font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                📅 Año Cursando
+                            </p>
+                            <p class="text-cbuh-gold font-bold text-2xl">2º AÑO</p>
+                        </div>
+
+                        <!-- Card: Ubicación Actual -->
+                        <div
+                            class="bg-black/40 p-5 rounded-2xl border border-white/10 flex flex-col justify-center md:col-span-1">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                📍 Ubicación Actual
+                            </p>
+                            <p class="text-white font-bold text-sm">Urb. Los Mangos, Calle 3</p>
+                        </div>
+
+                        <!-- Card: Email (full width) -->
+                        <div
+                            class="bg-black/40 p-5 rounded-2xl border border-white/10 md:col-span-3 flex flex-col justify-center">
+                            <p
+                                class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                                    class="w-4 h-4">
+                                    <path
+                                        d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 011.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
+                                    <path
+                                        d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
+                                </svg>
+                                Correo Electrónico Institucional
+                            </p>
+                            <p class="text-white font-bold truncate text-lg">samuel.diaz@profesores.cbuh.edu</p>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
-                    <p
-                        class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                            <path
-                                d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                        </svg>
-                        Número de Teléfono
-                    </p>
-                    <p class="text-white font-bold text-lg tracking-wide">0414-9876543</p>
-                </div>
-                <div class="bg-black/30 p-5 rounded-2xl border border-white/10 flex flex-col justify-center">
-                    <p
-                        class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                            <path fill-rule="evenodd"
-                                d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        Lugar y Fecha de Nacimiento
-                    </p>
-                    <p class="text-white font-bold flex flex-col leading-tight">
-                        <span>Valencia, Carabobo</span>
-                        <span class="text-sm text-gray-400 mt-1">📅 20/08/1978</span>
-                    </p>
-                </div>
-                <div
-                    class="bg-black/30 p-5 rounded-2xl border border-white/10 md:col-span-2 flex flex-col justify-center">
-                    <p
-                        class="text-cbuh-gold/80 font-bold tracking-wider text-xs mb-2 uppercase flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
-                            <path
-                                d="M3 4a2 2 0 00-2 2v1.161l8.441 4.221a1.25 1.25 0 001.118 0L19 7.162V6a2 2 0 00-2-2H3z" />
-                            <path
-                                d="M19 8.839l-7.77 3.885a2.75 2.75 0 01-2.46 0L1 8.839V14a2 2 0 002 2h14a2 2 0 002-2V8.839z" />
-                        </svg>
-                        Correo Electrónico Institucional
-                    </p>
-                    <p class="text-white font-bold truncate text-lg">samuel.diaz@profesores.cbuh.edu</p>
-                </div>
+
             </div>
         </div>
     </section>
 
     <main class="flex-grow px-6 pb-20 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        <!-- Added id and data attributes for JavaScript functionality -->
         <div class="glass-panel rounded-3xl p-6 shadow-xl">
             <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
                 <h3 class="text-2xl font-heading text-white uppercase tracking-wide">
                     Materias a Cargo
                 </h3>
-                <button
+                <button id="addSubjectBtn"
                     class="bg-cbuh-gold text-black p-2 rounded-full hover-animate-plus transition-all duration-300 shadow-md group"
                     title="Agregar Materia">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
@@ -193,11 +319,12 @@
                     </svg>
                 </button>
             </div>
-            <div class="space-y-4">
-                <div
-                    class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer">
+            <div id="subjectsList" class="space-y-4">
+                <div class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer"
+                    data-subject-id="1">
                     <span class="font-bold text-white text-lg">1. Hermenéutica Avanzada</span>
-                    <button class="text-red-500 hover:text-red-400 transition p-1" title="Eliminar Materia">
+                    <button class="deleteSubjectBtn text-red-500 hover:text-red-400 transition p-1"
+                        title="Eliminar Materia">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
                                 d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.518.149.022a.75.75 0 00.23-1.482A41.032 41.032 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
@@ -205,10 +332,11 @@
                         </svg>
                     </button>
                 </div>
-                <div
-                    class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer">
+                <div class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer"
+                    data-subject-id="2">
                     <span class="font-bold text-white text-lg">2. Teología Sistemática III</span>
-                    <button class="text-red-500 hover:text-red-400 transition p-1" title="Eliminar Materia">
+                    <button class="deleteSubjectBtn text-red-500 hover:text-red-400 transition p-1"
+                        title="Eliminar Materia">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
                                 d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.518.149.022a.75.75 0 00.23-1.482A41.032 41.032 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
@@ -216,10 +344,11 @@
                         </svg>
                     </button>
                 </div>
-                <div
-                    class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer">
+                <div class="flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer"
+                    data-subject-id="3">
                     <span class="font-bold text-white text-lg">3. Homilética II</span>
-                    <button class="text-red-500 hover:text-red-400 transition p-1" title="Eliminar Materia">
+                    <button class="deleteSubjectBtn text-red-500 hover:text-red-400 transition p-1"
+                        title="Eliminar Materia">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                             <path fill-rule="evenodd"
                                 d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.518.149.022a.75.75 0 00.23-1.482A41.032 41.032 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
@@ -241,10 +370,10 @@
                             <path
                                 d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
                         </svg>
-                        Materia: Hermenéutica Avanzada
+                        <span id="currentSubject">Materia: Hermenéutica Avanzada</span>
                     </p>
                 </div>
-                <button
+                <button id="addStudentBtn"
                     class="bg-cbuh-gold text-black p-2 rounded-full hover-animate-plus transition-all duration-300 shadow-sm group h-fit"
                     title="Agregar Estudiante">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
@@ -256,9 +385,9 @@
             </div>
 
             <div class="overflow-y-auto scrollbar-thin flex-grow pr-3">
-                <div class="space-y-4">
-                    <div
-                        class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md">
+                <div id="studentsList" class="space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md"
+                        data-student-id="1">
                         <div class="flex items-center gap-4 w-full md:w-auto">
                             <div
                                 class="w-12 h-12 rounded-full bg-gradient-to-br from-cbuh-gold to-yellow-600 p-0.5 shadow-sm flex-shrink-0">
@@ -274,14 +403,15 @@
                         </div>
                         <div class="flex items-center gap-3 w-full md:w-auto justify-end">
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
+                                class="viewGradesBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
                                 Notas
                             </button>
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
+                                class="viewAttendanceBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
                                 Asistencia
                             </button>
-                            <button class="text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
+                            <button
+                                class="deleteStudentBtn text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
                                 title="Eliminar Estudiante">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="w-5 h-5">
@@ -292,8 +422,8 @@
                             </button>
                         </div>
                     </div>
-                    <div
-                        class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md">
+                    <div class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md"
+                        data-student-id="2">
                         <div class="flex items-center gap-4 w-full md:w-auto">
                             <div
                                 class="w-12 h-12 rounded-full bg-gradient-to-br from-cbuh-gold to-yellow-600 p-0.5 shadow-sm flex-shrink-0">
@@ -309,10 +439,11 @@
                         </div>
                         <div class="flex items-center gap-3 w-full md:w-auto justify-end">
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Notas</button>
+                                class="viewGradesBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Notas</button>
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Asistencia</button>
-                            <button class="text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
+                                class="viewAttendanceBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Asistencia</button>
+                            <button
+                                class="deleteStudentBtn text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
                                 title="Eliminar Estudiante">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="w-5 h-5">
@@ -323,8 +454,8 @@
                             </button>
                         </div>
                     </div>
-                    <div
-                        class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md">
+                    <div class="flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md"
+                        data-student-id="3">
                         <div class="flex items-center gap-4 w-full md:w-auto">
                             <div
                                 class="w-12 h-12 rounded-full bg-gradient-to-br from-cbuh-gold to-yellow-600 p-0.5 shadow-sm flex-shrink-0">
@@ -340,10 +471,11 @@
                         </div>
                         <div class="flex items-center gap-3 w-full md:w-auto justify-end">
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Notas</button>
+                                class="viewGradesBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Notas</button>
                             <button
-                                class="bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Asistencia</button>
-                            <button class="text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
+                                class="viewAttendanceBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">Asistencia</button>
+                            <button
+                                class="deleteStudentBtn text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg"
                                 title="Eliminar Estudiante">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                     class="w-5 h-5">
@@ -360,6 +492,461 @@
 
     </main>
 
+    <!-- Modals -->
+    <div id="addSubjectModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-heading text-cbuh-gold mb-6">Agregar Nueva Materia</h2>
+            <div class="space-y-4">
+                <input type="text" id="subjectInput" class="modal-input" placeholder="Nombre de la materia"
+                    autocomplete="off">
+                <div class="flex gap-3 pt-4">
+                    <button id="saveSubjectBtn"
+                        class="flex-1 bg-cbuh-gold text-black font-bold py-2 rounded-lg hover:bg-yellow-600 transition">
+                        Guardar
+                    </button>
+                    <button id="cancelSubjectBtn"
+                        class="flex-1 bg-black/30 text-white font-bold py-2 rounded-lg border border-white/10 hover:bg-black/50 transition">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-heading text-cbuh-gold mb-6">Agregar Nuevo Estudiante</h2>
+            <div class="space-y-4">
+                <input type="text" id="studentNameInput" class="modal-input" placeholder="Nombre completo"
+                    autocomplete="off">
+                <input type="text" id="studentCedulaInput" class="modal-input" placeholder="Cédula (V-XXXXXXXXX)"
+                    autocomplete="off">
+                <div class="flex gap-3 pt-4">
+                    <button id="saveStudentBtn"
+                        class="flex-1 bg-cbuh-gold text-black font-bold py-2 rounded-lg hover:bg-yellow-600 transition">
+                        Guardar
+                    </button>
+                    <button id="cancelStudentBtn"
+                        class="flex-1 bg-black/30 text-white font-bold py-2 rounded-lg border border-white/10 hover:bg-black/50 transition">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewGradesModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-heading text-cbuh-gold mb-6">Notas de <span id="studentNameDisplay"></span></h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm text-cbuh-gold/80 font-bold mb-2 block">Nota</label>
+                    <input type="number" id="gradeInput" class="modal-input" placeholder="0-20" min="0" max="20"
+                        autocomplete="off">
+                </div>
+                <div>
+                    <label class="text-sm text-cbuh-gold/80 font-bold mb-2 block">Fecha</label>
+                    <input type="date" id="gradeDateInput" class="modal-input" autocomplete="off">
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button id="saveGradeBtn"
+                        class="flex-1 bg-cbuh-gold text-black font-bold py-2 rounded-lg hover:bg-yellow-600 transition">
+                        Registrar Nota
+                    </button>
+                    <button id="closeGradesBtn"
+                        class="flex-1 bg-black/30 text-white font-bold py-2 rounded-lg border border-white/10 hover:bg-black/50 transition">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="viewAttendanceModal" class="modal">
+        <div class="modal-content">
+            <h2 class="text-2xl font-heading text-cbuh-gold mb-6">Asistencia de <span id="studentNameDisplay2"></span>
+            </h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="text-sm text-cbuh-gold/80 font-bold mb-2 block">Fecha</label>
+                    <input type="date" id="attendanceDateInput" class="modal-input" autocomplete="off">
+                </div>
+                <div>
+                    <label class="text-sm text-cbuh-gold/80 font-bold mb-2 block">Estado</label>
+                    <select id="attendanceStatusInput" class="modal-input">
+                        <option value="">Seleccionar estado</option>
+                        <option value="Presente">Presente</option>
+                        <option value="Ausente">Ausente</option>
+                        <option value="Tarde">Tarde</option>
+                    </select>
+                </div>
+                <div class="flex gap-3 pt-4">
+                    <button id="saveAttendanceBtn"
+                        class="flex-1 bg-cbuh-gold text-black font-bold py-2 rounded-lg hover:bg-yellow-600 transition">
+                        Registrar Asistencia
+                    </button>
+                    <button id="closeAttendanceBtn"
+                        class="flex-1 bg-black/30 text-white font-bold py-2 rounded-lg border border-white/10 hover:bg-black/50 transition">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 
 </html>
+<script>
+    // Data Storage
+    const data = {
+        subjects: [
+            { id: 1, name: "Hermenéutica Avanzada" },
+            { id: 2, name: "Teología Sistemática III" },
+            { id: 3, name: "Homilética II" },
+        ],
+        students: [
+            { id: 1, name: "Juan Pérez García", cedula: "V-28.123.456" },
+            { id: 2, name: "María Rodríguez López", cedula: "V-29.555.123" },
+            { id: 3, name: "Carlos Andrés Pérez", cedula: "V-30.111.222" },
+        ],
+        grades: {},
+        attendance: {},
+    }
+
+    let currentStudentId = null
+    let nextSubjectId = 4
+    let nextStudentId = 4
+
+    // Initialize page
+    document.addEventListener("DOMContentLoaded", () => {
+        initializeEventListeners()
+        loadDataFromLocalStorage()
+        renderSubjects()
+        renderStudents()
+    })
+
+    // Event Listeners
+    function initializeEventListeners() {
+        // Subject buttons
+        document.getElementById("addSubjectBtn").addEventListener("click", openAddSubjectModal)
+        document.getElementById("saveSubjectBtn").addEventListener("click", saveSubject)
+        document.getElementById("cancelSubjectBtn").addEventListener("click", closeModal)
+
+        // Student buttons
+        document.getElementById("addStudentBtn").addEventListener("click", openAddStudentModal)
+        document.getElementById("saveStudentBtn").addEventListener("click", saveStudent)
+        document.getElementById("cancelStudentBtn").addEventListener("click", closeModal)
+
+        // Grade buttons
+        document.getElementById("saveGradeBtn").addEventListener("click", saveGrade)
+        document.getElementById("closeGradesBtn").addEventListener("click", closeModal)
+
+        // Attendance buttons
+        document.getElementById("saveAttendanceBtn").addEventListener("click", saveAttendance)
+        document.getElementById("closeAttendanceBtn").addEventListener("click", closeModal)
+
+        // Close modals when clicking outside
+        window.addEventListener("click", (event) => {
+            if (event.target.classList.contains("modal")) {
+                closeModal()
+            }
+        })
+    }
+
+    // Subject Functions
+    function openAddSubjectModal() {
+        document.getElementById("addSubjectModal").classList.add("active")
+        document.getElementById("subjectInput").focus()
+    }
+
+    function saveSubject() {
+        const subjectName = document.getElementById("subjectInput").value.trim()
+
+        if (subjectName === "") {
+            alert("Por favor ingresa el nombre de la materia")
+            return
+        }
+
+        data.subjects.push({
+            id: nextSubjectId++,
+            name: subjectName,
+        })
+
+        saveDataToLocalStorage()
+        renderSubjects()
+        document.getElementById("subjectInput").value = ""
+        closeModal()
+        showNotification("Materia agregada exitosamente")
+    }
+
+    function deleteSubject(subjectId) {
+        if (confirm("¿Estás seguro de que deseas eliminar esta materia?")) {
+            data.subjects = data.subjects.filter((s) => s.id !== subjectId)
+            saveDataToLocalStorage()
+            renderSubjects()
+            showNotification("Materia eliminada")
+        }
+    }
+
+    function renderSubjects() {
+        const subjectsList = document.getElementById("subjectsList")
+        subjectsList.innerHTML = ""
+
+        data.subjects.forEach((subject, index) => {
+            const subjectDiv = document.createElement("div")
+            subjectDiv.className =
+                "flex justify-between items-center p-4 rounded-2xl bg-black/30 border border-white/5 hover:bg-black/50 transition duration-300 group cursor-pointer"
+            subjectDiv.dataset.subjectId = subject.id
+
+            subjectDiv.innerHTML = `
+      <span class="font-bold text-white text-lg">${index + 1}. ${subject.name}</span>
+      <button class="deleteSubjectBtn text-red-500 hover:text-red-400 transition p-1" title="Eliminar Materia">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+          <path fill-rule="evenodd"
+            d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.518.149.022a.75.75 0 00.23-1.482A41.032 41.032 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+    `
+
+            const deleteBtn = subjectDiv.querySelector(".deleteSubjectBtn")
+            deleteBtn.addEventListener("click", () => deleteSubject(subject.id))
+
+            subjectsList.appendChild(subjectDiv)
+        })
+
+        attachDeleteSubjectListeners()
+    }
+
+    function attachDeleteSubjectListeners() {
+        document.querySelectorAll(".deleteSubjectBtn").forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+                e.stopPropagation()
+                const subjectId = Number.parseInt(this.closest("[data-subject-id]").dataset.subjectId)
+                deleteSubject(subjectId)
+            })
+        })
+    }
+
+    // Student Functions
+    function openAddStudentModal() {
+        document.getElementById("addStudentModal").classList.add("active")
+        document.getElementById("studentNameInput").focus()
+    }
+
+    function saveStudent() {
+        const studentName = document.getElementById("studentNameInput").value.trim()
+        const studentCedula = document.getElementById("studentCedulaInput").value.trim()
+
+        if (studentName === "" || studentCedula === "") {
+            alert("Por favor completa todos los campos")
+            return
+        }
+
+        data.students.push({
+            id: nextStudentId++,
+            name: studentName,
+            cedula: studentCedula,
+        })
+
+        saveDataToLocalStorage()
+        renderStudents()
+        document.getElementById("studentNameInput").value = ""
+        document.getElementById("studentCedulaInput").value = ""
+        closeModal()
+        showNotification("Estudiante agregado exitosamente")
+    }
+
+    function deleteStudent(studentId) {
+        if (confirm("¿Estás seguro de que deseas eliminar este estudiante?")) {
+            data.students = data.students.filter((s) => s.id !== studentId)
+            delete data.grades[studentId]
+            delete data.attendance[studentId]
+            saveDataToLocalStorage()
+            renderStudents()
+            showNotification("Estudiante eliminado")
+        }
+    }
+
+    function renderStudents() {
+        const studentsList = document.getElementById("studentsList")
+        studentsList.innerHTML = ""
+
+        data.students.forEach((student) => {
+            const studentDiv = document.createElement("div")
+            studentDiv.className =
+                "flex flex-col md:flex-row justify-between items-center p-5 rounded-2xl bg-black/30 border border-white/5 gap-4 hover:bg-black/50 transition-all duration-300 group hover:shadow-md"
+            studentDiv.dataset.studentId = student.id
+
+            studentDiv.innerHTML = `
+      <div class="flex items-center gap-4 w-full md:w-auto">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-cbuh-gold to-yellow-600 p-0.5 shadow-sm flex-shrink-0">
+          <div class="w-full h-full rounded-full bg-black flex items-center justify-center text-xl text-cbuh-gold">
+            👤
+          </div>
+        </div>
+        <div>
+          <h5 class="font-bold text-white text-xl">${student.name}</h5>
+          <p class="text-sm text-cbuh-gold/80 font-medium tracking-wider uppercase">Cédula: ${student.cedula}</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+        <button class="viewGradesBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
+          Notas
+        </button>
+        <button class="viewAttendanceBtn bg-cbuh-gold hover:bg-yellow-600 text-black text-xs font-bold px-4 py-2 rounded-lg transition shadow-sm uppercase tracking-wider">
+          Asistencia
+        </button>
+        <button class="deleteStudentBtn text-red-500 hover:text-red-400 transition p-2 bg-black/20 rounded-lg" title="Eliminar Estudiante">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+            <path fill-rule="evenodd"
+              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.518.149.022a.75.75 0 00.23-1.482A41.032 41.032 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+              clip-rule="evenodd" />
+          </svg>
+        </button>
+      </div>
+    `
+
+            const gradesBtn = studentDiv.querySelector(".viewGradesBtn")
+            const attendanceBtn = studentDiv.querySelector(".viewAttendanceBtn")
+            const deleteBtn = studentDiv.querySelector(".deleteStudentBtn")
+
+            gradesBtn.addEventListener("click", () => openGradesModal(student))
+            attendanceBtn.addEventListener("click", () => openAttendanceModal(student))
+            deleteBtn.addEventListener("click", () => deleteStudent(student.id))
+
+            studentsList.appendChild(studentDiv)
+        })
+
+        attachDeleteStudentListeners()
+    }
+
+    function attachDeleteStudentListeners() {
+        document.querySelectorAll(".deleteStudentBtn").forEach((btn) => {
+            btn.addEventListener("click", function (e) {
+                e.stopPropagation()
+                const studentId = Number.parseInt(this.closest("[data-student-id]").dataset.studentId)
+                deleteStudent(studentId)
+            })
+        })
+    }
+
+    // Grades Functions
+    function openGradesModal(student) {
+        currentStudentId = student.id
+        document.getElementById("studentNameDisplay").textContent = student.name
+        document.getElementById("viewGradesModal").classList.add("active")
+        document.getElementById("gradeInput").focus()
+    }
+
+    function saveGrade() {
+        const grade = document.getElementById("gradeInput").value
+        const gradeDate = document.getElementById("gradeDateInput").value
+
+        if (grade === "" || gradeDate === "") {
+            alert("Por favor completa todos los campos")
+            return
+        }
+
+        if (grade < 0 || grade > 20) {
+            alert("La nota debe estar entre 0 y 20")
+            return
+        }
+
+        if (!data.grades[currentStudentId]) {
+            data.grades[currentStudentId] = []
+        }
+
+        data.grades[currentStudentId].push({
+            grade: Number.parseFloat(grade),
+            date: gradeDate,
+        })
+
+        saveDataToLocalStorage()
+        document.getElementById("gradeInput").value = ""
+        document.getElementById("gradeDateInput").value = ""
+        closeModal()
+        showNotification("Nota registrada exitosamente")
+    }
+
+    // Attendance Functions
+    function openAttendanceModal(student) {
+        currentStudentId = student.id
+        document.getElementById("studentNameDisplay2").textContent = student.name
+        document.getElementById("viewAttendanceModal").classList.add("active")
+        document.getElementById("attendanceDateInput").focus()
+    }
+
+    function saveAttendance() {
+        const attendanceDate = document.getElementById("attendanceDateInput").value
+        const attendanceStatus = document.getElementById("attendanceStatusInput").value
+
+        if (attendanceDate === "" || attendanceStatus === "") {
+            alert("Por favor completa todos los campos")
+            return
+        }
+
+        if (!data.attendance[currentStudentId]) {
+            data.attendance[currentStudentId] = []
+        }
+
+        data.attendance[currentStudentId].push({
+            date: attendanceDate,
+            status: attendanceStatus,
+        })
+
+        saveDataToLocalStorage()
+        document.getElementById("attendanceDateInput").value = ""
+        document.getElementById("attendanceStatusInput").value = ""
+        closeModal()
+        showNotification("Asistencia registrada exitosamente")
+    }
+
+    // Modal Functions
+    function closeModal() {
+        document.querySelectorAll(".modal").forEach((modal) => {
+            modal.classList.remove("active")
+        })
+    }
+
+    // Local Storage Functions
+    function saveDataToLocalStorage() {
+        localStorage.setItem("profesorPanelData", JSON.stringify(data))
+    }
+
+    function loadDataFromLocalStorage() {
+        const savedData = localStorage.getItem("profesorPanelData")
+        if (savedData) {
+            const parsedData = JSON.parse(savedData)
+            data.subjects = parsedData.subjects || data.subjects
+            data.students = parsedData.students || data.students
+            data.grades = parsedData.grades || data.grades
+            data.attendance = parsedData.attendance || data.attendance
+
+            // Update next IDs
+            if (data.subjects.length > 0) {
+                nextSubjectId = Math.max(...data.subjects.map((s) => s.id)) + 1
+            }
+            if (data.students.length > 0) {
+                nextStudentId = Math.max(...data.students.map((s) => s.id)) + 1
+            }
+        }
+    }
+
+    // Utility Functions
+    function showNotification(message) {
+        const notification = document.createElement("div")
+        notification.className =
+            "fixed bottom-4 right-4 bg-cbuh-gold text-black font-bold px-6 py-3 rounded-lg shadow-lg z-50 animate-bounce"
+        notification.textContent = message
+
+        document.body.appendChild(notification)
+
+        setTimeout(() => {
+            notification.remove()
+        }, 3000)
+    }
+
+</script>

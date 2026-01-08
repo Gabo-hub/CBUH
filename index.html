@@ -10,18 +10,14 @@
         /* --- VARIABLES DE COLOR --- */
         :root {
             --primary: #4a0d1e;
-            /* Color Vinotinto principal */
             --accent: #c5a059;
-            /* Color Dorado/Beige para detalles */
             --bg-light: #f9f9f9;
-            /* Fondo claro de la página */
             --text-dark: #333333;
             --text-light: #ffffff;
             --text-gray: #666666;
         }
 
-        /* --- ANIMACIONES --- */
-        /* Nuevas animaciones keyframes */
+        /* --- ANIMACIONES KEYFRAMES --- */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -58,6 +54,18 @@
             }
         }
 
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
         @keyframes float {
             0% {
                 transform: translateY(0px);
@@ -86,6 +94,52 @@
             }
         }
 
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        /* Agregadas clases para animaciones scroll */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        .animate-on-scroll.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         /* --- RESET BÁSICO --- */
         * {
             margin: 0;
@@ -98,6 +152,7 @@
             background-color: var(--bg-light);
             color: var(--text-dark);
             line-height: 1.6;
+            scroll-behavior: smooth;
         }
 
         a {
@@ -118,7 +173,6 @@
         /* --- CLASES UTILITARIAS --- */
         .container {
             max-width: 1200px;
-            /* Aumentado para más amplitud */
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -131,6 +185,21 @@
             margin: 60px 0 30px;
             letter-spacing: 1px;
             color: #222;
+            animation: fadeInDown 0.8s ease-out;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        /* Línea decorativa bajo títulos */
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+            margin: 15px auto 0;
+            border-radius: 2px;
         }
 
         /* --- HEADER --- */
@@ -142,23 +211,30 @@
             display: flex;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            position: relative;
+            position: fixed;
+            top: 0;
+            width: 100%;
             z-index: 100;
             animation: fadeInDown 0.8s ease-out;
+            backdrop-filter: blur(10px);
+            background-color: rgba(74, 13, 30, 0.95);
+        }
+
+        /* Agregado padding al body para header fixed */
+        body {
+            padding-top: 80px;
         }
 
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            /* Asegura que ocupe todo el ancho disponible */
             width: 100%;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            /* Ajusté el espacio y tamaño del logo */
             gap: 15px;
             font-weight: bold;
             font-size: 1.5rem;
@@ -167,14 +243,16 @@
             text-decoration: none;
         }
 
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
         .logo img {
-            /* Control estricto del tamaño de la imagen del logo */
             height: 50px;
             width: auto;
         }
 
         .logo span {
-            /* Estilo para el texto CBUH */
             font-family: 'Segoe UI', sans-serif;
             font-weight: 700;
             letter-spacing: 2px;
@@ -183,7 +261,6 @@
 
         .nav-menu ul {
             display: flex;
-            /* Espaciado más consistente entre enlaces */
             gap: 30px;
             margin: 0;
             padding: 0;
@@ -198,8 +275,8 @@
             letter-spacing: 0.5px;
             position: relative;
             padding: 5px 0;
-            /* Evita que textos largos como AÑOS ACADEMICOS se rompan mal */
             white-space: nowrap;
+            transition: opacity 0.3s ease;
         }
 
         .nav-menu a:hover {
@@ -207,7 +284,6 @@
             color: var(--accent);
         }
 
-        /* Efecto de línea debajo al hacer hover */
         .nav-menu a::after {
             content: '';
             position: absolute;
@@ -216,7 +292,7 @@
             bottom: 0;
             left: 0;
             background-color: var(--accent);
-            transition: width 0.3s;
+            transition: width 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .nav-menu a:hover::after {
@@ -238,11 +314,16 @@
             text-transform: uppercase;
             transition: all 0.3s ease;
             letter-spacing: 0.5px;
+            border: none;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
         }
 
         .btn-outline {
@@ -251,21 +332,40 @@
             color: white;
         }
 
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+        }
+
         .btn-solid {
             background: #a38249;
-            /* Tono dorado oscuro */
             border: none;
             color: white;
         }
 
-        /* --- HERO SECTION (Portada) --- */
+        .btn-solid:hover {
+            background: #c5a059;
+        }
+
+        /* --- HERO SECTION --- */
         .hero {
-            /* Modernización del fondo con gradiente y padding ajustado */
             background: linear-gradient(135deg, var(--primary) 0%, #2a0510 100%);
             color: white;
             position: relative;
             padding: 80px 0 100px;
-            overflow: visible;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(197, 160, 89, 0.1) 0%, transparent 50%);
+            pointer-events: none;
         }
 
         .hero-inner {
@@ -273,57 +373,47 @@
             align-items: center;
             justify-content: space-between;
             gap: 60px;
-            /* Más separación entre elementos */
             position: relative;
             z-index: 2;
         }
 
         .hero-image {
-            /* Ajuste de tamaño y posición */
             width: 50%;
             position: relative;
-            left: 0;
             order: 2;
-            /* Imagen a la derecha para diseño moderno estándar */
-            /* Animación de entrada de la imagen */
             animation: slideInRight 1s ease-out;
         }
 
         .hero-image img {
-            /* Estilo moderno: bordes suaves, sombra difusa y efecto flotante */
             border-radius: 20px;
             box-shadow: 20px 20px 0 rgba(197, 160, 89, 0.2),
                 0 20px 40px rgba(0, 0, 0, 0.4);
             width: 100%;
             height: 500px;
             object-fit: cover;
-            transition: transform 0.3s ease;
-            /* Animación flotante continua */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.5s ease;
             animation: float 6s ease-in-out infinite;
         }
 
         .hero-image:hover img {
-            transform: translateY(-5px);
+            transform: translateY(-10px) scale(1.02);
+            filter: brightness(1.1);
         }
 
         .hero-text {
-            /* Alineación izquierda y mejor tipografía */
             width: 50%;
             text-align: left;
             padding-right: 0;
             order: 1;
-            /* Asegura que el contenido respete la animación de sus hijos */
         }
 
         .hero-text h1 {
-            /* Tipografía más limpia y moderna */
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
             font-size: 3.5rem;
             line-height: 1.1;
             font-weight: 800;
             letter-spacing: -1px;
             margin-bottom: 25px;
-            /* Animación de entrada del título */
             animation: fadeInUp 0.8s ease-out 0.2s backwards;
         }
 
@@ -335,6 +425,7 @@
             color: var(--accent);
             margin-bottom: 10px;
             font-weight: 600;
+            animation: fadeInUp 0.8s ease-out 0.3s backwards;
         }
 
         .hero-text h1 span.highlight {
@@ -343,20 +434,17 @@
         }
 
         .hero-text p.subtitle {
-            /* Subtítulo descriptivo añadido */
             font-size: 1.125rem;
             color: rgba(255, 255, 255, 0.85);
             margin-bottom: 35px;
             line-height: 1.6;
             max-width: 90%;
-            /* Animación de entrada del subtítulo con retraso */
             animation: fadeInUp 0.8s ease-out 0.4s backwards;
         }
 
         .cta-group {
             display: flex;
             gap: 15px;
-            /* Animación de entrada de botones con más retraso */
             animation: fadeInUp 0.8s ease-out 0.6s backwards;
         }
 
@@ -364,10 +452,6 @@
             padding: 15px 30px;
             font-size: 1rem;
             letter-spacing: 0.5px;
-        }
-
-        /* Estilos específicos hover para botón principal */
-        .btn-solid.btn-hero {
             position: relative;
             overflow: hidden;
         }
@@ -379,7 +463,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: 0.5s;
         }
 
@@ -400,30 +484,68 @@
             border-radius: 10px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            /* Transición mejorada */
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            animation: scaleIn 0.6s ease-out backwards;
+        }
+
+        /* Agregada animación escalonada para tarjetas */
+        .year-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .year-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .year-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .year-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .year-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.2), transparent);
+            transition: 0.6s;
+        }
+
+        .year-card:hover::before {
+            left: 100%;
         }
 
         .year-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(74, 13, 30, 0.15);
+            border-top: 3px solid var(--accent);
         }
 
         .year-icon {
             width: 50px;
             height: 50px;
             margin: 0 auto 15px;
-            /* Aquí puedes poner tus iconos SVG o PNG */
-            transition: transform 0.5s ease;
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 1;
         }
 
         .year-card:hover .year-icon {
-            transform: rotateY(180deg);
+            transform: rotateY(180deg) scale(1.1);
         }
 
         .year-card h3 {
             font-size: 1.1rem;
             margin-bottom: 5px;
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .year-card p {
@@ -444,8 +566,27 @@
             overflow: hidden;
             position: relative;
             background-color: #333;
-            /* Cursor pointer */
             cursor: pointer;
+            animation: slideUp 0.8s ease-out backwards;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Animaciones escalonadas para subject cards */
+        .subject-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .subject-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .subject-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .subject-card:nth-child(4) {
+            animation-delay: 0.4s;
         }
 
         .subject-card img {
@@ -453,13 +594,17 @@
             height: 100%;
             object-fit: cover;
             opacity: 0.6;
-            transition: opacity 0.5s, transform 0.5s;
+            transition: opacity 0.5s, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         }
 
         .subject-card:hover img {
-            opacity: 0.4;
-            /* Zoom en hover */
-            transform: scale(1.1);
+            opacity: 0.3;
+            transform: scale(1.15) rotate(2deg);
         }
 
         .subject-title {
@@ -471,13 +616,12 @@
             font-weight: bold;
             font-size: 1rem;
             line-height: 1.2;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-            /* Transición de posición */
-            transition: transform 0.3s;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .subject-card:hover .subject-title {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
         }
 
         /* --- NOTICIAS Y ANUNCIOS --- */
@@ -496,15 +640,46 @@
             align-items: center;
             gap: 15px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            /* Transiciones para hover */
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: default;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            animation: slideUp 0.8s ease-out backwards;
+            border-left: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animaciones escalonadas para news cards */
+        .news-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .news-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .news-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .news-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(197, 160, 89, 0.1), transparent);
+            transition: 0.6s;
+        }
+
+        .news-card:hover::before {
+            left: 100%;
         }
 
         .news-card:hover {
-            transform: translateX(5px);
-            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.1);
-            border-left: 3px solid var(--accent);
+            transform: translateX(8px) translateY(-5px);
+            box-shadow: 8px 8px 25px rgba(0, 0, 0, 0.12);
+            border-left-color: var(--accent);
         }
 
         .news-icon-box {
@@ -514,12 +689,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: rgba(197, 160, 89, 0.1);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .news-card:hover .news-icon-box {
+            background: var(--accent);
+            transform: scale(1.1) rotate(10deg);
         }
 
         .news-text h4 {
             font-size: 0.95rem;
             margin-bottom: 5px;
             color: var(--primary);
+            font-weight: 700;
         }
 
         .news-text p {
@@ -534,6 +718,20 @@
             color: white;
             padding: 50px 0 20px;
             margin-top: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(197, 160, 89, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
         }
 
         .footer-grid {
@@ -541,6 +739,8 @@
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 30px;
             margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
         }
 
         .footer-col h4 {
@@ -549,17 +749,52 @@
             text-transform: uppercase;
             font-size: 0.9rem;
             letter-spacing: 1px;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .footer-col h4:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .footer-col h4:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .footer-col h4:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .footer-col h4:nth-child(4) {
+            animation-delay: 0.4s;
         }
 
         .footer-col ul li {
             margin-bottom: 8px;
             font-size: 0.9rem;
             opacity: 0.8;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-left: 0;
+        }
+
+        .footer-col ul li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
         }
 
         .footer-col ul li:hover {
             opacity: 1;
-            text-decoration: underline;
+            padding-left: 10px;
+        }
+
+        .footer-col ul li:hover::before {
+            width: 100%;
         }
 
         .contact-item {
@@ -569,6 +804,12 @@
             margin-bottom: 10px;
             font-size: 0.9rem;
             opacity: 0.9;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            opacity: 1;
+            transform: translateX(5px);
         }
 
         .socials {
@@ -577,20 +818,23 @@
         }
 
         .social-icon {
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* Transiciones suaves para iconos sociales */
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: bold;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .social-icon:hover {
             background: var(--accent);
-            transform: translateY(-3px) rotate(360deg);
+            color: var(--primary);
+            transform: translateY(-5px) rotate(360deg);
+            box-shadow: 0 8px 20px rgba(197, 160, 89, 0.4);
         }
 
         .copyright {
@@ -599,10 +843,16 @@
             padding-top: 20px;
             font-size: 0.75rem;
             opacity: 0.6;
+            position: relative;
+            z-index: 1;
         }
 
         /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 900px) {
+            body {
+                padding-top: 80px;
+            }
+
             .hero-inner {
                 flex-direction: column;
                 padding-bottom: 40px;
@@ -611,7 +861,6 @@
             .hero-image {
                 width: 100%;
                 order: 1;
-                /* Imagen arriba en móvil */
                 margin-bottom: 30px;
             }
 
@@ -662,7 +911,6 @@
     <!-- Header -->
     <header>
         <div class="container header-content">
-            <!-- Logo envuelto en enlace para mejor UX -->
             <a href="#" class="logo">
                 <img src="/img/libro.png" alt="Logo CBUH">
                 <span>CBUH</span>
@@ -670,24 +918,22 @@
 
             <nav class="nav-menu">
                 <ul>
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Materias</a></li>
-                    <li><a href="#">Años Académicos</a></li>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#materias">Materias</a></li>
+                    <li><a href="#años">Años Académicos</a></li>
                     <li><a href="#">Carrera</a></li>
                     <li><a href="login.html">Perfil</a></li>
                 </ul>
             </nav>
 
             <div class="auth-buttons">
-                <!-- Clases actualizadas para mejor visibilidad -->
                 <button class="btn btn-outline">Inscripción</button>
-
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="inicio">
         <div class="container hero-inner">
             <div class="hero-text">
                 <h1>
@@ -703,7 +949,6 @@
                 </div>
             </div>
             <div class="hero-image">
-                <!-- REEMPLAZA ESTE SRC POR LA FOTO DE LA BIBLIOTECA -->
                 <img src="/img/principal.jpg" alt="Biblioteca CBUH">
             </div>
         </div>
@@ -713,48 +958,48 @@
     <main class="container">
 
         <!-- Sección Años -->
-        <h2 class="section-title">Tus Años Académicos</h2>
+        <h2 class="section-title" id="años">Tus Años Académicos</h2>
         <div class="years-grid">
-            <div class="year-card">
+            <div class="year-card animate-on-scroll">
                 <div class="year-icon">
                     <img src="/img/iconolibroañosdeestudio.png" alt="Icono 1">
                 </div>
                 <h3>Año 1</h3>
                 <p>Fundamentos</p>
             </div>
-            <div class="year-card">
+            <div class="year-card animate-on-scroll">
                 <div class="year-icon">
                     <img src="/img/iconopergaminoañosdeestudio.png" alt="Icono 2">
                 </div>
                 <h3>Año 2</h3>
                 <p>Desarrollo</p>
             </div>
-            <div class="year-card">
+            <div class="year-card animate-on-scroll">
                 <div class="year-icon">
                     <img src="/img/iconobirreteañosdeestudio.png" alt="Icono 3">
                 </div>
                 <h3>Año 3</h3>
                 <p>Ministerio</p>
             </div>
+
         </div>
 
         <!-- Sección Materias -->
-        <h2 class="section-title">Materias Destacadas</h2>
+        <h2 class="section-title" id="materias">Materias Destacadas</h2>
         <div class="subjects-grid">
-            <div class="subject-card">
-                <!-- REEMPLAZA ESTAS IMAGENES DE FONDO -->
+            <div class="subject-card animate-on-scroll">
                 <img src="/img/materiasbiblia.jpg" alt="Teología">
                 <div class="subject-title">Introducción a la Biblia</div>
             </div>
-            <div class="subject-card">
+            <div class="subject-card animate-on-scroll">
                 <img src="/img/materiassermon.jpg" alt="Historia">
                 <div class="subject-title">Homilética</div>
             </div>
-            <div class="subject-card">
+            <div class="subject-card animate-on-scroll">
                 <img src="/img/materiasinterpretacion.jpg" alt="Hermenéutica">
                 <div class="subject-title">Hermenéutica</div>
             </div>
-            <div class="subject-card">
+            <div class="subject-card animate-on-scroll">
                 <img src="/img/materiasmisiones.jpg" alt="Predicación">
                 <div class="subject-title">Evangelismo y Misiones</div>
             </div>
@@ -763,7 +1008,7 @@
         <!-- Sección Noticias -->
         <h2 class="section-title">Noticias y Anuncios</h2>
         <div class="news-grid">
-            <div class="news-card">
+            <div class="news-card animate-on-scroll">
                 <div class="news-icon-box">
                     <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
                 </div>
@@ -772,7 +1017,7 @@
                     <p>Pastoral: 15 de Octubre. Órdenes internacionales.</p>
                 </div>
             </div>
-            <div class="news-card">
+            <div class="news-card animate-on-scroll">
                 <div class="news-icon-box">
                     <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
                 </div>
@@ -781,7 +1026,7 @@
                     <p>1 de Noviembre. Precios online y fechas clave.</p>
                 </div>
             </div>
-            <div class="news-card">
+            <div class="news-card animate-on-scroll">
                 <div class="news-icon-box">
                     <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
                 </div>
@@ -834,6 +1079,207 @@
             <p>&copy; 2025 CBUH. Todos los derechos reservados. | Política de Privacidad.</p>
         </div>
     </footer>
+
+    <!-- Script para animaciones avanzadas con IntersectionObserver -->
+    <script>
+        // ==========================================
+        // ANIMACIONES AL HACER SCROLL
+        // ==========================================
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Opcional: desanimar cuando sale del viewport
+                    // observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.animate-on-scroll').forEach(el => {
+            observer.observe(el);
+        });
+
+        // ==========================================
+        // EFECTO PARALLAX EN EL HERO
+        // ==========================================
+        window.addEventListener('mousemove', (e) => {
+            const heroImage = document.querySelector('.hero-image img');
+            if (heroImage) {
+                const x = (e.clientX / window.innerWidth) * 10 - 5;
+                const y = (e.clientY / window.innerHeight) * 10 - 5;
+                heroImage.style.transform = `translateY(-10px) scale(1.02) perspective(1000px) rotateX(${-y * 0.1}deg) rotateY(${x * 0.1}deg)`;
+            }
+        });
+
+        // Reset cuando sale el mouse
+        document.addEventListener('mouseleave', () => {
+            const heroImage = document.querySelector('.hero-image img');
+            if (heroImage) {
+                heroImage.style.transform = '';
+            }
+        });
+
+        // ==========================================
+        // SMOOTH SCROLL MEJORADO
+        // ==========================================
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // ==========================================
+        // EFECTO COUNTER PARA NÚMEROS
+        // ==========================================
+        function animateCounter(element, target, duration = 2000) {
+            let current = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    element.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // ==========================================
+        // HEADER DINÁMICO - CAMBIAR ESTILO AL SCROLLEAR
+        // ==========================================
+        let lastScroll = 0;
+        const header = document.querySelector('header');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            if (currentScroll > 100) {
+                header.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.2)';
+            }
+
+            lastScroll = currentScroll;
+        });
+
+        // ==========================================
+        // EFECTO RIPPLE EN BOTONES
+        // ==========================================
+        function addRippleEffect() {
+            const buttons = document.querySelectorAll('.btn');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function (e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple');
+
+                    // Agregar estilos CSS para ripple si no existen
+                    if (!document.querySelector('style[data-ripple]')) {
+                        const style = document.createElement('style');
+                        style.setAttribute('data-ripple', 'true');
+                        style.textContent = `
+                            .btn {
+                                position: relative;
+                                overflow: hidden;
+                            }
+                            .ripple {
+                                position: absolute;
+                                border-radius: 50%;
+                                background: rgba(255, 255, 255, 0.5);
+                                transform: scale(0);
+                                animation: rippleEffect 0.6s ease-out;
+                                pointer-events: none;
+                            }
+                            @keyframes rippleEffect {
+                                to {
+                                    transform: scale(4);
+                                    opacity: 0;
+                                }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
+
+                    this.appendChild(ripple);
+                });
+            });
+        }
+
+        addRippleEffect();
+
+        // ==========================================
+        // PRELOAD ANIMATIONS - Espera a que cargue el DOM
+        // ==========================================
+        document.addEventListener('DOMContentLoaded', () => {
+            // Agregar clase visible a elementos visibles inicialmente
+            document.querySelectorAll('.animate-on-scroll').forEach((el, index) => {
+                if (el.getBoundingClientRect().top < window.innerHeight) {
+                    setTimeout(() => {
+                        el.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        });
+
+        // ==========================================
+        // EFECTO SCROLL REVELADOR - CARDS CON STAGGER
+        // ==========================================
+        const revealOnScroll = () => {
+            const reveals = document.querySelectorAll('.year-card, .subject-card, .news-card');
+
+            reveals.forEach((reveal, index) => {
+                const windowHeight = window.innerHeight;
+                const revealTop = reveal.getBoundingClientRect().top;
+                const revealPoint = 150;
+
+                if (revealTop < windowHeight - revealPoint) {
+                    reveal.style.opacity = '1';
+                    reveal.style.transform = 'translateY(0)';
+                }
+            });
+        };
+
+        window.addEventListener('scroll', revealOnScroll);
+
+        // ==========================================
+        // EFECTO FOCUS EN INPUTS Y FORMULARIOS (Si existen)
+        // ==========================================
+        const setupFormAnimations = () => {
+            const inputs = document.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function () {
+                    this.parentElement?.classList.add('focused');
+                });
+                input.addEventListener('blur', function () {
+                    this.parentElement?.classList.remove('focused');
+                });
+            });
+        };
+
+        setupFormAnimations();
+
+    </script>
 
 </body>
 
