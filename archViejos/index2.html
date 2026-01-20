@@ -7,7 +7,9 @@
     <title>Colegio Biblíco Universal Horeb</title>
     <link rel="icon" type="image/png" href="/img/libro.png">
     <style>
-        /* --- VARIABLES DE COLOR --- */
+        /* ========================================
+           VARIABLES DE COLOR Y CONFIGURACIÓN GLOBAL
+           ======================================== */
         :root {
             --primary: #4a0d1e;
             --accent: #c5a059;
@@ -17,7 +19,9 @@
             --text-gray: #666666;
         }
 
-        /* --- ANIMACIONES KEYFRAMES --- */
+        /* ========================================
+           ANIMACIONES KEYFRAMES
+           ======================================== */
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -128,19 +132,9 @@
             }
         }
 
-        /* Agregadas clases para animaciones scroll */
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* --- RESET BÁSICO --- */
+        /* ========================================
+           RESET BÁSICO
+           ======================================== */
         * {
             margin: 0;
             padding: 0;
@@ -170,7 +164,9 @@
             display: block;
         }
 
-        /* --- CLASES UTILITARIAS --- */
+        /* ========================================
+           CLASES UTILITARIAS Y COMPONENTES
+           ======================================== */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -202,7 +198,9 @@
             border-radius: 2px;
         }
 
-        /* --- HEADER --- */
+        /* ========================================
+           HEADER Y NAVEGACIÓN
+           ======================================== */
         header {
             background-color: var(--primary);
             color: var(--text-light);
@@ -347,7 +345,9 @@
             background: #c5a059;
         }
 
-        /* --- HERO SECTION --- */
+        /* ========================================
+           HERO SECTION
+           ======================================== */
         .hero {
             background: linear-gradient(135deg, var(--primary) 0%, #2a0510 100%);
             color: white;
@@ -471,7 +471,9 @@
             left: 100%;
         }
 
-        /* --- TARJETAS AÑOS --- */
+        /* ========================================
+           TARJETAS DE AÑOS ACADÉMICOS
+           ======================================== */
         .years-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -553,7 +555,9 @@
             color: #999;
         }
 
-        /* --- MATERIAS DESTACADAS --- */
+        /* ========================================
+           MATERIAS DESTACADAS
+           ======================================== */
         .subjects-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -624,7 +628,9 @@
             transform: translateY(-8px);
         }
 
-        /* --- NOTICIAS Y ANUNCIOS --- */
+        /* ========================================
+           NOTICIAS Y ANUNCIOS
+           ======================================== */
         .news-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -712,7 +718,9 @@
             line-height: 1.4;
         }
 
-        /* --- FOOTER --- */
+        /* ========================================
+           FOOTER
+           ======================================== */
         footer {
             background-color: var(--primary);
             color: white;
@@ -847,7 +855,9 @@
             z-index: 1;
         }
 
-        /* --- RESPONSIVE MOBILE --- */
+        /* ========================================
+           DISEÑO RESPONSIVE
+           ======================================== */
         @media (max-width: 900px) {
             body {
                 padding-top: 80px;
@@ -909,14 +919,14 @@
 <body>
 
     <!-- Header -->
-    <header>
+    <header role="banner">
         <div class="container header-content">
-            <a href="#" class="logo">
+            <a href="#" class="logo" aria-label="Inicio CBUH">
                 <img src="/img/libro.png" alt="Logo CBUH">
                 <span>CBUH</span>
             </a>
 
-            <nav class="nav-menu">
+            <nav class="nav-menu" role="navigation" aria-label="Navegación principal">
                 <ul>
                     <li><a href="#inicio">Inicio</a></li>
                     <li><a href="#materias">Materias</a></li>
@@ -927,13 +937,13 @@
             </nav>
 
             <div class="auth-buttons">
-                <button class="btn btn-outline">Inscripción</button>
+                <button class="btn btn-outline" aria-label="Iniciar proceso de inscripción">Inscripción</button>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" id="inicio">
+    <section class="hero" id="inicio" role="main">
         <div class="container hero-inner">
             <div class="hero-text">
                 <h1>
@@ -945,146 +955,174 @@
                     Descubre tu propósito y prepárate para impactar al mundo.
                 </p>
                 <div class="cta-group">
-                    <button class="btn btn-solid btn-hero">COMENZAR AHORA</button>
+                    <button class="btn btn-solid btn-hero" aria-label="Comenzar ahora el proceso de admisión">COMENZAR
+                        AHORA</button>
                 </div>
             </div>
             <div class="hero-image">
-                <img src="/img/principal.jpg" alt="Biblioteca CBUH">
+                <img src="/img/principal.jpg" alt="Biblioteca del Colegio Bíblico Universal Horeb">
             </div>
         </div>
     </section>
 
     <!-- Contenido Principal -->
-    <main class="container">
+    <main class="container" role="main">
 
         <!-- Sección Años -->
-        <h2 class="section-title" id="años">Tus Años Académicos</h2>
-        <div class="years-grid">
-            <div class="year-card animate-on-scroll">
-                <div class="year-icon">
-                    <img src="/img/iconolibroañosdeestudio.png" alt="Icono 1">
-                </div>
-                <h3>Año 1</h3>
-                <p>Fundamentos</p>
+        <section aria-labelledby="años-title">
+            <h2 class="section-title" id="años-title">Tus Años Académicos</h2>
+            <div class="years-grid" role="list">
+                <article class="year-card animate-on-scroll" role="listitem">
+                    <div class="year-icon">
+                        <img src="/img/iconolibroañosdeestudio.png" alt="Icono primer año">
+                    </div>
+                    <h3>Año 1</h3>
+                    <p>Fundamentos</p>
+                </article>
+                <article class="year-card animate-on-scroll" role="listitem">
+                    <div class="year-icon">
+                        <img src="/img/iconopergaminoañosdeestudio.png" alt="Icono segundo año">
+                    </div>
+                    <h3>Año 2</h3>
+                    <p>Desarrollo</p>
+                </article>
+                <article class="year-card animate-on-scroll" role="listitem">
+                    <div class="year-icon">
+                        <img src="/img/iconobirreteañosdeestudio.png" alt="Icono tercer año">
+                    </div>
+                    <h3>Año 3</h3>
+                    <p>Ministerio</p>
+                </article>
             </div>
-            <div class="year-card animate-on-scroll">
-                <div class="year-icon">
-                    <img src="/img/iconopergaminoañosdeestudio.png" alt="Icono 2">
-                </div>
-                <h3>Año 2</h3>
-                <p>Desarrollo</p>
-            </div>
-            <div class="year-card animate-on-scroll">
-                <div class="year-icon">
-                    <img src="/img/iconobirreteañosdeestudio.png" alt="Icono 3">
-                </div>
-                <h3>Año 3</h3>
-                <p>Ministerio</p>
-            </div>
-
-        </div>
+        </section>
 
         <!-- Sección Materias -->
-        <h2 class="section-title" id="materias">Materias Destacadas</h2>
-        <div class="subjects-grid">
-            <div class="subject-card animate-on-scroll">
-                <img src="/img/materiasbiblia.jpg" alt="Teología">
-                <div class="subject-title">Introducción a la Biblia</div>
+        <section aria-labelledby="materias-title">
+            <h2 class="section-title" id="materias-title">Materias Destacadas</h2>
+            <div class="subjects-grid" role="list">
+                <article class="subject-card animate-on-scroll" role="listitem" tabindex="0"
+                    aria-label="Introducción a la Biblia">
+                    <img src="/img/materiasbiblia.jpg" alt="Teología">
+                    <div class="subject-title">Introducción a la Biblia</div>
+                </article>
+                <article class="subject-card animate-on-scroll" role="listitem" tabindex="0" aria-label="Homilética">
+                    <img src="/img/materiassermon.jpg" alt="Homilética">
+                    <div class="subject-title">Homilética</div>
+                </article>
+                <article class="subject-card animate-on-scroll" role="listitem" tabindex="0" aria-label="Hermenéutica">
+                    <img src="/img/materiasinterpretacion.jpg" alt="Hermenéutica">
+                    <div class="subject-title">Hermenéutica</div>
+                </article>
+                <article class="subject-card animate-on-scroll" role="listitem" tabindex="0"
+                    aria-label="Evangelismo y Misiones">
+                    <img src="/img/materiasmisiones.jpg" alt="Misiones">
+                    <div class="subject-title">Evangelismo y Misiones</div>
+                </article>
             </div>
-            <div class="subject-card animate-on-scroll">
-                <img src="/img/materiassermon.jpg" alt="Historia">
-                <div class="subject-title">Homilética</div>
-            </div>
-            <div class="subject-card animate-on-scroll">
-                <img src="/img/materiasinterpretacion.jpg" alt="Hermenéutica">
-                <div class="subject-title">Hermenéutica</div>
-            </div>
-            <div class="subject-card animate-on-scroll">
-                <img src="/img/materiasmisiones.jpg" alt="Predicación">
-                <div class="subject-title">Evangelismo y Misiones</div>
-            </div>
-        </div>
+        </section>
 
         <!-- Sección Noticias -->
-        <h2 class="section-title">Noticias y Anuncios</h2>
-        <div class="news-grid">
-            <div class="news-card animate-on-scroll">
-                <div class="news-icon-box">
-                    <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
-                </div>
-                <div class="news-text">
-                    <h4>Conferencia de Ética</h4>
-                    <p>Pastoral: 15 de Octubre. Órdenes internacionales.</p>
-                </div>
+        <section aria-labelledby="noticias-title">
+            <h2 class="section-title" id="noticias-title">Noticias y Anuncios</h2>
+            <div class="news-grid" role="list">
+                <article class="news-card animate-on-scroll" role="listitem" tabindex="0">
+                    <div class="news-icon-box" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cbuh-gold" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                    <div class="news-text">
+                        <h4>Conferencia de Ética</h4>
+                        <p>Pastoral: 15 de Octubre. Órdenes internacionales.</p>
+                    </div>
+                </article>
+                <article class="news-card animate-on-scroll" role="listitem" tabindex="0">
+                    <div class="news-icon-box" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cbuh-gold" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" />
+                        </svg>
+                    </div>
+                    <div class="news-text">
+                        <h4>Apertura Inscripciones</h4>
+                        <p>1 de Noviembre. Precios online y fechas clave.</p>
+                    </div>
+                </article>
+                <article class="news-card animate-on-scroll" role="listitem" tabindex="0">
+                    <div class="news-icon-box" aria-hidden="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-cbuh-gold" fill="currentColor"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5S2.45 4.9 1 6v14.65c0 .25.25.5.5.5.5.1 0 .15-.01.2-.03.31-.13.59-.27.78-.43.81-.67.54-1.21.54-1.21 0-1.38-.35-3.11-.84-4.43-.72-1.38-1.72-2.06-2.98-2.06-1.61 0-3.09.55-4.23 1.48-.18.16-.35.34-.48.55-.2.31-.3.65-.3.98 0 .67.1 1.26.3 1.73.2.46.4.91.4 1.38 0 1.28-.25 2.72-.7 3.7-1.29.98-.59 2.15-1.38 2.74-2.39.59-1.01.78-2.22.78-3.56 0-1.81-.78-3.55-2.34-4.81-1.57-.26-3.23-.26-4.81 0-1.17.21-2.28.58-3.27 1.06-.99 2.45-1.56 3.81-1.56 1.38 0 2.5.4 2.5 1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2z" />
+                        </svg>
+                    </div>
+                    <div class="news-text">
+                        <h4>Nuevos Recursos</h4>
+                        <p>Biblioteca Virtual. Acceso a miles de ebooks.</p>
+                    </div>
+                </article>
             </div>
-            <div class="news-card animate-on-scroll">
-                <div class="news-icon-box">
-                    <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
-                </div>
-                <div class="news-text">
-                    <h4>Apertura Inscripciones</h4>
-                    <p>1 de Noviembre. Precios online y fechas clave.</p>
-                </div>
-            </div>
-            <div class="news-card animate-on-scroll">
-                <div class="news-icon-box">
-                    <img src="/placeholder.svg?height=30&width=30&text=IC" alt="Icon">
-                </div>
-                <div class="news-text">
-                    <h4>Nuevos Recursos</h4>
-                    <p>Biblioteca Virtual. Acceso a miles de ebooks.</p>
-                </div>
-            </div>
-        </div>
+        </section>
 
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer role="contentinfo">
         <div class="container footer-grid">
             <div class="footer-col">
                 <h4>Acerca de CBUH</h4>
-                <ul>
-                    <li><a href="#">Historia</a></li>
-                    <li><a href="#">Misión</a></li>
-                    <li><a href="#">Visión</a></li>
-                    <li><a href="#">Cuerpo Docente</a></li>
+                <ul role="list">
+                    <li role="listitem"><a href="#">Historia</a></li>
+                    <li role="listitem"><a href="#">Misión</a></li>
+                    <li role="listitem"><a href="#">Visión</a></li>
+                    <li role="listitem"><a href="#">Cuerpo Docente</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Programas</h4>
-                <ul>
-                    <li><a href="#">Teología Ministerial</a></li>
-                    <li><a href="#">Estudios Bíblicos</a></li>
-                    <li><a href="#">Liderazgo</a></li>
-                    <li><a href="#">Cursos Cortos</a></li>
+                <ul role="list">
+                    <li role="listitem"><a href="#">Teología Ministerial</a></li>
+                    <li role="listitem"><a href="#">Estudios Bíblicos</a></li>
+                    <li role="listitem"><a href="#">Liderazgo</a></li>
+                    <li role="listitem"><a href="#">Cursos Cortos</a></li>
                 </ul>
             </div>
             <div class="footer-col">
                 <h4>Contacto</h4>
-                <div class="contact-item">📍 Av. Principal, Edificio CBUH, Mariara</div>
-                <div class="contact-item">📞 +58 241 1234567</div>
-                <div class="contact-item">✉️ colegiobiblicohorebvenezuela@gmail.com</div>
+                <address class="contact-item"> Av. Principal, Edificio CBUH, Mariara</address>
+                <div class="contact-item"> +58 241 1234567</div>
+                <div class="contact-item"> colegiobiblicohorebvenezuela@gmail.com</div>
             </div>
             <div class="footer-col">
                 <h4>Redes Sociales</h4>
-                <div class="socials">
-                    <a href="#" class="social-icon">F</a>
-                    <a href="#" class="social-icon">I</a>
-                    <a href="#" class="social-icon">X</a>
+                <div class="socials" role="list">
+                    <a href="#" class="social-icon" aria-label="Facebook" role="listitem">F</a>
+                    <a href="#" class="social-icon" aria-label="Instagram" role="listitem">I</a>
+                    <a href="#" class="social-icon" aria-label="X (Twitter)" role="listitem">X</a>
                 </div>
             </div>
         </div>
         <div class="copyright">
-            <p>&copy; 2025 CBUH. Todos los derechos reservados. | Política de Privacidad.</p>
+            <p>&copy; 2025 CBUH. Todos los derechos reservados. | <a href="#"
+                    class="hover:text-cbuh-gold transition">Política de Privacidad</a>.</p>
         </div>
     </footer>
 
-    <!-- Script para animaciones avanzadas con IntersectionObserver -->
+    <!-- ========================================
+         SCRIPTS PRINCIPALES
+         ======================================== -->
     <script>
-        // ==========================================
-        // ANIMACIONES AL HACER SCROLL
-        // ==========================================
+        // ========================================
+        // CONFIGURACIÓN GLOBAL Y UTILIDADES
+        // ========================================
+        'use strict';
+
+        // ========================================
+        // ANIMACIONES AL HACER SCROLL (Intersection Observer)
+        // ========================================
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1104,9 +1142,9 @@
             observer.observe(el);
         });
 
-        // ==========================================
-        // EFECTO PARALLAX EN EL HERO
-        // ==========================================
+        // ========================================
+        // EFECTO PARALLAX EN HERO SECTION
+        // ========================================
         window.addEventListener('mousemove', (e) => {
             const heroImage = document.querySelector('.hero-image img');
             if (heroImage) {
@@ -1124,9 +1162,9 @@
             }
         });
 
-        // ==========================================
+        // ========================================
         // SMOOTH SCROLL MEJORADO
-        // ==========================================
+        // ========================================
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1140,9 +1178,9 @@
             });
         });
 
-        // ==========================================
-        // EFECTO COUNTER PARA NÚMEROS
-        // ==========================================
+        // ========================================
+        // EFECTO CONTADOR ANIMADO
+        // ========================================
         function animateCounter(element, target, duration = 2000) {
             let current = 0;
             const increment = target / (duration / 16);
@@ -1157,9 +1195,9 @@
             }, 16);
         }
 
-        // ==========================================
-        // HEADER DINÁMICO - CAMBIAR ESTILO AL SCROLLEAR
-        // ==========================================
+        // ========================================
+        // HEADER DINÁMICO CON SCROLL
+        // ========================================
         let lastScroll = 0;
         const header = document.querySelector('header');
 
@@ -1175,9 +1213,9 @@
             lastScroll = currentScroll;
         });
 
-        // ==========================================
+        // ========================================
         // EFECTO RIPPLE EN BOTONES
-        // ==========================================
+        // ========================================
         function addRippleEffect() {
             const buttons = document.querySelectorAll('.btn');
 
@@ -1228,9 +1266,9 @@
 
         addRippleEffect();
 
-        // ==========================================
-        // PRELOAD ANIMATIONS - Espera a que cargue el DOM
-        // ==========================================
+        // ========================================
+        // INICIALIZACIÓN DEL DOM
+        // ========================================
         document.addEventListener('DOMContentLoaded', () => {
             // Agregar clase visible a elementos visibles inicialmente
             document.querySelectorAll('.animate-on-scroll').forEach((el, index) => {
@@ -1242,9 +1280,9 @@
             });
         });
 
-        // ==========================================
-        // EFECTO SCROLL REVELADOR - CARDS CON STAGGER
-        // ==========================================
+        // ========================================
+        // EFECTO REVELADOR CON SCROLL
+        // ========================================
         const revealOnScroll = () => {
             const reveals = document.querySelectorAll('.year-card, .subject-card, .news-card');
 
@@ -1262,9 +1300,9 @@
 
         window.addEventListener('scroll', revealOnScroll);
 
-        // ==========================================
-        // EFECTO FOCUS EN INPUTS Y FORMULARIOS (Si existen)
-        // ==========================================
+        // ========================================
+        // ANIMACIONES DE FORMULARIOS
+        // ========================================
         const setupFormAnimations = () => {
             const inputs = document.querySelectorAll('input, textarea, select');
             inputs.forEach(input => {

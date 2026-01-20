@@ -4,14 +4,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Profesor - CBUH </title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="/img/libro.png">
-    <style>
-        /* Importación de fuentes originales */
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&display=swap');
+    <meta name="description" content="Panel de profesor del Colegio Bíblico Universal Horeb">
+    <meta name="author" content="Colegio Bíblico Universal Horeb">
+    <title>Panel Profesor - CBUH</title>
 
-        /* Configuración de tipografía */
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/img/libro.png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* ========================================
+           CONFIGURACIÓN DE TIPOGRAFÍA
+           ======================================== */
         .font-heading {
             font-family: 'Anton', sans-serif;
             letter-spacing: 1px;
@@ -21,15 +33,15 @@
             font-family: 'Inter', sans-serif;
         }
 
-        /* Colores Base */
+        /* ========================================
+           COLORES INSTITUCIONALES
+           ======================================== */
         .bg-cbuh-dark {
             background-color: #4A0E1C;
-            /* Vinotinto solicitado */
         }
 
         .text-cbuh-gold {
             color: #FBBF24;
-            /* Dorado */
         }
 
         .bg-cbuh-gold {
@@ -40,7 +52,9 @@
             border-color: #FBBF24;
         }
 
-        /* Estilos para las cajas de cristal (Glassmorphism) */
+        /* ========================================
+           EFECTOS VISUALES
+           ======================================== */
         .glass-panel {
             background-color: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -48,12 +62,13 @@
             -webkit-backdrop-filter: blur(8px);
         }
 
-        /* Animaciones para el botón de agregar (+) */
         .hover-animate-plus:hover {
             transform: scale(1.1) rotate(90deg);
         }
 
-        /* Scrollbar personalizado para la lista de estudiantes */
+        /* ========================================
+           SCROLLBAR PERSONALIZADO
+           ======================================== */
         .scrollbar-thin::-webkit-scrollbar {
             width: 6px;
         }
@@ -68,7 +83,9 @@
             border-radius: 10px;
         }
 
-        /* Modal Styles */
+        /* ========================================
+           ESTILOS DEL MODAL
+           ======================================== */
         .modal {
             display: none;
             position: fixed;
@@ -122,6 +139,9 @@
             }
         }
 
+        /* ========================================
+           INPUTS DEL MODAL
+           ======================================== */
         .modal-input {
             background-color: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(251, 191, 36, 0.25);
