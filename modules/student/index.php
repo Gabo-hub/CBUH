@@ -1,64 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
+<?php
+session_start();
+require_once '../../config/database.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Perfil Estudiante</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="/img/libro.png">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&display=swap');
+// Redirigir si no hay sesión
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../auth/login.php');
+    exit;
+}
 
-        .font-heading {
-            font-family: 'Anton', sans-serif;
-            letter-spacing: 1px;
-        }
+// TODO: Fetch student records from DB
+// $pdo = getDBConnection();
+// $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
+// $stmt->execute([$_SESSION['user_id']]);
+// $student = $stmt->fetch();
 
-        .font-body {
-            font-family: 'Inter', sans-serif;
-        }
+$page_title = "Perfil Estudiante - CBUH";
+$nav_active = "ACADÉMICO";
+$path_depth = 2;
 
-        /* Vinotinto rico y elegante (el que te gustó) */
-        .bg-cbuh-dark {
-            background-color: #4A0E1C;
-        }
-
-        .text-cbuh-gold {
-            color: #FBBF24;
-        }
-
-        .bg-cbuh-gold {
-            background-color: #FBBF24;
-        }
-
-        .border-cbuh-gold {
-            border-color: #FBBF24;
-        }
-    </style>
-</head>
-
-<body class="bg-cbuh-dark text-white font-body min-h-screen flex flex-col">
-
-    <nav class="w-full px-8 py-6 flex justify-between items-center max-w-7xl mx-auto border-b border-white/10">
-        <div class="flex items-center gap-3">
-            <div class="flex items-center gap-2 text-white">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-8 h-8">
-                    <path
-                        d="M11.25 4.533A9.707 9.707 0 006 3a9.735 9.735 0 00-3.25.555.75.75 0 00-.5.707v14.25a.75.75 0 001 .707A8.237 8.237 0 016 18.75c1.995 0 3.823.707 5.25 1.886V4.533zM12.75 20.636A8.214 8.214 0 0118 18.75c.966 0 1.89.166 2.75.47a.75.75 0 001-.708V4.262a.75.75 0 00-.5-.707A9.735 9.735 0 0018 3a9.707 9.707 0 00-5.25 1.533v16.103z" />
-                </svg>
-                <span class="text-3xl font-heading tracking-wider">CBUH</span>
-            </div>
-        </div>
-        <div class="hidden md:flex gap-8 text-sm font-semibold tracking-widest">
-            <a href="index.html" class="hover:text-cbuh-gold transition">INICIO</a>
-            <a href="#" class="text-cbuh-gold">ACADÉMICO</a>
-        </div>
-        <a href="#"
-            class="hidden md:block px-6 py-2 border border-white/20 rounded hover:bg-white/10 transition text-sm font-bold tracking-wide">
-            CERRAR SESIÓN
-        </a>
-    </nav>
+include '../../includes/head.php';
+include '../../includes/navbar.php';
+?>
 
     <section class="max-w-7xl mx-auto px-6 mt-10 w-full">
         <div
@@ -335,6 +297,4 @@
         </div>
     </main>
 
-</body>
-
-</html>
+<?php include '../../includes/footer.php'; ?>

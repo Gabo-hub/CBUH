@@ -1,3 +1,60 @@
+<?php
+// modules/auth/login.php
+session_start();
+require_once '../../config/database.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($username) && !empty($password)) {
+        try {
+            $pdo = getDBConnection();
+            // Nuevas tablas en español: usuarios, roles
+            $stmt = $pdo->prepare("SELECT u.id, u.usuario, u.clave_hash, u.rol_id, u.url_foto 
+                                   FROM usuarios u 
+                                   WHERE u.usuario = :username AND u.estado_id = 1");
+            $stmt->execute(['username' => $username]);
+            $user = $stmt->fetch();
+
+            // Verificación de contraseña con password_verify (bcrypt)
+            if ($user && password_verify($password, $user['clave_hash'])) {
+                // Guardar datos del usuario en sesión
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['usuario'] = $user['usuario'];
+                $_SESSION['rol_id'] = $user['rol_id'];
+                $_SESSION['url_foto'] = $user['url_foto'];
+
+                // Obtener el nombre del rol
+                $stmtRole = $pdo->prepare("SELECT nombre FROM roles WHERE id = :id");
+                $stmtRole->execute(['id' => $user['rol_id']]);
+                $roleName = $stmtRole->fetchColumn();
+
+                $_SESSION['rol_nombre'] = $roleName;
+                $roleName = strtolower($roleName);
+
+                // Redirección según el rol
+                if (strpos($roleName, 'estudiante') !== false) {
+                    header('Location: ../student/index.php');
+                } elseif (strpos($roleName, 'docente') !== false) {
+                    header('Location: ../teacher/index.php');
+                } else {
+                    // Admin, Control de Estudio, Director
+                    header('Location: ../admin/index.php');
+                }
+                exit;
+
+            } else {
+                $error = "Credenciales incorrectas.";
+            }
+        } catch (Exception $e) {
+            $error = "Error de conexión: " . $e->getMessage();
+        }
+    } else {
+        $error = "Por favor complete todos los campos.";
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -9,7 +66,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="icon" type="image/png" href="/img/libro.png">
+    <link rel="icon" type="image/png" href="../../assets/img/libro.png">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -58,13 +115,10 @@
     <!-- Contenedor Principal de la Tarjeta -->
     <div class="login-card w-full max-w-md rounded-[30px] p-8 pb-10 relative flex flex-col items-center">
 
-        <!-- Área del Logo (Sube tu imagen aquí) -->
+        Área del Logo
         <div class="logo-container mb-6 relative z-10">
-            <!-- 
-                IMPORTANTE: Reemplaza 'src' con la ruta de tu logo.
-                He puesto un placeholder rectangular vertical similar al escudo.
-            -->
-            <img src="/img/cbuh.png" alt="Logo Institucional" class="w-32 md:w-40 drop-shadow-2xl object-contain"
+            <img src="../../assets/img/cbuh.png" alt="Logo Institucional"
+                class="w-32 md:w-40 drop-shadow-2xl object-contain"
                 style="filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
         </div>
 
@@ -74,7 +128,12 @@
         </h1>
 
         <!-- Formulario -->
-        <form class="w-full space-y-6 flex flex-col items-center">
+        <form class="w-full space-y-6 flex flex-col items-center" method="POST" action="login.php">
+            <?php if (isset($error)): ?>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                    <span class="block sm:inline"><?php echo $error; ?></span>
+                </div>
+            <?php endif; ?>
 
             <!-- Campo Cédula -->
             <div class="input-glow w-full rounded-xl flex items-center px-4 py-3 relative group">
@@ -84,7 +143,7 @@
                     <path
                         d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                 </svg>
-                <input type="text" placeholder="Cédula"
+                <input type="text" name="username" placeholder="Cédula"
                     class="bg-transparent border-none outline-none text-gray-800 placeholder-gray-800 text-lg w-full font-medium"
                     required>
             </div>
@@ -97,7 +156,7 @@
                     <path
                         d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z" />
                 </svg>
-                <input type="password" placeholder="Contraseña"
+                <input type="password" name="password" placeholder="Contraseña"
                     class="bg-transparent border-none outline-none text-gray-800 placeholder-gray-800 text-lg w-full font-medium"
                     required>
             </div>
@@ -105,13 +164,11 @@
             <!-- Botón Acceder -->
             <button type="submit"
                 class="btn-gold w-full py-3 rounded-full text-black font-bold text-xl tracking-wider mt-4 hover:brightness-110">
-                <a href="estudiantes.html">
-                    ACCEDER
-                </a>
+                ACCEDER
             </button>
 
             <!-- Enlace Olvidar Contraseña -->
-            <a href="estudiantes.html"
+            <a href="#"
                 class="text-[#5a1a25] underline decoration-1 underline-offset-4 text-sm font-semibold hover:text-black transition-colors mt-2">
                 ¿Olvidaste tu contraseña?
             </a>

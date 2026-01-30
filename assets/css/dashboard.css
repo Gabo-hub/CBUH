@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;600;800&display=swap');
+
+:root {
+    --cbuh-dark: #4A0E1C;
+    --cbuh-gold: #FBBF24;
+}
+
+.font-heading {
+    font-family: 'Anton', sans-serif;
+    letter-spacing: 1px;
+}
+
+.font-body {
+    font-family: 'Inter', sans-serif;
+}
+
+.bg-cbuh-dark {
+    background-color: var(--cbuh-dark);
+}
+
+.text-cbuh-gold {
+    color: var(--cbuh-gold);
+}
+
+.bg-cbuh-gold {
+    background-color: var(--cbuh-gold);
+}
+
+.border-cbuh-gold {
+    border-color: var(--cbuh-gold);
+}
+
+.glass-panel {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.hover-animate-plus:hover {
+    transform: scale(1.1) rotate(90deg);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: var(--cbuh-gold);
+    border-radius: 10px;
+}
