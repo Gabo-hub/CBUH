@@ -12,10 +12,19 @@ let allPrelaciones = []; // Store prelation rules
 let filteredSchedules = [];
 let isInitialized = false;
 
+// Variables de configuración de tiempo (Valores por defecto)
+let configStartStr = '07:00';
+let configEndStr = '16:00';
+let configStartMinutes = 420; // 7 * 60
+let configEndMinutes = 960;  // 16 * 60
+
 // Inicializar módulo
 export async function initSchedules() {
     if (isInitialized) return;
     console.log('[Schedules] Initializing schedules module');
+
+    // Cargar config de tiempos PRIMERO
+    await loadTimeConfig();
 
     // Cargar datos
     await Promise.all([
@@ -51,6 +60,59 @@ async function checkScheduleConfig() {
         if (data && data.valor === 'false') return false;
         return true;
     } catch (e) { return true; }
+}
+
+// Cargar configuración de tiempos desde Supabase
+async function loadTimeConfig() {
+    try {
+        const sedeId = window.adminContext?.sedeId || 1;
+        const { data } = await supabase
+            .from('configuraciones')
+            .select('clave, valor')
+            .eq('sede_id', sedeId)
+            .in('clave', ['hora_inicio_clases', 'hora_fin_clases']);
+
+        if (data && data.length > 0) {
+            const startConf = data.find(c => c.clave === 'hora_inicio_clases');
+            const endConf = data.find(c => c.clave === 'hora_fin_clases');
+
+            if (startConf) {
+                configStartStr = startConf.valor;
+                configStartMinutes = timeToMinutes(configStartStr);
+            }
+            if (endConf) {
+                configEndStr = endConf.valor;
+                configEndMinutes = timeToMinutes(configEndStr);
+            }
+        }
+    } catch (e) {
+        console.error('Error loading time config:', e);
+    }
+    // Render grid
+    renderTimeGrid();
+}
+
+function renderTimeGrid() {
+    const timeCol = document.getElementById('grid-time-column');
+    const headerCols = document.getElementById('grid-header-row');
+
+    if (!timeCol) return; // Might need to add ID to HTML first
+
+    // Calculate hours range
+    const startHour = Math.floor(configStartMinutes / 60);
+    const endHour = Math.floor(configEndMinutes / 60);
+
+    let html = '';
+    // Generate slots for each hour
+    for (let h = startHour; h < endHour; h++) { // < endHour because e.g. 16:00 is the limit
+        const timeLabel = `${h.toString().padStart(2, '0')}:00`;
+        html += `
+             <div class="h-24 border-b border-white/5 flex items-start justify-center pt-2 text-[10px] font-bold text-white/20">
+                ${timeLabel}
+            </div>
+        `;
+    }
+    timeCol.innerHTML = html;
 }
 
 function disableScheduleEditing() {
@@ -174,12 +236,21 @@ async function loadCargas() {
                     nombres,
                     apellidos
                 )
-            `)
-            .order('id', { ascending: false }); // Idealmente filtrar por periodo activo
+            `);
 
         if (error) throw error;
 
-        allCargas = data || [];
+        // Sort in memory by academic order (Year -> Code)
+        allCargas = (data || []).sort((a, b) => {
+            const yearA = a.materia?.año_materia || 0;
+            const yearB = b.materia?.año_materia || 0;
+            if (yearA !== yearB) return yearA - yearB;
+
+            const codeA = a.materia?.codigo || '';
+            const codeB = b.materia?.codigo || '';
+            return codeA.localeCompare(codeB);
+        });
+
         renderCargasDropdown();
 
     } catch (error) {
@@ -221,25 +292,25 @@ async function loadSchedules() {
         const { data, error } = await supabase
             .from('horarios')
             .select(`
-                id,
-                dia_semana,
-                hora_inicio,
-                hora_fin,
-                aula,
-                mes,
-                carga_academica_id,
-                carga:cargas_academicas (
-                    materia:materias (
-                        nombre,
-                        codigo,
-                        año_materia
-                    ),
-                    docente:docentes (
-                        id,
-                        nombres,
-                        apellidos
-                    )
+        id,
+            dia_semana,
+            hora_inicio,
+            hora_fin,
+            aula,
+            mes,
+            carga_academica_id,
+            carga: cargas_academicas(
+                materia: materias(
+                    nombre,
+                    codigo,
+                    año_materia
+                ),
+                docente: docentes(
+                    id,
+                    nombres,
+                    apellidos
                 )
+            )
             `);
 
         if (error) throw error;
@@ -316,9 +387,13 @@ function createScheduleBlock(schedule) {
     // 1 hora = 96px (height-24 * 4 quarters)
     // 96px / 60min = 1.6 px/min.
 
-    const baseStart = 420; // 7:00 AM
     const pxPerMin = 96 / 60;
 
+    // Usar la configuración cargada
+    const baseStart = configStartMinutes;
+
+    // Si la clase empieza antes del inicio de jornada, se corta visualmente (o validación previa lo impide)
+    // Pero calculamos relativo al inicio configurado
     const top = (startMinutes - baseStart) * pxPerMin;
     const height = durationCurrent * pxPerMin;
 
@@ -385,7 +460,7 @@ function formatTime(timeStr) {
     const hours = parseInt(h);
     const ampm = hours >= 12 ? 'PM' : 'AM';
     const h12 = hours % 12 || 12;
-    return `${h12}:${m} ${ampm}`;
+    return `${h12}:${m} ${ampm} `;
 }
 
 // ---- Editor Logic ----
@@ -477,15 +552,18 @@ async function handleSaveSchedule(e) {
     try {
         const formData = new FormData(e.target);
         const id = formData.get('id');
+        const rawCargaId = formData.get('carga_id');
+        const rawDia = formData.get('dia_semana');
+        const rawMes = formData.get('mes');
 
-        // Map form input 'carga_id' to logic 'carga_academica_id'
+        // Map and ensure numeric types for integer columns
         const scheduleData = {
-            carga_academica_id: formData.get('carga_id'),
-            dia_semana: formData.get('dia_semana'),
+            carga_academica_id: rawCargaId ? parseInt(rawCargaId) : null,
+            dia_semana: rawDia ? parseInt(rawDia) : null,
             hora_inicio: formData.get('hora_inicio'),
             hora_fin: formData.get('hora_fin'),
             aula: formData.get('aula'),
-            mes: formData.get('mes') // Include Month
+            mes: rawMes ? parseInt(rawMes) : null
         };
 
         // --- VALIDATIONS ---
@@ -496,8 +574,24 @@ async function handleSaveSchedule(e) {
         const newAula = scheduleData.aula?.trim().toLowerCase();
         const newMes = Number(scheduleData.mes);
 
+        // 1. Validar campos obligatorios
+        if (!scheduleData.carga_academica_id || !scheduleData.dia_semana || !scheduleData.mes || !scheduleData.aula?.trim()) {
+            showNotification('Por favor, completa todos los campos obligatorios: Materia, Mes, Día y AULA/UBICACIÓN.', 'error');
+            btn.disabled = false;
+            return;
+        }
+
+        // 2. Validar coherencia de horas
         if (newEnd <= newStart) {
             showNotification('La hora fin debe ser mayor a la hora inicio', 'error');
+            btn.disabled = false;
+            return;
+        }
+
+        // 3. Validar rango permitido por sede
+        if (newStart < configStartMinutes || newEnd > configEndMinutes) {
+            showNotification(`El horario debe estar dentro de la jornada configurada (${configStartStr} - ${configEndStr})`, 'error');
+            btn.disabled = false;
             return;
         }
 
@@ -530,7 +624,7 @@ async function handleSaveSchedule(e) {
                 if (teacherId && exTeacherId && teacherId === exTeacherId) {
                     const teacherName = existing.carga.docente.nombres.split(' ')[0] + ' ' + existing.carga.docente.apellidos.split(' ')[0];
                     const conflictMateria = existing.carga.materia.nombre;
-                    showNotification(`Conflicto: El docente ${teacherName} ya tiene clase a esa hora en ese mes (${conflictMateria})`, 'error');
+                    showNotification(`Conflicto: El docente ${teacherName} ya tiene clase a esa hora en ese mes(${conflictMateria})`, 'error');
                     return;
                 }
 
@@ -539,7 +633,7 @@ async function handleSaveSchedule(e) {
                     const exAula = existing.aula.trim().toLowerCase();
                     if (newAula === exAula) {
                         const conflictMateria = existing.carga.materia.nombre;
-                        showNotification(`Conflicto: El aula ${existing.aula} ya está ocupada por ${conflictMateria}`, 'error');
+                        showNotification(`Conflicto: El aula ${existing.aula} ya está ocupada por ${conflictMateria} `, 'error');
                         return;
                     }
                 }
@@ -556,16 +650,12 @@ async function handleSaveSchedule(e) {
             // 2. Find prerequisites for this subject
             const prerequisites = allPrelaciones
                 .filter(p => p.materia_id === currentMateriaId)
-                .map(p => p.prelacion_materia_id); // IDs of required subjects
+                .map(p => p.prelacion_id); // IDs of required subjects (fixed from prelacion_materia_id)
 
             if (prerequisites.length > 0) {
                 // 3. Check each prerequisite
                 for (const prereqId of prerequisites) {
                     // Find if/when this prereq is scheduled
-                    // We only care if it's scheduled in the same academic context/year normally, 
-                    // but for modular month logic, we look for its schedule entry.
-                    // Assuming 1 schedule per subject per year/cycle.
-
                     const scheduledPrereq = allSchedules.find(s => s.carga?.materia?.id === prereqId);
 
                     if (scheduledPrereq) {
@@ -574,17 +664,18 @@ async function handleSaveSchedule(e) {
                         // Rule: Current Month MUST be GREATER than Prerequisite Month
                         if (newMes <= prereqMes) {
                             const prereqName = scheduledPrereq.carga?.materia?.nombre || 'Materia Previa';
-                            const mesName = document.querySelector(`#schedule-month option[value="${prereqMes}"]`)?.text || prereqMes;
+                            const mesName = document.querySelector(`#schedule - month option[value = "${prereqMes}"]`)?.text || prereqMes;
 
                             showNotification(`Error de Prelación: "${selectedCarga.materia.nombre}" requiere aprobar "${prereqName}". "${prereqName}" está programada en ${mesName}, por lo que esta materia debe ser en un mes posterior.`, 'error');
                             return;
                         }
                     } else {
-                        // Warning: Prerequisite not programmed yet.
-                        // Strictly speaking, we might want to BLOCK this too, but maybe they schedule out of order?
-                        // Let's just warn or allow, but typically for a modular schedule generator, blocking implies strict order planning.
-                        // Let's allow but maybe warn in console.
-                        console.warn(`[Prelation] Prerequisite subject ${prereqId} is not scheduled yet.`);
+                        // BLOQUEO: Pre-requisito no programado
+                        const { data: prereqObj } = await supabase.from('materias').select('nombre').eq('id', prereqId).single();
+                        const prereqName = prereqObj?.nombre || `ID: ${prereqId} `;
+
+                        showNotification(`BLOQUEO DE PRELACIÓN: No puedes programar "${selectedCarga.materia.nombre}" porque su pre - requisito "${prereqName}" aún no ha sido asignado a un mes en el horario.`, 'error');
+                        return;
                     }
                 }
             }
@@ -673,7 +764,7 @@ async function handlePrintSchedule() {
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
         doc.text('CENTRO BÍBLICO UNIVERSITARIO DE HERRERA', 15, 28);
-        doc.text(`${yearText} | Mes: ${monthName} | Generado: ${new Date().toLocaleDateString()}`, 15, 33);
+        doc.text(`${yearText} | Mes: ${monthName} | Generado: ${new Date().toLocaleDateString()} `, 15, 33);
 
         // -- Table Logic --
         const daysMap = {
@@ -688,10 +779,10 @@ async function handlePrintSchedule() {
 
         const tableBody = sortedSchedules.map(s => [
             daysMap[s.dia_semana] || 'Desconocido',
-            `${formatTime(s.hora_inicio)} - ${formatTime(s.hora_fin)}`,
+            `${formatTime(s.hora_inicio)} - ${formatTime(s.hora_fin)} `,
             s.carga?.materia?.nombre || 'Materia',
             s.carga?.materia?.codigo || '-',
-            s.carga?.docente ? `${s.carga.docente.nombres} ${s.carga.docente.apellidos}` : 'SIN DOCENTE',
+            s.carga?.docente ? `${s.carga.docente.nombres} ${s.carga.docente.apellidos} ` : 'SIN DOCENTE',
             s.aula || '-'
         ]);
 

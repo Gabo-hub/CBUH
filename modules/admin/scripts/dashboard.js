@@ -33,8 +33,8 @@ async function init() {
 
         if (error) throw error
 
-        // Verify admin role
-        if (profile.rol_id !== 1) {
+        // Verify admin/staff role (Admin = 1, Control de Estudio = 2)
+        if (profile.rol_id !== 1 && profile.rol_id !== 2) {
             window.location.href = '/'
             return
         }

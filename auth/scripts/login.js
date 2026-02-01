@@ -3,14 +3,11 @@
  * Usa los módulos compartidos de auth y utils
  */
 
+import '../../assets/css/tailwind.css'
+import { supabase } from '../../config/supabase-client.js'
 import { AuthManager } from './auth.js'
 import { showError, redirectByRole } from '../../shared/scripts/utils.js'
 
-// Configurar Supabase
-const SUPABASE_URL = 'https://nxzwytaqqczgyeyjjhrz.supabase.co'
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54end5dGFxcWN6Z3lleWpqaHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMDM5OTAsImV4cCI6MjA4Mzc3OTk5MH0.bMeSy6IHm1h3kklD2q7vHEPQ4madhb40GLjSH_mF_28'
-
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
 const authManager = new AuthManager(supabase)
 
 // Verificar si ya está autenticado

@@ -19,49 +19,8 @@
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-    <!--Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "vinotinto": "#4A0E1C",
-                        "vinotinto-dark": "#2a0810",
-                        "accent-gold": "#C9A961",
-                        "beige": "#F5F2EA",
-                        "beige-dark": "#E9E2D5",
-                        "charcoal-gray": "#333333",
-                        "light-gray": "#F9F9F9",
-                    },
-                    fontFamily: {
-                        "display": ["Noto Serif", "serif"],
-                        "body": ["Manrope", "sans-serif"],
-                    }
-                },
-            },
-        }
-    </script>
-    <style type="text/tailwindcss">
-        body {
-            font-family: 'Manrope', sans-serif;
-            background-color: white;
-            color: theme('colors.charcoal-gray');
-        }
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Noto Serif', serif;
-        }
-        .hero-overlay {
-            background: linear-gradient(to right, rgba(74, 14, 28, 0.95), rgba(74, 14, 28, 0.6));
-        }
-        .section-frame {
-            border-left: 8px solid theme('colors.vinotinto');
-        }
-        .card-shadow {
-            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
-        }
-    </style>
+    <!-- UI Logic & Tailwind Import (processed by Vite) -->
+    <script type="module" src="/assets/js/home.js"></script>
 </head>
 
 <body class="bg-white text-charcoal-gray overflow-x-hidden selection:bg-vinotinto selection:text-white">
@@ -276,58 +235,6 @@
         </div>
     </footer>
 
-    <!-- Auth Script -->
-    <script type="module">
-        const SUPABASE_URL = 'https://nxzwytaqqczgyeyjjhrz.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54end5dGFxcWN6Z3lleWpqaHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMDM5OTAsImV4cCI6MjA4Mzc3OTk5MH0.bMeSy6IHm1h3kklD2q7vHEPQ4madhb40GLjSH_mF_28'
-
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-
-        async function loadAuthButtons() {
-            const { data: { session } } = await supabase.auth.getSession()
-            const container = document.getElementById('auth-buttons')
-
-            if (session) {
-                // Usuario logueado
-                const { data: profile } = await supabase
-                    .from('usuarios')
-                    .select('rol_id')
-                    .eq('auth_id', session.user.id)
-                    .single()
-
-                let dashboardLink = '/modules/admin/index.html'
-                if (profile) {
-                    if (profile.rol_id === 1) dashboardLink = '/modules/admin/index.html'
-                    else if (profile.rol_id === 2) dashboardLink = '/modules/teacher/index.html'
-                    else if (profile.rol_id === 3) dashboardLink = '/modules/student/index.html'
-                }
-
-                container.innerHTML = `
-                    <a href="${dashboardLink}" class="hidden sm:flex border border-vinotinto text-vinotinto font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto hover:text-white transition-all duration-300">
-                        Mi Dashboard
-                    </a>
-                    <button id="logout-btn" class="hidden sm:flex bg-vinotinto text-white font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto-dark transition-all duration-300 shadow-md">
-                        Cerrar Sesión
-                    </button>
-                `
-
-                document.getElementById('logout-btn').addEventListener('click', async () => {
-                    await supabase.auth.signOut()
-                    window.location.reload()
-                })
-            } else {
-                // Usuario no logueado
-                container.innerHTML = `
-                    <a href="/auth/login.html" class="hidden sm:flex border border-vinotinto text-vinotinto font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto hover:text-white transition-all duration-300">
-                        Iniciar Sesión
-                    </a>
-                `
-            }
-        }
-
-        // Cargar botones al iniciar
-        loadAuthButtons()
-    </script>
 </body>
 
 </html>

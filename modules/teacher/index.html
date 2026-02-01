@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBUH - Portal Docente</title>
+
+    <!--Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/css/theme.css">
+
+    <!-- Notifications -->
+    <script src="/assets/js/notifications.js" defer></script>
+
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(201, 169, 97, 0.3);
+            border-radius: 3px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-100 min-h-screen overflow-hidden flex">
+
+    <!-- Sidebar Container -->
+    <div id="layout-sidebar" class="h-screen shrink-0"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative w-0 overflow-hidden bg-background-dark h-screen">
+
+        <!-- Header Container -->
+        <div id="layout-header"></div>
+
+        <!-- Dashboard Tab Content -->
+        <div id="tab-dashboard" class="tab-content h-full flex flex-col overflow-y-auto custom-scrollbar">
+            <!-- Cargando dinámicamente... -->
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Other Tabs -->
+        <div id="tab-materias" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <div id="tab-estudiantes" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <div id="tab-horario" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <div id="tab-configuracion" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Modals Container -->
+        <div id="modals-container">
+            <!-- Modal Carga de Notas -->
+            <div id="modal-grades" class="fixed inset-0 z-50 hidden">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('modal-grades')"></div>
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-primary-dark rounded-3xl border border-white/10 shadow-2xl p-8 transform transition-all scale-100">
+                    <div class="text-center mb-6">
+                        <div
+                            class="size-16 rounded-full bg-gold/10 border border-gold/20 flex items-center justify-center text-gold mx-auto mb-4">
+                            <span class="material-symbols-outlined text-3xl">star</span>
+                        </div>
+                        <h3 class="text-xl font-black text-white uppercase tracking-tight" id="modal-student-name">
+                            Nombre Estudiante</h3>
+                        <p class="text-xs font-bold text-gold uppercase tracking-widest mt-1" id="modal-title">Cargar
+                            Nota Corte 1</p>
+                    </div>
+
+                    <form id="form-grades" class="space-y-6">
+                        <input type="hidden" id="grade-student-id">
+                        <input type="hidden" id="grade-inscription-id">
+                        <input type="hidden" id="grade-field"> <!-- nota1, nota2, nota3 -->
+
+                        <div class="relative group">
+                            <input type="number" id="grade-input" min="0" max="20" step="0.01" required
+                                class="w-full bg-black/40 border border-white/10 rounded-2xl py-6 text-center text-4xl font-black text-white focus:border-gold/50 outline-none transition-all placeholder-white/10"
+                                placeholder="00" />
+                            <span
+                                class="absolute top-1/2 right-6 -translate-y-1/2 text-white/20 font-bold text-xs uppercase pointer-events-none">PTS</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" onclick="closeModal('modal-grades')"
+                                class="py-3 rounded-xl bg-white/5 border border-white/5 text-white/60 font-black uppercase text-xs hover:bg-white/10 transition-all">
+                                Cancelar
+                            </button>
+                            <button type="submit"
+                                class="py-3 rounded-xl bg-gold text-primary-dark font-black uppercase text-xs hover:bg-white transition-all shadow-lg shadow-gold/20">
+                                Guardar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Asistencia -->
+            <div id="modal-attendance" class="fixed inset-0 z-50 hidden">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('modal-attendance')">
+                </div>
+                <!-- Simple placeholder for attendance -->
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-primary-dark rounded-3xl border border-white/10 shadow-2xl p-8">
+                    <div class="text-center space-y-4">
+                        <span class="material-symbols-outlined text-4xl text-emerald-400">how_to_reg</span>
+                        <h3 class="text-lg font-black text-white uppercase">Control de Asistencia</h3>
+                        <p class="text-white/40 text-xs">Sistema de asistencia en desarrollo. Pronto disponible.</p>
+                        <button onclick="closeModal('modal-attendance')"
+                            class="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-white font-bold uppercase text-xs">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Perfil Estudiante -->
+            <div id="modal-student-profile" class="fixed inset-0 z-50 hidden">
+                <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"
+                    onclick="closeModal('modal-student-profile')"></div>
+                <div
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-primary-dark rounded-3xl border border-white/10 shadow-2xl p-8 transform transition-all scale-100">
+                    <div class="flex flex-col items-center text-center">
+                        <div
+                            class="size-24 rounded-full bg-slate-800 border-2 border-gold/20 overflow-hidden mb-4 shadow-lg shadow-gold/5">
+                            <img id="profile-modal-img" src="" class="w-full h-full object-cover hidden">
+                            <span id="profile-modal-icon" class="text-4xl leading-[90px]">👤</span>
+                        </div>
+
+                        <h3 class="text-xl font-black text-white uppercase tracking-tight mb-1" id="profile-modal-name">
+                            Nombre Estudiante
+                        </h3>
+                        <p class="text-sm font-bold text-gold uppercase tracking-widest mb-6" id="profile-modal-cedula">
+                            V-12.345.678
+                        </p>
+
+                        <div class="w-full space-y-3 text-left">
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                                <p class="text-[9px] font-bold text-white/40 uppercase tracking-widest">Correo
+                                    Electrónico</p>
+                                <p class="text-sm font-bold text-white truncate" id="profile-modal-email">--</p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-white/5 border border-white/5 space-y-1">
+                                <p class="text-[9px] font-bold text-white/40 uppercase tracking-widest">Teléfono</p>
+                                <p class="text-sm font-bold text-white truncate" id="profile-modal-phone">--</p>
+                            </div>
+                        </div>
+
+                        <button onclick="closeModal('modal-student-profile')"
+                            class="mt-8 w-full py-3 rounded-xl bg-white/5 border border-white/5 text-white/60 font-black uppercase text-xs hover:bg-white/10 transition-all">
+                            Cerrar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Scripts -->
+    <script type="module" src="../admin/scripts/component-loader.js"></script>
+    <script type="module" src="./scripts/dashboard.js"></script>
+    <script type="module" src="./scripts/subjects.js"></script>
+    <script type="module" src="./scripts/students.js"></script>
+    <script type="module" src="./scripts/schedule.js"></script>
+</body>
+
+</html>

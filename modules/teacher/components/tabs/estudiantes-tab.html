@@ -1,0 +1,94 @@
+<div class="p-8 space-y-8">
+    <!-- Stats Row -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-primary-dark p-6 rounded-2xl border border-white/10 flex items-center gap-6">
+            <div
+                class="size-14 bg-card-dark rounded-xl flex items-center justify-center text-gold border border-white/5">
+                <span class="material-symbols-outlined text-3xl">groups</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Total Estudiantes</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-3xl font-black text-white" id="total-students-count">0</h3>
+                </div>
+            </div>
+        </div>
+        <div class="bg-primary-dark p-6 rounded-2xl border border-white/10 flex items-center gap-6">
+            <div
+                class="size-14 bg-card-dark rounded-xl flex items-center justify-center text-gold border border-white/5">
+                <span class="material-symbols-outlined text-3xl">how_to_reg</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Asistencia Promedio</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-3xl font-black text-white" id="avg-attendance">--</h3>
+                </div>
+            </div>
+        </div>
+        <div class="bg-primary-dark p-6 rounded-2xl border border-white/10 flex items-center gap-6">
+            <div
+                class="size-14 bg-card-dark rounded-xl flex items-center justify-center text-gold border border-white/5">
+                <span class="material-symbols-outlined text-3xl">school</span>
+            </div>
+            <div>
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest">Materias a Cargo</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-3xl font-black text-white" id="total-subjects-count">0</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+        <!-- Students List by Subject -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-xl font-bold text-white uppercase tracking-tight">Mis Estudiantes por Materia</h2>
+                <div class="flex gap-2">
+                    <div class="bg-white/5 border border-white/10 rounded-lg px-3 py-1.5 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm text-gold">search</span>
+                        <input id="studentSearchInput"
+                            class="bg-transparent border-none p-0 text-xs focus:ring-0 text-white placeholder-white/20 w-40"
+                            placeholder="Buscar estudiante..." type="text" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Accordion Container -->
+            <div id="subjects-accordion" class="space-y-4">
+                <!-- Dinámico -->
+                <div class="flex items-center justify-center py-12">
+                    <span class="animate-spin material-symbols-outlined text-gold text-4xl">sync</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Info -->
+        <div class="space-y-6">
+            <div class="bg-primary-dark rounded-2xl border border-white/10 overflow-hidden flex flex-col">
+                <div class="p-6 border-b border-white/5">
+                    <h2 class="text-lg font-bold text-white uppercase tracking-tighter">Resumen Académico</h2>
+                    <p class="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">Periodo 2024-II</p>
+                </div>
+                <div class="p-4 space-y-3" id="subjects-summary-list">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+            <div class="bg-primary-dark rounded-2xl border border-white/10 p-6 space-y-4">
+                <h2 class="text-sm font-bold text-white uppercase tracking-widest mb-4">Herramientas</h2>
+                <button
+                    class="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-gold hover:text-primary-dark transition-all group">
+                    <span class="material-symbols-outlined text-gold group-hover:text-primary-dark">download</span>
+                    <span class="text-xs font-bold uppercase">Descargar Listados</span>
+                </button>
+                <button
+                    class="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-gold hover:text-primary-dark transition-all group">
+                    <span class="material-symbols-outlined text-gold group-hover:text-primary-dark">print</span>
+                    <span class="text-xs font-bold uppercase">Imprimir Registro</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

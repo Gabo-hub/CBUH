@@ -1,0 +1,56 @@
+<div class="p-8 space-y-8 max-w-6xl mx-auto w-full">
+    <section>
+        <div class="flex items-center gap-4 mb-6">
+            <span class="material-symbols-outlined text-gold">analytics</span>
+            <h2 class="text-xl font-extrabold text-white uppercase tracking-tight">Resumen de Desempeño</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+            <div
+                class="bg-primary-dark p-8 rounded-3xl border border-white/10 flex items-center gap-8 shadow-xl relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl rounded-full -mr-16 -mt-16"></div>
+                <div
+                    class="size-16 bg-card-dark rounded-2xl flex items-center justify-center text-gold border border-gold/20 shrink-0">
+                    <span class="material-symbols-outlined text-4xl">stars</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-gold/60 uppercase tracking-widest mb-1">Promedio Histórico</p>
+                    <div class="flex items-baseline gap-3">
+                        <h3 id="grades-avg-all" class="text-5xl font-black text-white">--</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary-dark p-8 rounded-3xl border border-white/10 flex items-center gap-8 shadow-xl">
+                <div
+                    class="size-16 bg-card-dark rounded-2xl flex items-center justify-center text-gold border border-gold/20 shrink-0">
+                    <span class="material-symbols-outlined text-4xl">workspace_premium</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-gold/60 uppercase tracking-widest mb-1">Unidades de Crédito</p>
+                    <div class="flex items-baseline gap-2">
+                        <h3 id="grades-credits" class="text-4xl font-black text-white">--</h3>
+                        <span class="text-xs font-bold text-white/40 uppercase">Aprobadas</span>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-primary-dark p-8 rounded-3xl border border-white/10 flex items-center gap-8 shadow-xl">
+                <div
+                    class="size-16 bg-card-dark rounded-2xl flex items-center justify-center text-gold border border-gold/20 shrink-0">
+                    <span class="material-symbols-outlined text-4xl">school</span>
+                </div>
+                <div>
+                    <p class="text-[10px] font-bold text-gold/60 uppercase tracking-widest mb-1">Materias Cursadas</p>
+                    <div class="flex items-baseline gap-2">
+                        <h3 id="grades-total-subjects" class="text-4xl font-black text-white">--</h3>
+                        <span class="text-xs font-bold text-white/40 uppercase">Total</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="grades-container" class="space-y-6">
+        <p class="text-center text-white/40 py-10">Cargando historial de notas...</p>
+    </div>
+
+    <div class="h-10"></div>
+</div>

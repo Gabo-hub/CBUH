@@ -54,12 +54,13 @@ export async function redirectByRole(supabase) {
         // Redirigir según rol
         switch (profile.rol_id) {
             case 1: // Administrador
+            case 2: // Control de Estudio
                 window.location.href = '/modules/admin/index.html'
                 break
-            case 2: // Docente
+            case 3: // Docente
                 window.location.href = '/modules/teacher/index.html'
                 break
-            case 3: // Estudiante
+            case 4: // Estudiante
                 window.location.href = '/modules/student/index.html'
                 break
             default:

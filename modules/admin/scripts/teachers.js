@@ -855,7 +855,7 @@ async function loadCommonData() {
             .select('*')
             .eq('estado_id', 1)
             .order('año_materia', { ascending: true })
-            .order('nombre', { ascending: true });
+            .order('codigo', { ascending: true });
 
         if (materias) allSubjects = materias;
     }
@@ -905,6 +905,7 @@ window.openManageAssignments = async function (teacherId) {
         // Show modal
         const modal = document.getElementById('manageAssignmentsModal');
         modal.classList.remove('hidden');
+        modal.classList.add('flex');
         setTimeout(() => {
             modal.classList.remove('opacity-0');
             modal.querySelector('#manageAssignmentsModalContent').classList.remove('scale-95');

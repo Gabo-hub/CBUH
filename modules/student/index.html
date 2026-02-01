@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBUH - Portal Estudiantil</title>
+
+    <!--Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        rel="stylesheet" />
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/css/theme.css">
+
+    <!-- Notifications -->
+    <script src="/assets/js/notifications.js" defer></script>
+
+    <style>
+        body {
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(201, 169, 97, 0.3);
+            border-radius: 3px;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-100 min-h-screen overflow-hidden flex">
+
+    <!-- Sidebar Container -->
+    <div id="layout-sidebar" class="h-screen shrink-0"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col relative w-0 overflow-hidden bg-background-dark h-screen">
+
+        <!-- Header Container -->
+        <div id="layout-header"></div>
+
+        <!-- Dashboard Tab Content -->
+        <div id="tab-dashboard" class="tab-content h-full flex flex-col overflow-y-auto custom-scrollbar">
+            <!-- Cargando dinámicamente... -->
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Notas Tab -->
+        <div id="tab-notas" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Horario Tab -->
+        <div id="tab-horario" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Configuración Tab -->
+        <div id="tab-configuracion" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Inscripción Tab -->
+        <div id="tab-inscripcion" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
+        <!-- Modals Container -->
+        <div id="modals-container"></div>
+
+    </main>
+
+    <!-- Scripts -->
+    <!-- Use shared component loader but pointing to admin one is fine as it is generic or we can create a student specific one if paths differ significantly. 
+         Usually component-loader.js is generic. Let's assume it works or we check it later.
+    -->
+    <script type="module" src="../admin/scripts/component-loader.js"></script>
+    <script type="module" src="./scripts/dashboard.js"></script>
+    <script type="module" src="./scripts/grades.js"></script>
+    <script type="module" src="./scripts/schedule.js"></script>
+    <script type="module" src="./scripts/inscription.js"></script>
+
+    <script>
+        // Init global context for student
+        window.studentContext = {};
+
+        // Tab Switcher
+        window.switchTab = async function (tabId) {
+            // UI Toggle
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.section-link').forEach(btn => {
+                btn.classList.remove('bg-gold', 'text-primary-dark', 'font-bold')
+                btn.classList.add('text-white/60', 'font-medium', 'hover:bg-white/5', 'hover:text-white')
+                if (btn.id === 'nav-' + tabId) {
+                    btn.classList.add('bg-gold', 'text-primary-dark', 'font-bold')
+                    btn.classList.remove('text-white/60', 'font-medium', 'hover:bg-white/5', 'hover:text-white')
+                }
+            });
+
+            // Lazy Load
+            if (window.loadTab) await window.loadTab(tabId);
+
+            // Trigger Logic
+            if (tabId === 'dashboard') {
+                if (window.loadDashboardData) window.loadDashboardData();
+            }
+            if (tabId === 'notas') {
+                if (window.initGrades) window.initGrades();
+            }
+            if (tabId === 'horario') {
+                if (window.initSchedule) window.initSchedule();
+            }
+            if (tabId === 'configuracion') {
+                if (window.loadConfigData) window.loadConfigData();
+            }
+            if (tabId === 'inscripcion') {
+                if (window.initInscription) window.initInscription();
+            }
+        }
+    </script>
+</body>
+
+</html>

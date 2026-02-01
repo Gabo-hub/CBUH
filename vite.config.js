@@ -12,6 +12,7 @@ export default defineConfig({
                 main: resolve(__dirname, 'index.html'),
                 login: resolve(__dirname, 'auth/login.html'),
                 admin: resolve(__dirname, 'modules/admin/index.html'),
+                teacher: resolve(__dirname, 'modules/teacher/index.html'),
                 // Add other entry points as migrated
             }
         }
