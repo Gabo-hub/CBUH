@@ -1,0 +1,84 @@
+<!-- Component: Teachers Tab -->
+<!-- Pestaña de Profesores con tabla y estadísticas -->
+<div class="p-8 space-y-8">
+    <!-- Search Section -->
+    <section class="bg-primary-dark rounded-2xl border border-white/10 p-6">
+        <div class="md:col-span-4">
+            <label class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">
+                Buscar Profesor
+            </label>
+            <div class="relative">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gold/60 text-lg">search</span>
+                <input id="teachers-search-input"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                    placeholder="Buscar profesor por nombre o cédula..." type="text" />
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-primary-dark p-5 rounded-2xl border border-white/10">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Total Profesores
+            </p>
+            <h3 id="stat-total-teachers" class="text-2xl font-black text-white">0</h3>
+            <p class="text-[9px] text-gold font-bold uppercase mt-2">Registrados</p>
+        </div>
+        <div class="bg-primary-dark p-5 rounded-2xl border border-white/10">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Activos</p>
+            <h3 id="stat-active-teachers" class="text-2xl font-black text-gold">0</h3>
+            <p class="text-[9px] text-green-400 font-bold uppercase mt-2">Con materias</p>
+        </div>
+        <div class="bg-primary-dark p-5 rounded-2xl border border-white/10">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Carga Promedio</p>
+            <h3 id="stat-avg-load" class="text-2xl font-black text-white">0.0</h3>
+            <p class="text-[9px] text-blue-400 font-bold uppercase mt-2">Materias/Prof</p>
+        </div>
+        <div class="bg-primary-dark p-5 rounded-2xl border border-white/10">
+            <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Carga Máxima</p>
+            <h3 id="stat-full-load" class="text-2xl font-black text-white">0</h3>
+            <p class="text-[9px] text-red-400 font-bold uppercase mt-2">Al límite (5/5)</p>
+        </div>
+    </div>
+
+    <!-- Teachers Table -->
+    <div class="bg-primary-dark rounded-2xl border border-white/10 overflow-hidden">
+        <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/10">
+            <div class="flex items-center gap-4">
+                <div class="bg-gold/10 px-4 py-2 rounded-lg border border-gold/20">
+                    <span id="teachers-count" class="text-gold font-bold text-sm">0 Profesores</span>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button id="btn-new-teacher"
+                    class="bg-gold hover:bg-white text-primary-dark font-black px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all uppercase text-xs tracking-widest shadow-lg shadow-gold/10">
+                    <span class="material-symbols-outlined font-bold">person_add</span>
+                    Nuevo Profesor
+                </button>
+            </div>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
+                <thead class="bg-black/20 text-white/40 text-[10px] uppercase tracking-[0.2em]">
+                    <tr>
+                        <th class="px-6 py-5 font-black">Información del Profesor</th>
+                        <th class="px-6 py-5 font-black">Cédula</th>
+                        <th class="px-6 py-5 font-black">Materias Asignadas</th>
+                        <th class="px-6 py-5 font-black text-center">Carga</th>
+                        <th class="px-6 py-5 font-black text-right">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="teachers-tbody" class="divide-y divide-white/5">
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center">
+                            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gold mx-auto">
+                            </div>
+                            <p class="text-white/40 mt-4">Cargando profesores...</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

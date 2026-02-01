@@ -31,3 +31,9 @@ Thumbs.db
 
 # Logs
 *.log
+
+cr.md
+pd_plan.md
+
+# Legacy/Backups
+_legacy/

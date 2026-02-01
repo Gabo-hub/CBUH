@@ -1,0 +1,168 @@
+/* CBUH - Global Theme Configuration */
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    /* Color Palette - Vinotinto Theme */
+    --vinotinto: #4A0E1C;
+    --vinotinto-dark: #2a0810;
+    --accent-gold: #C9A961;
+    --beige: #F5F2EA;
+    --beige-dark: #E9E2D5;
+    --charcoal-gray: #333333;
+    --light-gray: #F9F9F9;
+
+}
+
+body {
+    font-family: "Manrope", "sans-serif";
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Montserrat";
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(201, 169, 97, 0.3);
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(201, 169, 97, 0.5);
+}
+
+/* Material Icons Config */
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+/* Card Shadows */
+.card-shadow {
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Hero Overlay */
+.hero-overlay {
+    background: linear-gradient(to right, rgba(74, 14, 28, 0.95), rgba(74, 14, 28, 0.6));
+}
+
+/* Section Frame */
+.section-frame {
+    border-left: 8px solid var(--vinotinto);
+}
+
+/* Background Colors */
+.bg-vinotinto {
+    background-color: var(--vinotinto) !important;
+}
+
+.bg-vinotinto-dark {
+    background-color: var(--vinotinto-dark) !important;
+}
+
+.bg-gold {
+    background-color: var(--accent-gold) !important;
+}
+
+.bg-beige {
+    background-color: var(--beige) !important;
+}
+
+.bg-beige-dark {
+    background-color: var(--beige-dark) !important;
+}
+
+.bg-primary-dark {
+    background-color: var(--vinotinto) !important;
+}
+
+.bg-background-dark {
+    background-color: var(--vinotinto-dark) !important;
+}
+
+.bg-card-dark {
+    background-color: var(--vinotinto) !important;
+}
+
+/* Text Colors */
+.text-vinotinto {
+    color: var(--vinotinto) !important;
+}
+
+.text-vinotinto-dark {
+    color: var(--vinotinto-dark) !important;
+}
+
+.text-gold {
+    color: var(--accent-gold) !important;
+}
+
+.text-beige {
+    color: var(--beige) !important;
+}
+
+.text-charcoal-gray {
+    color: var(--charcoal-gray) !important;
+}
+
+/* Border Colors */
+.border-vinotinto {
+    border-color: var(--vinotinto) !important;
+}
+
+.border-gold {
+    border-color: var(--accent-gold) !important;
+}
+
+.border-beige {
+    border-color: var(--beige) !important;
+}
+
+/* Hover States */
+.hover\:bg-vinotinto:hover {
+    background-color: var(--vinotinto) !important;
+}
+
+.hover\:bg-vinotinto-dark:hover {
+    background-color: var(--vinotinto-dark) !important;
+}
+
+.hover\:bg-gold:hover {
+    background-color: var(--accent-gold) !important;
+}
+
+.hover\:text-vinotinto:hover {
+    color: var(--vinotinto) !important;
+}
+
+.hover\:text-gold:hover {
+    color: var(--accent-gold) !important;
+}
+
+.hover\:border-vinotinto:hover {
+    border-color: var(--vinotinto) !important;
+}
+
+/* Select styling for dark mode */
+select option {
+    background-color: #1a1a1a;
+    color: white;
+    padding: 8px;
+}
+
+select {
+    color-scheme: dark;
+}

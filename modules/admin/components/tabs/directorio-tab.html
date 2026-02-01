@@ -1,0 +1,82 @@
+<!-- Component: Directory Tab -->
+<!-- Pestaña de Directorio Estudiantil con tabla y filtros -->
+<div class="p-8 space-y-6">
+    <!-- Data Filters -->
+    <section class="bg-primary-dark rounded-2xl border border-white/10 p-6">
+        <div id="directoryFilters" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">Buscar
+                    Estudiante</label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gold/60 text-lg">search</span>
+                    <input id="searchInput" name="search"
+                        class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                        placeholder="Nombre o Cédula..." type="text" />
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">Año
+                    Académico</label>
+                <select id="yearSelect" name="year"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none appearance-none cursor-pointer">
+                    <option value="all">Todos los Años</option>
+                    <option value="1">1er Año</option>
+                    <option value="2">2do Año</option>
+                    <option value="3">3er Año</option>
+                    <option value="4">4to Año</option>
+                </select>
+            </div>
+            <div>
+                <label
+                    class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">Estado</label>
+                <select id="statusSelect" name="status"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none appearance-none cursor-pointer">
+                    <option value="all">Todos</option>
+                    <option value="1">Activo</option>
+                    <option value="2">Suspendido</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- Table -->
+    <section class="bg-primary-dark rounded-2xl border border-white/10 overflow-hidden shadow-2xl">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead
+                    class="bg-black/40 text-white/50 text-[10px] uppercase tracking-[0.2em] border-b border-white/10">
+                    <tr>
+                        <th class="px-8 py-5 font-black">Estudiante</th>
+                        <th class="px-6 py-5 font-black text-center">Cédula</th>
+                        <th class="px-6 py-5 font-black text-center">Año</th>
+                        <th class="px-6 py-5 font-black text-center">Estado</th>
+                        <th class="px-8 py-5 font-black text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="studentsTableBody" class="divide-y divide-white/5">
+                    <!-- JS Injected Content -->
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination -->
+        <div class="p-6 bg-black/40 border-t border-white/10 flex items-center justify-between">
+            <p id="totalRecordsDisplay" class="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">
+                Mostrando datos...
+            </p>
+            <div class="flex items-center gap-2">
+                <button id="prevPageBtn"
+                    class="size-9 flex items-center justify-center rounded-lg bg-card-dark border border-white/10 text-white hover:bg-white/5 transition-all">
+                    <span class="material-symbols-outlined text-lg">chevron_left</span>
+                </button>
+                <button id="currentPageDisplay"
+                    class="size-9 flex items-center justify-center rounded-lg bg-gold text-primary-dark font-black text-xs">1</button>
+                <button id="nextPageBtn"
+                    class="size-9 flex items-center justify-center rounded-lg bg-card-dark border border-white/10 text-white hover:bg-white/5 transition-all">
+                    <span class="material-symbols-outlined text-lg">chevron_right</span>
+                </button>
+            </div>
+        </div>
+    </section>
+</div>

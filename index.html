@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Colegio Biblíco Universal Horeb</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+    <link rel="icon" type="image/png" href="/img/libro.png">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!--Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "vinotinto": "#4A0E1C",
+                        "vinotinto-dark": "#2a0810",
+                        "accent-gold": "#C9A961",
+                        "beige": "#F5F2EA",
+                        "beige-dark": "#E9E2D5",
+                        "charcoal-gray": "#333333",
+                        "light-gray": "#F9F9F9",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: white;
+            color: theme('colors.charcoal-gray');
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Noto Serif', serif;
+        }
+        .hero-overlay {
+            background: linear-gradient(to right, rgba(74, 14, 28, 0.95), rgba(74, 14, 28, 0.6));
+        }
+        .section-frame {
+            border-left: 8px solid theme('colors.vinotinto');
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-charcoal-gray overflow-x-hidden selection:bg-vinotinto selection:text-white">
+    <!-- Top Bar -->
+    <div
+        class="hidden md:flex bg-vinotinto text-white text-[10px] uppercase tracking-[0.2em] py-2 px-6 justify-end border-b border-accent-gold/20 relative z-50">
+        <div class="flex gap-6 max-w-[1200px] w-full mx-auto justify-end">
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 left-0 right-0 z-40 bg-white border-b-4 border-vinotinto shadow-md">
+        <div class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <img src="assets/img/libro.png" class="h-10" alt="Logo CBUH">
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-xl leading-none tracking-wide text-vinotinto">CBUH</span>
+                    <span class="text-[10px] text-charcoal-gray/60 uppercase tracking-[0.2em] mt-1">Excelencia
+                        Teológica</span>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-10">
+                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
+                    href="#">Programas</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
+                    href="#">Admisiones</a>
+                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
+                    href="#">Nosotros</a>
+            </nav>
+
+            <div id="auth-buttons" class="flex items-center gap-4">
+                <!-- Buttons will be dynamically loaded -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-[85vh] flex items-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <div class="w-full h-full bg-cover bg-center"
+                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzqFDyuejUIs46411syb9WlxLETxClEAVFG63YUZzvfQ8ZLZU6L-gW2PUx8NUxGIQNKC0JWLxAoARlzg9FGRW2zZHNPhYpamX4y-xY7r2Iy5xeqIBQX8LxpYoegsk3yC3b8Q2-9XHkC9rn7_1Av2yr0IElwR_jxkkbmrTfwZB3pNMdQajdfUKWGBMw3okKDkc5Tl4lZw4tc-g6a3S3NM0Pw8gCFcnx1fm0cTRvEjq3Xc0kaG8JsrrVA7vfjDNGzT2RfN0ANSX5448');">
+            </div>
+            <div class="absolute inset-0 hero-overlay"></div>
+        </div>
+        <div class="relative z-10 max-w-[1200px] mx-auto px-6 w-full py-20">
+            <div class="max-w-4xl border-l-4 border-accent-gold pl-8 md:pl-12">
+                <span
+                    class="inline-block py-1 px-3 bg-white/10 backdrop-blur-sm text-accent-gold text-[10px] font-bold uppercase tracking-[0.3em] mb-6 border border-accent-gold/30">
+                    Educación Superior
+                </span>
+                <h1
+                    class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight tracking-tight text-white mb-8">
+                    Formación <br />
+                    <span class="text-accent-gold italic font-serif">Teológica</span>
+                </h1>
+                <p
+                    class="text-lg md:text-xl text-beige/90 max-w-xl font-light leading-relaxed mb-12 border-t border-white/20 pt-8">
+                    Descubre el camino hacia una educación bíblica profunda y transformadora con nuestra metodología
+                    visual inmersiva y rigor académico.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-5">
+                    <button
+                        class="bg-accent-gold text-vinotinto-dark px-10 py-4 font-bold tracking-widest uppercase text-xs transition-all shadow-xl hover:bg-white flex items-center justify-center gap-3">
+                        Explorar Programas
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Year Cards Section -->
+    <section class="py-24 px-6 bg-beige relative">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="text-center mb-20">
+                <span class="text-vinotinto uppercase tracking-[0.3em] text-xs font-bold">Trayectoria</span>
+                <h2 class="text-4xl md:text-5xl font-display font-bold text-vinotinto mt-4 mb-6">El Viaje Académico</h2>
+                <div class="w-16 h-1 bg-vinotinto mx-auto"></div>
+                <p class="mt-8 text-charcoal-gray/70 max-w-2xl mx-auto text-lg font-light">
+                    Tres años diseñados meticulosamente para transformar la mente y el espíritu a través de un currículo
+                    progresivo y fundacional.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Year 1 -->
+                <div
+                    class="group bg-white card-shadow relative top-0 transition-all duration-500 hover:-top-2 border-b-4 border-vinotinto">
+                    <div class="h-60 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-n_qHQRImkr3OusNwXd-jpPTJsDE3rL02E63VM1V4pLJvi9Eyp4EIK9Bo2I5MCZTrn19HAOnYWqFJRkJJ_P6HkbTzOv2ixOXM7vWxen1ZLylOnPRVHK-7iv3rAyICci3Z0ZMZVDQt2flq7Z6MmizNetI6yKo0R41uWIx-wYMbbk9gZbVBnEjMpPLkEaXJKrc9U3Sg9foSuMTONaIZ9U2ksJpUyxP_vmyAWOrQ_KQd2Pn-YXcAq0DBMejEwWHrdyv8zCsGD7ScMto');">
+                        </div>
+                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
+                            01</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Fundamentos</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
+                            Estableciendo las bases doctrinales y exegéticas necesarias para todo estudiante de la
+                            palabra.
+                        </p>
+                    </div>
+                </div>
+                <!-- Year 2 -->
+                <div
+                    class="group bg-white card-shadow relative top-0 md:-top-8 transition-all duration-500 hover:md:-top-10 border-b-4 border-vinotinto z-10">
+                    <div class="h-60 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhYsz7oAfsrfIj5Vk0ueuS1awpi9TNp0pTIeJEq1Ah-BoDdilJ87UmJWUEz2L5NZDEtYJwLARtoPbI-_u1YgdVooeG0xlkexGIwFbN19rb47XoR4AeIHu4KlRWzM9xbKIJcSVZcza0ez6m_99KqNjoFFCVbf-9mW94Dl-rkyBTHga0t3zIdGAYQ5B2eaYCd9fGK6smqXHVX_bw5aDS2cA4tolPuSEKJvU8YjtQSL3d6r6tkkFs-akGYONw_ZufsgA46f_iDmjTkd4');">
+                        </div>
+                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
+                            02</div>
+                    </div>
+                    <div class="p-8 bg-white">
+                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Profundización</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
+                            Un análisis detallado de los textos originales y la historia que formó nuestra teología
+                            actual.
+                        </p>
+                    </div>
+                </div>
+                <!-- Year 3 -->
+                <div
+                    class="group bg-white card-shadow relative top-0 transition-all duration-500 hover:-top-2 border-b-4 border-vinotinto">
+                    <div class="h-60 relative overflow-hidden">
+                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDYS1FMNixAYPoQPxk4gBE3jSlO22PAsuiNheRCT61ZxckgnCBi7v4TT744uzxWc2euX9HpYYisUCPjPvTUp6Zk9CSoEKRjCY2K1b-mkcajAzs5vKLxyf8bauaceWuh9IwLb7psg_2RVZrvKyaHUlcQ5FK3xH8n-BxdU-8inTuBwS5RT8jHez0NXPp_bVp7dTSskCHpXqR-e54X0GDRg6nuI17H55Oy8UC9AAbrtbu0Q4r07QIxaYFP16-vQh5jKnF0qQlnTLMt7KM');">
+                        </div>
+                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
+                        </div>
+                        <div
+                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
+                            03</div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Ministerio</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
+                            Aplicación práctica y pastoral de los conocimientos adquiridos para el servicio a la
+                            iglesia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-vinotinto-dark py-20 px-6 border-t-4 border-accent-gold">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+                <div class="md:col-span-1">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-sm">
+                            <span class="material-symbols-outlined text-accent-gold text-xl">school</span>
+                        </div>
+                        <span class="font-display text-xl font-bold tracking-wider text-white">CBUH</span>
+                    </div>
+                    <p class="text-white/40 text-xs leading-relaxed">
+                        Formando líderes teológicos con excelencia académica y compromiso espiritual desde 1985.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Academia</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Programas
+                                de Grado</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Educación
+                                Continua</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
+                                href="#">Admisiones</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Institución</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Sobre
+                                Nosotros</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
+                                href="#">Declaración de Fe</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Cuerpo
+                                Docente</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Recursos</h4>
+                    <ul class="space-y-4">
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
+                                href="#">Biblioteca Digital</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Blog
+                                Académico</a></li>
+                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
+                                href="#">Eventos</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="w-full h-px bg-white/10 mb-8"></div>
+            <div
+                class="flex flex-col md:flex-row justify-between items-center text-[10px] text-white/40 gap-6 uppercase tracking-[0.1em]">
+                <p>© 2026 Colegio Bíblico Universal CBUH</p>
+                <div class="flex gap-8">
+                    <a class="hover:text-white transition-colors" href="#">Privacidad</a>
+                    <a class="hover:text-white transition-colors" href="#">Términos</a>
+                    <a class="hover:text-white transition-colors" href="#">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Script -->
+    <script type="module">
+        const SUPABASE_URL = 'https://nxzwytaqqczgyeyjjhrz.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54end5dGFxcWN6Z3lleWpqaHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMDM5OTAsImV4cCI6MjA4Mzc3OTk5MH0.bMeSy6IHm1h3kklD2q7vHEPQ4madhb40GLjSH_mF_28'
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        async function loadAuthButtons() {
+            const { data: { session } } = await supabase.auth.getSession()
+            const container = document.getElementById('auth-buttons')
+
+            if (session) {
+                // Usuario logueado
+                const { data: profile } = await supabase
+                    .from('usuarios')
+                    .select('rol_id')
+                    .eq('auth_id', session.user.id)
+                    .single()
+
+                let dashboardLink = '/modules/admin/index.html'
+                if (profile) {
+                    if (profile.rol_id === 1) dashboardLink = '/modules/admin/index.html'
+                    else if (profile.rol_id === 2) dashboardLink = '/modules/teacher/index.html'
+                    else if (profile.rol_id === 3) dashboardLink = '/modules/student/index.html'
+                }
+
+                container.innerHTML = `
+                    <a href="${dashboardLink}" class="hidden sm:flex border border-vinotinto text-vinotinto font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto hover:text-white transition-all duration-300">
+                        Mi Dashboard
+                    </a>
+                    <button id="logout-btn" class="hidden sm:flex bg-vinotinto text-white font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto-dark transition-all duration-300 shadow-md">
+                        Cerrar Sesión
+                    </button>
+                `
+
+                document.getElementById('logout-btn').addEventListener('click', async () => {
+                    await supabase.auth.signOut()
+                    window.location.reload()
+                })
+            } else {
+                // Usuario no logueado
+                container.innerHTML = `
+                    <a href="/auth/login.html" class="hidden sm:flex border border-vinotinto text-vinotinto font-bold text-xs uppercase tracking-widest px-6 py-2.5 hover:bg-vinotinto hover:text-white transition-all duration-300">
+                        Iniciar Sesión
+                    </a>
+                `
+            }
+        }
+
+        // Cargar botones al iniciar
+        loadAuthButtons()
+    </script>
+</body>
+
+</html>

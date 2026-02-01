@@ -1,20 +1,3 @@
-<?php
-session_start();
-require_once '../../config/database.php';
-
-<<<<<<<< HEAD:modules/student/index.php
-// Redirigir si no hay sesión
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ../auth/login.php');
-    exit;
-}
-
-// TODO: Fetch student records from DB
-// $pdo = getDBConnection();
-// $stmt = $pdo->prepare("SELECT * FROM users WHERE id = ?");
-// $stmt->execute([$_SESSION['user_id']]);
-// $student = $stmt->fetch();
-========
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,17 +25,7 @@ if (!isset($_SESSION['user_id'])) {
             font-family: 'Anton', sans-serif;
             letter-spacing: 1px;
         }
->>>>>>>> 4176f829b10d3d7613706a0a16ba8eb4fc38856f:archViejos/estudiantes.html
 
-$page_title = "Perfil Estudiante - CBUH";
-$nav_active = "ACADÉMICO";
-$path_depth = 2;
-
-<<<<<<<< HEAD:modules/student/index.php
-include '../../includes/head.php';
-include '../../includes/navbar.php';
-?>
-========
         /* ========================================
            COLORES INSTITUCIONALES
            ======================================== */
@@ -95,7 +68,7 @@ include '../../includes/navbar.php';
             CERRAR SESIÓN
         </a>
     </nav>
->>>>>>>> 4176f829b10d3d7613706a0a16ba8eb4fc38856f:archViejos/estudiantes.html
+    >>>>>>>> 4176f829b10d3d7613706a0a16ba8eb4fc38856f:archViejos/estudiantes.html
 
     <section class="max-w-7xl mx-auto px-6 mt-10 w-full">
         <div
@@ -372,4 +345,4 @@ include '../../includes/navbar.php';
         </div>
     </main>
 
-<?php include '../../includes/footer.php'; ?>
+    <?php include '../../includes/footer.php'; ?>

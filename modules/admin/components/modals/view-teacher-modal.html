@@ -1,0 +1,14 @@
+<!-- Component: View Teacher Modal -->
+<!-- Modal dinámico para ver detalles de un profesor -->
+<!-- El contenido se carga mediante JavaScript usando openTeacherModal() -->
+<div id="viewTeacherModal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('viewTeacherModal')"></div>
+    <div id="viewTeacherModalContent"
+        class="absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 w-full md:w-[800px] h-full md:h-[90vh] md:max-h-[800px] bg-primary-dark md:rounded-3xl border md:border-white/10 shadow-2xl overflow-hidden flex flex-col">
+        <!-- Content will be injected by JavaScript -->
+        <div class="flex items-center justify-center h-full">
+            <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+        </div>
+    </div>
+</div>
+<!-- End Component: View Teacher Modal -->

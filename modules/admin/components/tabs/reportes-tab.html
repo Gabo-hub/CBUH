@@ -1,0 +1,107 @@
+<!-- Component: Reports Tab -->
+<div class="p-8 space-y-8 max-w-7xl mx-auto w-full pb-20">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-2">
+        <div>
+            <h2 class="text-3xl font-black text-white uppercase tracking-tighter">Panel de <span
+                    class="text-gold">Reportes</span></h2>
+            <p class="text-sm text-white/40">Generación y descarga de documentos oficiales.</p>
+        </div>
+    </div>
+
+    <!-- Reports Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Report: Lista de Docentes -->
+        <button onclick="window.generatePDF('teachers')"
+            class="bg-primary-dark/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 hover:border-gold/30 hover:bg-white/5 transition-all text-left group relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <span class="material-symbols-outlined text-8xl text-gold">co_present</span>
+            </div>
+
+            <div
+                class="size-14 bg-gold/10 rounded-2xl flex items-center justify-center text-gold mb-6 group-hover:bg-gold group-hover:text-primary-dark transition-colors">
+                <span class="material-symbols-outlined text-3xl font-black">groups</span>
+            </div>
+
+            <h3 class="text-lg font-black text-white uppercase tracking-tight mb-2">Directorio Docente</h3>
+            <p class="text-sm text-white/40 leading-relaxed font-medium">Listado completo de profesores activos con
+                especialidad y contacto.</p>
+
+            <div
+                class="mt-6 flex items-center gap-2 text-gold text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                <span>Descargar PDF</span>
+                <span class="material-symbols-outlined text-sm">download</span>
+            </div>
+        </button>
+
+        <!-- Report: Nómina Estudiantes -->
+        <button onclick="window.openReportModal('students')"
+            class="bg-primary-dark/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 hover:border-gold/30 hover:bg-white/5 transition-all text-left group relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <span class="material-symbols-outlined text-8xl text-gold">school</span>
+            </div>
+
+            <div
+                class="size-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-400 mb-6 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-3xl font-black">folder_shared</span>
+            </div>
+
+            <h3 class="text-lg font-black text-white uppercase tracking-tight mb-2">Nómina Estudiantil</h3>
+            <p class="text-sm text-white/40 leading-relaxed font-medium">Listados de matrícula organizados por año
+                académico y sección.</p>
+
+            <div
+                class="mt-6 flex items-center gap-2 text-blue-400 text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                <span>Configurar</span>
+                <span class="material-symbols-outlined text-sm">settings</span>
+            </div>
+        </button>
+
+        <!-- Report: Boletín de Notas -->
+        <button onclick="window.openReportModal('grades_student')"
+            class="bg-primary-dark/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 hover:border-gold/30 hover:bg-white/5 transition-all text-left group relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <span class="material-symbols-outlined text-8xl text-gold">history_edu</span>
+            </div>
+
+            <div
+                class="size-14 bg-green-500/10 rounded-2xl flex items-center justify-center text-green-400 mb-6 group-hover:bg-green-500 group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-3xl font-black">assignment_ind</span>
+            </div>
+
+            <h3 class="text-lg font-black text-white uppercase tracking-tight mb-2">Boletín de Notas</h3>
+            <p class="text-sm text-white/40 leading-relaxed font-medium">Record académico individual con historial de
+                calificaciones.</p>
+
+            <div
+                class="mt-6 flex items-center gap-2 text-green-400 text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                <span>Buscar Estudiante</span>
+                <span class="material-symbols-outlined text-sm">search</span>
+            </div>
+        </button>
+
+        <!-- Report: Acta de Evaluación -->
+        <button onclick="window.openReportModal('grades_subject')"
+            class="bg-primary-dark/80 backdrop-blur-xl p-8 rounded-3xl border border-white/10 hover:border-gold/30 hover:bg-white/5 transition-all text-left group relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+                <span class="material-symbols-outlined text-8xl text-gold">toc</span>
+            </div>
+
+            <div
+                class="size-14 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-400 mb-6 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-3xl font-black">fact_check</span>
+            </div>
+
+            <h3 class="text-lg font-black text-white uppercase tracking-tight mb-2">Acta de Evaluación</h3>
+            <p class="text-sm text-white/40 leading-relaxed font-medium">Listado de notas definitivo por materia y
+                docente (Acta Final).</p>
+
+            <div
+                class="mt-6 flex items-center gap-2 text-purple-400 text-xs font-black uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+                <span>Seleccionar Materia</span>
+                <span class="material-symbols-outlined text-sm">list_alt</span>
+            </div>
+        </button>
+
+    </div>
+</div>

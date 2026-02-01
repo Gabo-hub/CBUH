@@ -1,0 +1,177 @@
+<!-- Component: Subjects Tab -->
+<!-- Pestaña de Materias con grid y filtros -->
+<div class="p-8 space-y-8">
+    <!-- Header: Búsqueda y Filtros -->
+    <section class="bg-primary-dark rounded-2xl border border-white/10 p-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">
+                    Buscar Materia
+                </label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-gold/60 text-lg">search</span>
+                    <input id="subjects-search-input"
+                        class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                        placeholder="Buscar por código o nombre..." type="text" />
+                </div>
+            </div>
+            <div>
+                <label class="block text-[10px] font-black text-white/40 uppercase tracking-widest mb-1.5 ml-1">
+                    Filtrar por Año
+                </label>
+                <select id="subjects-filter-year"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-2 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all appearance-none cursor-pointer">
+                    <option value="">Todos los años</option>
+                    <option value="1">Primer Año</option>
+                    <option value="2">Segundo Año</option>
+                    <option value="3">Tercer Año</option>
+                </select>
+            </div>
+            <div class="flex items-end gap-2">
+                <button onclick="window.openPrelationMatrix()"
+                    class="flex-1 bg-white/5 hover:bg-white/10 text-white font-black px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-all uppercase text-xs tracking-widest border border-white/10 h-[38px]">
+                    <span class="material-symbols-outlined font-bold text-lg">schema</span>
+                </button>
+                <button id="btn-new-subject"
+                    class="flex-[2] bg-gold hover:bg-white text-primary-dark font-black px-4 py-2 rounded-xl flex items-center justify-center gap-2 transition-all uppercase text-xs tracking-widest shadow-lg shadow-gold/10 h-[38px]">
+                    <span class="material-symbols-outlined font-bold text-lg">add</span>
+                    Nueva Materia
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <div class="bg-primary-dark rounded-2xl border border-white/10 p-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="text-center border-r border-white/5 last:border-0">
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Total Materias</p>
+                <h3 id="stat-total-subjects" class="text-3xl font-black text-white">0</h3>
+            </div>
+            <div class="text-center border-r border-white/5 last:border-0">
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Primer Año</p>
+                <h3 id="stat-subjects-year-1" class="text-3xl font-black text-gold">0</h3>
+            </div>
+            <div class="text-center border-r border-white/5 last:border-0">
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Segundo Año</p>
+                <h3 id="stat-subjects-year-2" class="text-3xl font-black text-gold">0</h3>
+            </div>
+            <div class="text-center">
+                <p class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-1">Tercer Año</p>
+                <h3 id="stat-subjects-year-3" class="text-3xl font-black text-gold">0</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Title & Tabs -->
+    <div class="flex flex-col gap-4">
+        <!-- Tabs por Año (Visual filter shortcuts) -->
+        <div class="flex gap-2 border-b border-white/10 overflow-x-auto">
+            <button
+                class="subject-tab-year active px-6 py-3 text-sm font-black uppercase tracking-wider transition-all border-b-2 border-gold text-gold"
+                data-year="">
+                Todas
+            </button>
+            <button
+                class="subject-tab-year px-6 py-3 text-sm font-black uppercase tracking-wider transition-all border-b-2 border-transparent text-white/40 hover:text-white"
+                data-year="1">
+                Primer Año
+            </button>
+            <button
+                class="subject-tab-year px-6 py-3 text-sm font-black uppercase tracking-wider transition-all border-b-2 border-transparent text-white/40 hover:text-white"
+                data-year="2">
+                Segundo Año
+            </button>
+            <button
+                class="subject-tab-year px-6 py-3 text-sm font-black uppercase tracking-wider transition-all border-b-2 border-transparent text-white/40 hover:text-white"
+                data-year="3">
+                Tercer Año
+            </button>
+        </div>
+    </div>
+
+    <!-- Subjects Grid -->
+    <div id="subjects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Loading State -->
+        <div class="col-span-full flex flex-col justify-center items-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-gold"></div>
+            <p class="text-white/40 mt-4 text-sm font-bold uppercase tracking-widest">Cargando materias...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nueva Materia (Hidden by default) -->
+<div id="newSubjectModal"
+    class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden backdrop-blur-sm p-4">
+    <div
+        class="bg-primary-dark rounded-2xl border border-white/10 p-8 max-w-2xl w-full mx-4 shadow-2xl transform transition-all scale-100">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 class="text-xl font-black text-white uppercase tracking-tight">Nueva Materia</h2>
+                <p class="text-xs text-white/40 font-bold uppercase tracking-widest mt-1">Ingresa los datos de la
+                    asignatura</p>
+            </div>
+            <button onclick="document.getElementById('newSubjectModal').classList.add('hidden')"
+                class="size-10 rounded-full hover:bg-white/5 text-white/40 hover:text-white transition-all flex items-center justify-center">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="newSubjectForm" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Código *</label>
+                    <input type="text" name="codigo" required
+                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                        placeholder="Ej: TEO-001">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Créditos</label>
+                    <input type="number" name="creditos" min="1" max="10"
+                        class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                        placeholder="Ej: 3">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Nombre de la Materia
+                    *</label>
+                <input type="text" name="nombre" required
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                    placeholder="Ej: Introducción a la Teología">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Año
+                    Académico</label>
+                <select name="año_materia"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all cursor-pointer">
+                    <option value="">Seleccionar año...</option>
+                    <option value="1">Primer Año</option>
+                    <option value="2">Segundo Año</option>
+                    <option value="3">Tercer Año</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Descripción</label>
+                <textarea name="descripcion" rows="3"
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all resize-none placeholder:text-white/20"
+                    placeholder="Breve descripción del contenido..."></textarea>
+            </div>
+
+            <div class="flex gap-4 pt-4 border-t border-white/5">
+                <button type="button" onclick="document.getElementById('newSubjectModal').classList.add('hidden')"
+                    class="flex-1 bg-white/5 hover:bg-white/10 text-white font-black px-6 py-3.5 rounded-xl uppercase text-xs tracking-widest transition-all">
+                    Cancelar
+                </button>
+                <button type="submit" id="btnSubmitNewSubject"
+                    class="flex-1 bg-gold hover:bg-white text-primary-dark font-black px-6 py-3.5 rounded-xl uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Guardar Materia
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
