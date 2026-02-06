@@ -110,6 +110,7 @@ async function loadSubjects() {
                 ),
                 cargas:cargas_academicas (
                     id,
+                    sede_id, 
                     docente:docentes (nombres, apellidos)
                 )
             `)
@@ -173,8 +174,11 @@ function renderSubjects() {
 
     grid.innerHTML = filteredSubjects.map(subject => {
         // Check teacher assignment (any active load)
-        // Check teacher assignment (any active load)
-        const activeCarga = subject.cargas && subject.cargas.length > 0 ? subject.cargas.find(c => c.docente) : null;
+        // Check teacher assignment (any active load FOR CURRENT SEDE)
+        const currentSedeId = window.adminContext?.sedeId;
+        const activeCargas = subject.cargas ? subject.cargas.filter(c => c.sede_id === currentSedeId && c.docente) : [];
+        const activeCarga = activeCargas.length > 0 ? activeCargas[0] : null;
+
         const hasTeacher = !!activeCarga;
         const teacherName = hasTeacher ? `${activeCarga.docente.nombres.split(' ')[0]} ${activeCarga.docente.apellidos.split(' ')[0]}` : null;
 
@@ -197,11 +201,14 @@ function renderSubjects() {
                 `<span class="ml-2 text-[10px] font-bold text-white/40 uppercase tracking-widest">${subject.año_materia}º Año</span>`
                 : ''}
                 </div>
+                <!-- Botones de acción - Temporalmente comentados para panel de admin -->
+                <!--
                 <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button onclick="window.deleteSubject(${subject.id})" class="size-8 rounded-lg bg-white/5 hover:bg-red-500/20 text-white/40 hover:text-red-400 flex items-center justify-center transition-all">
                         <span class="material-symbols-outlined text-sm">delete</span>
                     </button>
                 </div>
+                -->
             </div>
             
             <h3 class="text-lg font-black text-white mb-2 relative z-10 group-hover:text-gold transition-colors truncate" title="${subject.nombre}">
@@ -283,7 +290,8 @@ async function handleNewSubjectSubmit(e) {
             nombre: formData.get('nombre'),
             año_materia: formData.get('año_materia') || null,
             creditos: formData.get('creditos') || null,
-            descripcion: formData.get('descripcion') || null
+            descripcion: formData.get('descripcion') || null,
+            // sede_id is removed to default to NULL (Global)
         };
 
         const { error } = await supabase
@@ -312,7 +320,12 @@ async function handleNewSubjectSubmit(e) {
 
 // Eliminar materia
 window.deleteSubject = async function (id) {
-    if (!confirm('¿Estás seguro de eliminar esta materia? Esta acción no se puede deshacer.')) return;
+    const confirmed = await NotificationSystem.confirm(
+        'Eliminar Materia',
+        '¿Estás seguro de eliminar esta materia? Esta acción no se puede deshacer y podría afectar a estudiantes inscritos.',
+        { confirmText: 'Sí, Eliminar', type: 'danger' }
+    );
+    if (!confirmed) return;
 
     try {
         const { error } = await supabase
@@ -439,3 +452,11 @@ window.openPrelationMatrix = async function () {
         </div>
     `).join('');
 };
+// Función auxiliar para mostrar notificaciones
+function showNotification(message, type = 'info') {
+    if (window.NotificationSystem) {
+        NotificationSystem.show(message, type);
+    } else {
+        console.log(`[${type.toUpperCase()}] ${message}`);
+    }
+}

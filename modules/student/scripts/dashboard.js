@@ -235,14 +235,15 @@ async function loadActiveSubjectInfo(studentId) {
 
 async function loadStudentStats(studentId) {
     // Implement aggregate query
-    // This is calculating average grade.
+    // This is calculating average grade and attendance.
     try {
         const { data: gradesData, error } = await supabase
             .from('calificaciones')
-            .select('nota_final, inscripcion:inscripciones!inner(estudiante_id)')
+            .select('nota_final, asistencia, inscripcion:inscripciones!inner(estudiante_id)')
             .eq('inscripciones.estudiante_id', studentId);
 
         if (gradesData && gradesData.length > 0) {
+            // Grades
             const grades = gradesData.map(g => g.nota_final).filter(n => n !== null);
             const avg = grades.length ? (grades.reduce((a, b) => a + b, 0) / grades.length).toFixed(2) : '--';
 
@@ -253,6 +254,25 @@ async function loadStudentStats(studentId) {
             // Assuming > 10 is approved (CBUH scale 0-20, usually 10 is pass)
             const approved = grades.filter(n => n >= 10).length;
             if (statApproved) statApproved.textContent = approved;
+
+            // Attendance
+            const attendances = gradesData.map(g => g.asistencia).filter(a => a !== null);
+            const avgAttendance = attendances.length
+                ? (attendances.reduce((a, b) => a + b, 0) / attendances.length).toFixed(1)
+                : '--';
+
+            const statAttendance = document.getElementById('stat-attendance');
+            if (statAttendance) {
+                statAttendance.innerHTML = `${avgAttendance}%`;
+                // Optional: Color code if low
+                if (avgAttendance !== '--' && parseFloat(avgAttendance) < 80) {
+                    statAttendance.classList.add('text-red-400');
+                    statAttendance.classList.remove('text-white');
+                } else {
+                    statAttendance.classList.remove('text-red-400');
+                    statAttendance.classList.add('text-white');
+                }
+            }
         }
 
     } catch (e) { console.error('Stats error', e); }
@@ -328,14 +348,12 @@ window.loadConfigData = async function () {
 
     // Populate form fields
     const fields = {
-        'config-username': context.user.email, // using email as username display
+        'config-username': context.user.email,
         'config-email': context.user.email,
         'config-phone': context.estudiante?.telefono,
         'config-address': context.estudiante?.direccion,
         'config-birthdate': context.estudiante?.fecha_nacimiento,
-        // Specialty/Bio are teacher specific? Maybe add 'Resumen' for student too if column exists?
-        // Students usually dont have profile bio in this DB schema.
-        'config-display-name': `${context.estudiante?.nombres} ${context.estudiante?.apellidos} `,
+        'config-display-name': `${context.estudiante?.nombres} ${context.estudiante?.apellidos}`,
         'config-display-email': context.user.email
     };
 
@@ -345,6 +363,15 @@ window.loadConfigData = async function () {
             if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') el.value = val || '';
             else el.textContent = val || '';
         }
+    }
+
+    // Load Profile Image
+    const configImg = document.getElementById('config-profile-img');
+    const configIcon = document.getElementById('config-profile-icon');
+    if (context.url_foto && configImg) {
+        configImg.src = context.url_foto;
+        configImg.classList.remove('hidden');
+        if (configIcon) configIcon.classList.add('hidden');
     }
 
     // Setup Save Button
@@ -406,8 +433,8 @@ async function handlePhotoUpload(e) {
         if (window.NotificationSystem) NotificationSystem.show('Subiendo imagen...', 'info');
 
         const fileExt = file.name.split('.').pop();
-        const fileName = `${window.studentContext.profile.id} -${Date.now()}.${fileExt} `;
-        const filePath = `profiles / ${fileName} `;
+        const fileName = `${window.studentContext.profile.id}-${Date.now()}.${fileExt}`;
+        const filePath = `profiles/${fileName}`;
 
         // 1. Upload to storage
         const { error: uploadError } = await supabase.storage

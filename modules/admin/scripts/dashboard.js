@@ -77,7 +77,7 @@ async function init() {
         if (window.NotificationSystem) {
             NotificationSystem.show('Error al cargar perfil: ' + error.message, 'error')
         } else {
-            alert('Error al cargar perfil: ' + error.message)
+            console.error('Error al cargar perfil: ' + error.message)
         }
     }
 }
@@ -288,21 +288,191 @@ async function loadStatistics() {
 }
 
 // Load pending documents
+// Código corregido para loadPendingDocs()
+// Reemplazar la función existente con esta versión
+
+// Versión corregida de loadPendingDocs() usando la misma lógica que el modal
+
 async function loadPendingDocs() {
     try {
         const tbody = document.getElementById('pending-docs-table')
         if (!tbody) return
 
-        // Simplified - just show message for now since requisitos structure may vary
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" class="px-6 py-8 text-center text-white/40 font-bold uppercase tracking-widest text-xs">
-                    📋 Sistema de requisitos en desarrollo
-                </td>
-            </tr>
-        `
+        // Get all students from the sede
+        const { data: students, error } = await supabase
+            .from('estudiantes')
+            .select(`
+                id,
+                nombres,
+                apellidos,
+                cedula,
+                documentos_estudiantes(
+                    id,
+                    tipo_documento,
+                    verificado,
+                    creado_el
+                )
+            `)
+            .eq('sede_id', currentProfile.sede_id)
+
+        if (error) throw error
+
+        if (!students || students.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-white/40 font-bold uppercase tracking-widest text-xs">
+                        ✅ No hay estudiantes en la sede
+                    </td>
+                </tr>
+            `
+            return
+        }
+
+        // Standardized Document List (Matching Directory & Inscription goals)
+        const requiredDocTypes = ['cedula', 'titulo_bachiller', 'notas_certificadas', 'partida_nacimiento']
+
+        const studentsWithIssues = students.map(student => {
+            const studentDocs = student.documentos_estudiantes || []
+
+            // Check for MISSING documents (Priority 1)
+            const missingDocs = requiredDocTypes.filter(type =>
+                !studentDocs.some(doc => doc.tipo_documento === type)
+            )
+
+            // Check for UNVERIFIED documents (Priority 2 - Informational only for now)
+            // Note: Currently we only block/warn based on MISSING documents to match Directory view.
+            const pendingDocs = studentDocs.filter(doc => doc.verificado === false)
+
+            return {
+                ...student,
+                missingCount: missingDocs.length,
+                pendingCount: pendingDocs.length,
+                missingTypes: missingDocs.map(t => t.replace('_', ' ').toUpperCase()).join(', '),
+                // We determine "Issue" mainly by missing docs for the dashboard alert
+                isCritical: missingDocs.length > 0
+            }
+        }).filter(student => student.isCritical) // Only show students with MISSING documents
+
+        if (studentsWithIssues.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-white/40 font-bold uppercase tracking-widest text-xs">
+                        ✅ Todos los estudiantes tienen la documentación completa
+                    </td>
+                </tr>
+            `
+            return
+        }
+
+        // Generate table rows
+        const rows = studentsWithIssues.map(student => {
+            return `
+                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="size-10 bg-gold/10 rounded-full flex items-center justify-center border border-gold/20 group-hover:border-gold/50 transition-colors">
+                                <span class="text-gold font-black text-xs">${student.nombres.charAt(0)}${student.apellidos.charAt(0)}</span>
+                            </div>
+                            <div>
+                                <p class="text-white font-bold text-sm">${student.nombres} ${student.apellidos}</p>
+                                <p class="text-white/40 text-[10px] font-mono tracking-wider">${student.cedula}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-black uppercase tracking-widest rounded-full">
+                            <span class="size-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                            ${student.missingCount} Faltantes
+                        </span>
+                    </td>
+                    <td class="px-6 py-4">
+                        <p class="text-white/60 text-xs truncate max-w-[200px]" title="${student.missingTypes}">
+                            ${student.missingTypes}
+                        </p>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="goToStudentProfile(${student.id})" class="p-2 rounded-lg hover:bg-gold/10 text-white/40 hover:text-gold transition-all" title="Gestionar Documentos">
+                            <span class="material-symbols-outlined text-lg">folder_open</span>
+                        </button>
+                    </td>
+                </tr>
+            `
+        }).join('')
+
+        tbody.innerHTML = rows
+
     } catch (error) {
         console.error('Error loading pending docs:', error)
+        const tbody = document.getElementById('pending-docs-table')
+        if (tbody) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="4" class="px-6 py-8 text-center text-red-400 font-bold uppercase tracking-widest text-xs">
+                        ❌ Error al cargar validaciones
+                    </td>
+                </tr>
+            `
+        }
+    }
+}
+
+// Go to student profile in directory
+window.goToStudentProfile = async function (studentId) {
+    try {
+        // Switch to directory tab
+        window.switchTab('directorio')
+
+        // Wait for directory to load, then get student data and open edit modal
+        setTimeout(async () => {
+            try {
+                // Get student data from Supabase
+                const { data: student, error } = await supabase
+                    .from('estudiantes')
+                    .select(`
+                        *,
+                        usuarios!usuario_id (correo, url_foto),
+                        estados_registro!estado_id (nombre),
+                        documentos_estudiantes (
+                            id,
+                            tipo_documento,
+                            url_archivo,
+                            nombre_original,
+                            verificado,
+                            creado_el
+                        )
+                    `)
+                    .eq('id', studentId)
+                    .single()
+
+                if (error) throw error
+
+                // Encode student data for the modal
+                const studentData = encodeURIComponent(JSON.stringify(student))
+
+                // Open edit modal
+                if (window.openEditModal && typeof window.openEditModal === 'function') {
+                    window.openEditModal(studentData)
+                } else {
+                    // Store for when directory loads
+                    window.pendingStudentEdit = studentData
+                    if (window.NotificationSystem) {
+                        NotificationSystem.show('Abriendo perfil del estudiante...', 'info')
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error loading student data:', error)
+                if (window.NotificationSystem) {
+                    NotificationSystem.show('Error al cargar datos del estudiante: ' + error.message, 'error')
+                }
+            }
+        }, 1000) // Increased timeout to ensure directory loads
+
+    } catch (error) {
+        console.error('Error navigating to student profile:', error)
+        if (window.NotificationSystem) {
+            NotificationSystem.show('Error al navegar al perfil: ' + error.message, 'error')
+        }
     }
 }
 
@@ -431,7 +601,7 @@ function setupEventListeners() {
                 if (window.NotificationSystem) {
                     NotificationSystem.show('✅ Foto actualizada correctamente. Recargando...', 'success')
                 } else {
-                    alert('✅ Foto actualizada correctamente')
+                    console.log('✅ Foto actualizada correctamente')
                 }
 
                 // Reload after delay
@@ -444,7 +614,7 @@ function setupEventListeners() {
                 if (window.NotificationSystem) {
                     NotificationSystem.show('❌ Error al subir la foto: ' + error.message, 'error')
                 } else {
-                    alert('❌ Error al subir la foto: ' + error.message)
+                    console.error('❌ Error al subir la foto: ' + error.message)
                 }
 
                 // Restore icon
@@ -490,13 +660,12 @@ window.switchTab = async function (tabId) {
 
     // Dynamic Tab Loading
     if (window.loadTab) {
-        const dynamicTabs = ['directorio', 'profesores', 'inscripciones', 'horarios', 'materias', 'reportes', 'configuracion'];
+        const dynamicTabs = ['directorio', 'profesores', 'inscripciones', 'horarios', 'materias', 'reportes', 'configuracion', 'secciones'];
         if (dynamicTabs.includes(tabId)) {
             await window.loadTab(tabId);
         }
     }
 
-    // Initialize Modules (re-attach listeners if needed)
     // Initialize Modules (re-attach listeners if needed)
     if (tabId === 'directorio') initDirectory();
     if (tabId === 'inscripciones') initRegistration();
@@ -505,6 +674,7 @@ window.switchTab = async function (tabId) {
     if (tabId === 'horarios') initSchedules();
     if (tabId === 'reportes') initReports();
     if (tabId === 'configuracion') initSettings();
+    if (tabId === 'secciones' && window.loadSectionsModule) await window.loadSectionsModule();
 
     // Show selected
     const target = document.getElementById('tab-' + tabId)
@@ -519,6 +689,7 @@ window.switchTab = async function (tabId) {
         'horarios': 'Gestión de <span class="text-gold">Horarios</span>',
         'profesores': 'Vista <span class="text-gold">Profesor</span>',
         'materias': 'Gestión de <span class="text-gold">Materias</span>',
+        'secciones': 'Gestión de <span class="text-gold">Secciones</span>',
         'reportes': 'Reportes y <span class="text-gold">Estadísticas</span>',
         'configuracion': 'Configuración del <span class="text-gold">Sistema</span>'
     }
@@ -542,3 +713,5 @@ window.switchTab = async function (tabId) {
 
 // Initialize on load
 init()
+
+

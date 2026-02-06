@@ -181,7 +181,7 @@ async function checkEligibility() {
                 if (isAlreadyEnrolled) err = `Ya estás cursando: ${activeEnrollment.carga.materia.nombre}.`;
                 else if (!nextSub) err = `No hay más materias definidas para tu plan de estudios.`;
                 else if (!isPeriodOk) err = periodMessage;
-                else if (!isDocsOk) err = 'Debes subir tus documentos obligatorios en Configuración.';
+                else if (!isDocsOk) err = 'Debes subir tus documentos obligatorios en contacta con el control de estudios.';
                 else if (!isStatusOk) err = 'Tu estatus actual no permite inscripciones.';
                 errorText.textContent = err;
             }
@@ -272,30 +272,101 @@ async function renderSubjectSelection() {
     if (!sub) return;
 
     list.innerHTML = `
-        <div class="py-6 flex items-center justify-between group">
+        <div class="py-6 flex items-center justify-between group mb-6">
             <div class="flex items-center gap-4">
                 <div class="size-12 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold font-black">
                     ${sub.codigo}
                 </div>
                 <div>
                     <h5 class="text-sm font-black text-white group-hover:text-gold transition-colors capitalize">${sub.nombre.toLowerCase()}</h5>
-                    <p class="text-[10px] text-white/30 font-bold uppercase tracking-widest">Materia Inicial del Año</p>
+                    <p class="text-[10px] text-white/30 font-bold uppercase tracking-widest">Materia Correspondiente</p>
                 </div>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest">Inscripción Sugerida</span>
-                <span class="material-symbols-outlined text-gold">verified</span>
-            </div>
         </div>
-        <div class="py-4 text-center">
-            <p class="text-[9px] text-white/20 font-medium uppercase italic">Nota: Las materias restantes de este año se habilitarán secuencialmente.</p>
-        </div>
+
+        <!-- Section Selector Container -->
+        <h4 class="text-[10px] font-black text-white/40 uppercase tracking-widest mb-4">Selecciona tu Sección / Horario</h4>
+        <div id="sections-loader" class="text-center py-8"><div class="animate-spin rounded-full h-6 w-6 border-b-2 border-gold mx-auto"></div></div>
+        <div id="sections-list" class="space-y-3"></div>
+        <input type="hidden" id="selected-carga-id">
     `;
+
+    // Fetch Sections (Cargas)
+    try {
+        const student = window.studentContext.estudiante;
+        const { data: cargas, error } = await supabase
+            .from('cargas_academicas')
+            .select(`
+                id,
+                seccion:secciones(nombre, codigo, capacidad), 
+                docente:docentes(nombres, apellidos),
+                horarios(dia_semana, hora_inicio, hora_fin)
+            `)
+            .eq('materia_id', sub.id)
+            .eq('periodo_id', eligibility.activePeriod.id)
+            .eq('sede_id', student.sede_id)
+            .eq('estado_id', 1);
+
+        const container = document.getElementById('sections-list');
+        document.getElementById('sections-loader').classList.add('hidden');
+
+        if (error || !cargas || cargas.length === 0) {
+            container.innerHTML = '<p class="text-xs text-red-400 font-bold text-center">No hay secciones disponibles en tu sede.</p>';
+            return;
+        }
+
+        container.innerHTML = cargas.map(carga => {
+            const secName = carga.seccion?.nombre || 'Sección Sin Nombre';
+            const secCode = carga.seccion?.codigo || 'S/NM';
+            const docName = carga.docente ? `${carga.docente.nombres.split(' ')[0]} ${carga.docente.apellidos.split(' ')[0]}` : 'Por asignar';
+
+            // Format Schedule
+            let scheduleText = 'Sin horario definido';
+            if (carga.horarios && carga.horarios.length > 0) {
+                scheduleText = carga.horarios.map(h => {
+                    const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+                    return `<span class="block">${days[h.dia_semana]} ${h.hora_inicio.slice(0, 5)} - ${h.hora_fin.slice(0, 5)}</span>`;
+                }).join('');
+            }
+
+            return `
+            <label class="cursor-pointer block relative">
+                <input type="radio" name="carga_selection" value="${carga.id}" class="peer sr-only" onchange="window.selectCarga(${carga.id}, '${secName}', '${secCode}')">
+                <div class="bg-white/5 border border-white/10 rounded-xl p-4 transition-all hover:bg-white/10 peer-checked:border-gold peer-checked:bg-gold/10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="px-1.5 py-0.5 rounded bg-white/10 text-[9px] font-black text-white/60 uppercase tracking-widest border border-white/5">${secCode}</span>
+                                <h6 class="text-sm font-bold text-white">${secName}</h6>
+                            </div>
+                            <p class="text-[10px] text-white/40 font-mono mb-2"><span class="text-gold">Docente:</span> ${docName}</p>
+                            <div class="text-[10px] text-white/50 font-medium leading-tight">${scheduleText}</div>
+                        </div>
+                        <div class="size-5 rounded-full border border-white/20 peer-checked:border-gold peer-checked:bg-gold flex items-center justify-center">
+                            <span class="material-symbols-outlined text-[10px] text-primary-dark opacity-0 peer-checked:opacity-100 font-black">check</span>
+                        </div>
+                    </div>
+                </div>
+            </label>
+            `;
+        }).join('');
+
+        // Helper to capture selection
+        window.selectCarga = (id, name, code) => {
+            document.getElementById('selected-carga-id').value = id;
+            window.selectedSectionDetails = { name, code };
+        };
+
+    } catch (e) {
+        console.error('Error loading sections', e);
+        document.getElementById('sections-list').innerHTML = '<p class="text-xs text-red-400">Error al cargar horarios.</p>';
+    }
 }
 
 function renderSummary() {
     const summary = document.getElementById('enrollment-summary');
     const sub = eligibility.nextSubject;
+    const secDetails = window.selectedSectionDetails || { name: 'S/D', code: 'S/D' };
 
     summary.innerHTML = `
         <div class="flex justify-between items-center pb-3 border-b border-white/5">
@@ -303,8 +374,12 @@ function renderSummary() {
             <span class="text-sm font-black text-gold">${eligibility.targetYear}º Año Académico</span>
         </div>
         <div class="flex justify-between items-center pb-3 border-b border-white/5">
-            <span class="text-[10px] font-bold text-white/40 uppercase">Materia a Inscribir:</span>
+            <span class="text-[10px] font-bold text-white/40 uppercase">Materia:</span>
             <span class="text-sm font-black text-white font-mono">${sub.codigo} - ${sub.nombre}</span>
+        </div>
+        <div class="flex justify-between items-center pb-3 border-b border-white/5">
+            <span class="text-[10px] font-bold text-white/40 uppercase">Sección:</span>
+            <span class="text-sm font-black text-white">${secDetails.name} (${secDetails.code})</span>
         </div>
         <div class="flex justify-between items-center">
             <span class="text-[10px] font-bold text-white/40 uppercase">Sede:</span>
@@ -322,27 +397,19 @@ async function handleFinalConfirmation() {
         const student = window.studentContext.estudiante;
         const sub = eligibility.nextSubject;
 
-        // 1. Find Carga Academica for this subject in current period and student's sede
-        const { data: cargas, error: cargaError } = await supabase
-            .from('cargas_academicas')
-            .select('id')
-            .eq('materia_id', sub.id)
-            .eq('periodo_id', eligibility.activePeriod.id)
-            .eq('sede_id', student.sede_id)
-            .limit(1);
+        // Retrieve selected Carga ID from DOM
+        const selectedCargaId = document.getElementById('selected-carga-id')?.value;
 
-        if (cargaError || !cargas || cargas.length === 0) {
-            throw new Error('No hay secciones disponibles para esta materia en tu sede este periodo.');
+        if (!selectedCargaId) {
+            throw new Error('Debes seleccionar una sección y horario.');
         }
-
-        const cargaId = cargas[0].id;
 
         // 2. Insert into inscripciones
         const { error: insError } = await supabase
             .from('inscripciones')
             .insert({
                 estudiante_id: student.id,
-                carga_academica_id: cargaId,
+                carga_academica_id: parseInt(selectedCargaId),
                 estado_id: 1
             });
 

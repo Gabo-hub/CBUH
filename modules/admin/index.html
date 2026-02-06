@@ -152,37 +152,37 @@
                                     <p class="text-[10px] opacity-80">Registrar nuevo ingreso</p>
                                 </div>
                             </button>
-                            <button
+                            <button onclick="switchTab('reportes')"
                                 class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-gold/30 transition-all text-left group">
                                 <div
                                     class="size-10 bg-gold/10 rounded-lg flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-primary-dark transition-all">
-                                    <span class="material-symbols-outlined">assignment_turned_in</span>
+                                    <span class="material-symbols-outlined">description</span>
                                 </div>
                                 <div>
-                                    <p class="font-bold text-white text-sm">Generar Notas</p>
-                                    <p class="text-[10px] text-white/40">Record académico oficial</p>
+                                    <p class="font-bold text-white text-sm">Reportes Académicos</p>
+                                    <p class="text-[10px] text-white/40">Boletines y listados</p>
                                 </div>
                             </button>
-                            <button
+                            <button onclick="switchTab('directorio')"
                                 class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-gold/30 transition-all text-left group">
                                 <div
                                     class="size-10 bg-gold/10 rounded-lg flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-primary-dark transition-all">
-                                    <span class="material-symbols-outlined">upload_file</span>
+                                    <span class="material-symbols-outlined">groups</span>
                                 </div>
                                 <div>
-                                    <p class="font-bold text-white text-sm">Subir Calificaciones</p>
-                                    <p class="text-[10px] text-white/40">Carga masiva de resultados</p>
+                                    <p class="font-bold text-white text-sm">Directorio Estudiantes</p>
+                                    <p class="text-[10px] text-white/40">Gestionar matrículas</p>
                                 </div>
                             </button>
-                            <button
+                            <button onclick="switchTab('profesores')"
                                 class="flex items-center gap-4 p-4 rounded-xl bg-card-dark border border-white/5 hover:border-gold/30 transition-all text-left group">
                                 <div
                                     class="size-10 bg-gold/10 rounded-lg flex items-center justify-center text-gold group-hover:bg-gold group-hover:text-primary-dark transition-all">
-                                    <span class="material-symbols-outlined">mail</span>
+                                    <span class="material-symbols-outlined">school</span>
                                 </div>
                                 <div>
-                                    <p class="font-bold text-white text-sm">Enviar Aviso</p>
-                                    <p class="text-[10px] text-white/40">Circular a comunidad CBUH</p>
+                                    <p class="font-bold text-white text-sm">Gestión Docente</p>
+                                    <p class="text-[10px] text-white/40">Profesores y cargas</p>
                                 </div>
                             </button>
                         </div>
@@ -220,11 +220,9 @@
                             <thead class="bg-black/20 text-white/40 text-[10px] uppercase tracking-[0.2em]">
                                 <tr>
                                     <th class="px-6 py-4 font-black">Estudiante</th>
-                                    <th class="px-6 py-4 font-black">Cédula</th>
-                                    <th class="px-6 py-4 font-black">Pendiente</th>
-                                    <th class="px-6 py-4 font-black">Nivel</th>
-                                    <th class="px-6 py-4 font-black">Estado</th>
-                                    <th class="px-6 py-4 font-black text-right">Acción</th>
+                                    <th class="px-6 py-4 font-black">Documentos Pendientes</th>
+                                    <th class="px-6 py-4 font-black">Tipos de Documentos</th>
+                                    <th class="px-6 py-4 font-black">Acción</th>
                                 </tr>
                             </thead>
                             <tbody id="pending-docs-table" class="divide-y divide-white/5">
@@ -292,6 +290,12 @@
             </div>
         </div>
 
+        <div id="tab-secciones" class="tab-content h-full flex-col hidden overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-center h-full">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-5xl">sync</span>
+            </div>
+        </div>
+
     </main>
 
     <!-- Modals Container (componentes se cargan dinámicamente aquí) -->
@@ -301,6 +305,7 @@
     <script type="module" src="./scripts/dashboard.js"></script>
     <script type="module" src="./scripts/registration.js"></script>
     <script type="module" src="./scripts/teachers.js"></script>
+    <script type="module" src="./scripts/sections.js"></script>
 </body>
 
 </html>

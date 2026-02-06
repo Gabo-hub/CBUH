@@ -307,6 +307,10 @@ window.viewTeacherDetails = async function (teacherId) {
                         codigo,
                         año_materia
                     ),
+                    seccion:seccion_id (
+                        nombre,
+                        codigo
+                    ),
                     periodo:periodo_id (
                         nombre
                     ),
@@ -314,7 +318,8 @@ window.viewTeacherDetails = async function (teacherId) {
                         dia_semana,
                         hora_inicio,
                         hora_fin,
-                        aula
+                        aula,
+                        mes
                     )
                 )
             `)
@@ -452,6 +457,15 @@ window.switchTeacherTab = function (tabName) {
     }
 };
 
+// Función para obtener nombre del mes
+function getMesNombre(mes) {
+    const meses = [
+        'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+        'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+    return meses[mes - 1] || `Mes ${mes}`;
+}
+
 // Cargar tab de información
 function loadTeacherInfoTab(container, teacher) {
     // Calcular edad
@@ -560,7 +574,6 @@ function loadTeacherMateriasTab(container, teacher) {
     const materias = teacher.cargas_academicas || [];
     const periodoActual = materias[0]?.periodo?.nombre || 'Periodo Actual';
 
-    // Agrupar por año
     const materiasPorAño = {};
     materias.forEach(carga => {
         const materia = carga.materia;
@@ -568,7 +581,10 @@ function loadTeacherMateriasTab(container, teacher) {
 
         const año = materia.año_materia || 0;
         if (!materiasPorAño[año]) materiasPorAño[año] = [];
-        materiasPorAño[año].push(materia);
+        materiasPorAño[año].push({
+            ...materia,
+            seccion: carga.seccion
+        });
     });
 
     const años = Object.keys(materiasPorAño).sort((a, b) => Number(a) - Number(b));
@@ -596,8 +612,15 @@ function loadTeacherMateriasTab(container, teacher) {
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                         ${materiasPorAño[año].map(m => `
                             <div class="bg-white/5 border border-white/10 rounded-xl p-4 hover:border-gold/30 transition-all">
-                                <p class="text-sm font-black text-white uppercase tracking-wide">${m.nombre}</p>
-                                <p class="text-[10px] text-white/40 font-bold uppercase tracking-widest mt-1">${m.codigo}</p>
+                                <div class="flex justify-between items-start mb-2">
+                                    <p class="text-sm font-black text-white uppercase tracking-wide">${m.nombre}</p>
+                                    ${m.seccion ? `
+                                        <span class="px-2 py-0.5 rounded-md bg-gold/10 text-gold border border-gold/20 text-[9px] font-black uppercase tracking-widest">
+                                            ${m.seccion.nombre} ${m.seccion.codigo ? `(${m.seccion.codigo})` : ''}
+                                        </span>
+                                    ` : ''}
+                                </div>
+                                <p class="text-[10px] text-white/40 font-bold uppercase tracking-widest">${m.codigo}</p>
                             </div>
                         `).join('')}
                     </div>
@@ -664,10 +687,11 @@ async function handleNewTeacherSubmit(e) {
 
     try {
         const sedeId = window.adminContext?.sedeId;
-        if (!sedeId) throw new Error('No hay sede configurada');
+        if (!sedeId) {
+            throw new Error('No se encontró la sede asignada');
+        }
 
-
-        // Preparar datos del docente
+        // Datos del docente
         const docenteData = {
             cedula: formData.get('cedula'),
             nombres: formData.get('nombres'),
@@ -712,7 +736,7 @@ async function handleNewTeacherSubmit(e) {
                 nombres: docenteData.nombres,
                 apellidos: docenteData.apellidos,
                 correo: email,
-                rol_id: 2, // Docente
+                rol_id: 3, // Docente
                 sede_id: sedeId,
                 estado_id: 1
             })
@@ -760,8 +784,8 @@ async function handleNewTeacherSubmit(e) {
 
 // Función auxiliar para mostrar notificaciones
 function showNotification(message, type = 'info') {
-    if (window.showNotification) {
-        window.showNotification(message, type);
+    if (window.NotificationSystem) {
+        NotificationSystem.show(message, type);
     } else {
         console.log(`[${type.toUpperCase()}] ${message}`);
     }
@@ -782,6 +806,7 @@ async function loadTeacherScheduleTab(container, teacher) {
                     horarios.push({
                         ...h,
                         materia: carga.materia?.nombre || 'Materia',
+                        seccion: carga.seccion ? `${carga.seccion.nombre} ${carga.seccion.codigo ? `(${carga.seccion.codigo})` : ''}` : 'S/S',
                         aula: h.aula || 'Sin aula'
                     });
                 });
@@ -806,18 +831,22 @@ async function loadTeacherScheduleTab(container, teacher) {
                      <table class="w-full text-left">
                          <thead class="bg-black/20 text-white/40 text-[10px] uppercase tracking-[0.2em]">
                              <tr>
+                                 <th class="px-4 py-3 font-black">Mes</th>
                                  <th class="px-4 py-3 font-black">Día</th>
                                  <th class="px-4 py-3 font-black">Hora</th>
                                  <th class="px-4 py-3 font-black">Materia</th>
+                                 <th class="px-4 py-3 font-black">Sección</th>
                                  <th class="px-4 py-3 font-black">Aula</th>
                              </tr>
                          </thead>
                          <tbody class="divide-y divide-white/5">
                              ${horarios.map(h => `
                                  <tr class="hover:bg-white/5 transition-colors">
+                                     <td class="px-4 py-3 text-sm font-bold text-gold">${getMesNombre(h.mes)}</td>
                                      <td class="px-4 py-3 text-sm font-bold text-white">${dias[h.dia_semana] || 'Día ' + h.dia_semana}</td>
                                      <td class="px-4 py-3 text-sm text-white/80">${h.hora_inicio.slice(0, 5)} - ${h.hora_fin.slice(0, 5)}</td>
-                                     <td class="px-4 py-3 text-sm text-white/80">${h.materia}</td>
+                                     <td class="px-4 py-3 text-sm text-white/80 shrink-0 capitalize">${h.materia.toLowerCase()}</td>
+                                     <td class="px-4 py-3 text-sm font-bold text-gold/80">${h.seccion}</td>
                                      <td class="px-4 py-3 text-sm text-white/60">${h.aula}</td>
                                  </tr>
                              `).join('')}
@@ -858,6 +887,18 @@ async function loadCommonData() {
             .order('codigo', { ascending: true });
 
         if (materias) allSubjects = materias;
+
+        // Cargar Secciones (Globales + Específicas)
+        const sedeId = window.adminContext?.sedeId;
+        if (sedeId) {
+            const { data: secs } = await supabase
+                .from('secciones')
+                .select('id, nombre, codigo, materia_id')
+                .eq('sede_id', sedeId)
+                .order('nombre');
+
+            if (secs) window.allSectionsData = secs;
+        }
     }
 }
 
@@ -882,6 +923,8 @@ window.openManageAssignments = async function (teacherId) {
             showNotification('Error: No hay periodo académico activo', 'error');
             return;
         }
+
+        // Global Section Loader Removed (Logic moved to renderSubjectsSelection)
 
         // Obtener profesor con IDs de materias actuales
         const { data: teacher, error } = await supabase
@@ -919,8 +962,9 @@ window.openManageAssignments = async function (teacherId) {
 
 function renderSubjectsSelection(teacher) {
     const list = document.getElementById('subjectsList');
-    // IDs asignados
-    const assignedIds = teacher.cargas_academicas?.map(c => c.materia_id) || [];
+    // IDs asignados y sus datos completos
+    const currentCargas = teacher.cargas_academicas || [];
+    const assignedIds = currentCargas.map(c => c.materia_id);
 
     // Agrupar available subjects by year
     const byYear = {};
@@ -940,15 +984,39 @@ function renderSubjectsSelection(teacher) {
 
         byYear[year].forEach(subj => {
             const isChecked = assignedIds.includes(subj.id);
+            const loadInfo = currentCargas.find(c => c.materia_id === subj.id);
+            const currentSectionId = loadInfo?.seccion_id;
+
+            // Filter sections: Global (materia_id is null) OR Specific (materia_id matches)
+            const availableSections = (window.allSectionsData || []).filter(s =>
+                s.materia_id === null || s.materia_id === subj.id
+            );
+
+            const options = availableSections.length > 0
+                ? '<option value="">Seleccionar Sección...</option>' + availableSections.map(s =>
+                    `<option value="${s.id}" ${s.id === currentSectionId ? 'selected' : ''}>${s.nombre} ${s.codigo ? `(${s.codigo})` : ''}</option>`
+                ).join('')
+                : '<option value="">Sin secciones disponibles</option>';
+
             html += `
-             <label class="relative flex items-center gap-3 p-3 rounded-xl bg-white/5 border ${isChecked ? 'border-gold/50 bg-gold/10' : 'border-white/5'} cursor-pointer hover:border-gold/30 hover:bg-white/10 transition-all group select-none">
-                <input type="checkbox" name="materia_id" value="${subj.id}" ${isChecked ? 'checked' : ''} class="subject-checkbox accent-gold size-4">
-                <div class="flex-1">
-                    <span class="block text-xs font-bold text-white group-hover:text-gold transition-colors">${subj.nombre}</span>
-                    <span class="block text-[10px] text-white/40 font-mono mt-0.5">${subj.codigo}</span>
+            <div class="subject-row bg-black/20 border ${isChecked ? 'border-gold/50 bg-gold/10' : 'border-white/5'} rounded-xl p-3 transition-all hover:border-gold/30">
+                <div class="flex items-start gap-3">
+                    <label class="flex items-center gap-3 cursor-pointer flex-1 min-w-0">
+                        <input type="checkbox" name="materia_id" value="${subj.id}" ${isChecked ? 'checked' : ''} class="subject-checkbox accent-gold size-4 shrink-0">
+                        <div class="truncate">
+                            <span class="block text-xs font-bold text-white group-hover:text-gold transition-colors truncate">${subj.nombre}</span>
+                            <span class="block text-[10px] text-white/40 font-mono mt-0.5">${subj.codigo}</span>
+                        </div>
+                    </label>
                 </div>
-                ${isChecked ? '<span class="material-symbols-outlined text-gold text-lg absolute right-3 animate-pulse">check_circle</span>' : ''}
-             </label>
+                
+                <div class="mt-2 pl-7 ${isChecked ? '' : 'hidden opacity-50'} section-selector-container transition-all">
+                     <select class="section-select-per-subject w-full bg-black/40 border border-white/10 rounded-lg px-2 py-1.5 text-xs text-white focus:ring-1 focus:ring-gold/50 outline-none"
+                        data-subject-id="${subj.id}" ${isChecked ? 'required' : ''}>
+                        ${options}
+                     </select>
+                </div>
+            </div>
              `;
         });
     });
@@ -959,22 +1027,20 @@ function renderSubjectsSelection(teacher) {
     // Add listeners
     list.querySelectorAll('input.subject-checkbox').forEach(cb => {
         cb.addEventListener('change', (e) => {
-            const parent = e.target.closest('label');
-            const icon = parent.querySelector('.material-symbols-outlined');
+            const row = e.target.closest('.subject-row');
+            const selectorDiv = row.querySelector('.section-selector-container');
+            const select = selectorDiv.querySelector('select');
 
             if (e.target.checked) {
-                parent.classList.add('border-gold/50', 'bg-gold/10');
-                parent.classList.remove('border-white/5');
-                if (!icon) {
-                    const newIcon = document.createElement('span');
-                    newIcon.className = 'material-symbols-outlined text-gold text-lg absolute right-3 animate-pulse';
-                    newIcon.innerText = 'check_circle';
-                    parent.appendChild(newIcon);
-                }
+                row.classList.add('border-gold/50', 'bg-gold/10');
+                row.classList.remove('border-white/5');
+                selectorDiv.classList.remove('hidden', 'opacity-50');
+                if (select) select.required = true;
             } else {
-                parent.classList.remove('border-gold/50', 'bg-gold/10');
-                parent.classList.add('border-white/5');
-                if (icon) icon.remove();
+                row.classList.remove('border-gold/50', 'bg-gold/10');
+                row.classList.add('border-white/5');
+                selectorDiv.classList.add('hidden', 'opacity-50');
+                if (select) select.required = false;
             }
             updateSelectedCount();
         });
@@ -1007,12 +1073,21 @@ async function handleAssignmentsSubmit(e) {
     const checkboxes = document.querySelectorAll('.subject-checkbox:checked');
     const selectedIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
 
+    if (selectedIds.length === 0) {
+        showNotification('Debe seleccionar al menos una materia', 'error');
+        return;
+    }
+
     if (selectedIds.length > 5) {
         showNotification('Máximo 5 materias por profesor', 'error');
         return;
     }
 
-    if (!currentPeriod || !window.currentAssignTeacherId) return;
+    const sedeId = window.adminContext?.sedeId;
+    if (!sedeId || !currentPeriod || !window.currentAssignTeacherId) {
+        showNotification('Error de contexto (Sede/Periodo/Profesor)', 'error');
+        return;
+    }
 
     try {
         if (btn) {
@@ -1026,17 +1101,40 @@ async function handleAssignmentsSubmit(e) {
         // 1. Obtener cargas actuales para este periodo
         const { data: currentCargas, error: fetchError } = await supabase
             .from('cargas_academicas')
-            .select('id, materia_id')
+            .select('id, materia_id, seccion_id')
             .eq('docente_id', teacherId)
-            .eq('periodo_id', periodoId);
+            .eq('periodo_id', periodoId)
+            .eq('sede_id', sedeId);
 
         if (fetchError) throw fetchError;
 
         const currentMateriaIds = currentCargas.map(c => c.materia_id);
 
-        // 2. Diff
+        // 2. Diff (Same as before)
         const toAdd = selectedIds.filter(id => !currentMateriaIds.includes(id));
         const toRemove = currentCargas.filter(c => !selectedIds.includes(c.materia_id));
+
+        // 2b. Check for Updates (Materia kept, but section changed)
+        // For simplicity, we can treat them as remove+add OR update. 
+        // Current logic only does add/remove. 
+        // Let's stick to Add/Remove for now, but really "Changing Section" requires "Update".
+        // IMPROVEMENT: If I uncheck and check, it works. If I just change dropdown? 
+        // The current diff logic ignores updates. 
+        // FIX: Let's also find "Updates" where materia is in BOTH lists but Section differs.
+
+        const keptIds = selectedIds.filter(id => currentMateriaIds.includes(id));
+        const toUpdate = [];
+
+        for (const mId of keptIds) {
+            const select = document.querySelector(`.section-select-per-subject[data-subject-id="${mId}"]`);
+            const newSectionId = select ? parseInt(select.value) : null;
+            const oldSectionId = currentCargas.find(c => c.materia_id === mId)?.seccion_id;
+
+            if (newSectionId && newSectionId !== oldSectionId) {
+                const rowId = currentCargas.find(c => c.materia_id === mId).id;
+                toUpdate.push({ id: rowId, seccion_id: newSectionId });
+            }
+        }
 
         // 3. Eliminar
         if (toRemove.length > 0) {
@@ -1051,13 +1149,26 @@ async function handleAssignmentsSubmit(e) {
 
         // 4. Insertar
         if (toAdd.length > 0) {
-            const newRows = toAdd.map(materiaId => ({
-                docente_id: teacherId,
-                periodo_id: periodoId,
-                materia_id: materiaId,
-                estado_id: 1,
-                seccion_id: null // Sin sección específica (o usar 1 si es oblogatorio)
-            }));
+            const newRows = [];
+
+            for (const materiaId of toAdd) {
+                // Find the dropdown for this subject
+                const select = document.querySelector(`.section-select-per-subject[data-subject-id="${materiaId}"]`);
+                const sectionId = select ? select.value : null;
+
+                if (!sectionId) {
+                    throw new Error(`Debes seleccionar una sección para la materia ID: ${materiaId}`);
+                }
+
+                newRows.push({
+                    docente_id: teacherId,
+                    periodo_id: periodoId,
+                    materia_id: materiaId,
+                    estado_id: 1,
+                    sede_id: sedeId,
+                    seccion_id: parseInt(sectionId)
+                });
+            }
 
             const { error: insError } = await supabase
                 .from('cargas_academicas')

@@ -20,6 +20,23 @@ authManager.isAuthenticated().then(isAuth => {
 // Manejar submit del formulario
 document.getElementById('login-form').addEventListener('submit', handleLogin)
 
+// Manejar visibilidad de contraseña
+const togglePasswordBtn = document.getElementById('toggle-password')
+if (togglePasswordBtn) {
+    togglePasswordBtn.addEventListener('click', () => {
+        const passwordInput = document.getElementById('password')
+        const icon = togglePasswordBtn.querySelector('.material-symbols-outlined')
+
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text'
+            icon.textContent = 'visibility_off'
+        } else {
+            passwordInput.type = 'password'
+            icon.textContent = 'visibility'
+        }
+    })
+}
+
 async function handleLogin(e) {
     e.preventDefault()
 

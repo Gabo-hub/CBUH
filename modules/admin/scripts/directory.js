@@ -79,13 +79,19 @@ export async function initDirectory() {
         }
     }
 
-    // Image Preview Listener
+    isDirectoryInitialized = true;
+}
+
+/**
+ * Setup listeners for the Edit Modal elements (called after loadModal)
+ */
+function setupEditModalListeners() {
     const photoInput = document.getElementById('edit_photo_input')
     const preview = document.getElementById('edit_avatar_preview')
     const initials = document.getElementById('edit_avatar_initials')
 
     if (photoInput) {
-        photoInput.addEventListener('change', function (e) {
+        photoInput.onchange = function (e) {
             if (this.files && this.files[0]) {
                 const reader = new FileReader()
                 reader.onload = function (e) {
@@ -97,10 +103,8 @@ export async function initDirectory() {
                 }
                 reader.readAsDataURL(this.files[0])
             }
-        })
+        }
     }
-
-    isDirectoryInitialized = true;
 }
 
 async function loadStudents() {
@@ -123,7 +127,7 @@ async function loadStudents() {
             .from('estudiantes')
             .select(`
                 *,
-                usuarios!usuario_id (correo, url_foto),
+                usuario:usuarios!usuario_id (correo, url_foto),
                 estados_registro!estado_id (nombre),
                 documentos_estudiantes (url_archivo, tipo_documento)
             `, { count: 'exact' })
@@ -193,17 +197,17 @@ function renderTable(students) {
         const statusDot = (student.estado_id == 1) ? 'bg-green-400' : 'bg-red-400'
         const statusName = student.estados_registro?.nombre || 'Desconocido'
 
+        // User data normalization (Supabase might return object or array)
+        const user = Array.isArray(student.usuario) ? student.usuario[0] : student.usuario
+        const photoUrlFromUser = user?.url_foto
+
         // Photo Priority: Documentos > Usuarios
         const photoDoc = student.documentos_estudiantes?.find(d => d.tipo_documento === 'foto_perfil')
-        let photoUrl = student.usuarios?.url_foto
+        let photoUrl = photoUrlFromUser
         if (photoDoc) {
-            // If implicit public path, construct full url or just use it if it works
             photoUrl = photoDoc.url_archivo.startsWith('http')
                 ? photoDoc.url_archivo
-                : `${supabase.storageUrl}/object/public/documentos/${photoDoc.url_archivo}`
-
-            // Simplification: if we start storing full publicUrl, just use it.
-            if (photoDoc.url_archivo.startsWith('http')) photoUrl = photoDoc.url_archivo
+                : `${supabase.storageUrl}/object/public/avatars/profiles/${photoDoc.url_archivo}`
         }
 
         const initials = (student.nombres[0] || '') + (student.apellidos[0] || '')
@@ -222,7 +226,7 @@ function renderTable(students) {
                                 ${student.nombres} ${student.apellidos}
                             </p>
                             <p class="text-[10px] text-white/40 font-medium">
-                                ${student.usuarios?.correo || 'Sin correo'}
+                                ${user?.correo || 'Sin correo'}
                             </p>
                         </div>
                     </div>
@@ -355,11 +359,14 @@ async function openViewModal(encodedData) {
     // Load avatar
     const avatarImg = modalContent.querySelector('#view_avatar_preview')
     const photoDoc = data.documentos_estudiantes?.find(d => d.tipo_documento === 'foto_perfil')
-    let photoUrl = data.usuarios?.url_foto
+
+    const user = Array.isArray(data.usuario) ? data.usuario[0] : data.usuario
+    let photoUrl = user?.url_foto
+
     if (photoDoc && photoDoc.url_archivo.startsWith('http')) {
         photoUrl = photoDoc.url_archivo
     } else if (photoDoc) {
-        photoUrl = `${supabase.storageUrl}/object/public/documentos/${photoDoc.url_archivo}`
+        photoUrl = `${supabase.storageUrl}/object/public/avatars/profiles/${photoDoc.url_archivo}`
     }
 
     if (photoUrl && avatarImg) {
@@ -434,7 +441,7 @@ function loadInfoTab(container, data) {
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-card-dark p-5 rounded-xl border border-white/5">
                         <p class="text-[9px] font-black text-white/30 uppercase tracking-widest mb-2">Correo</p>
-                        <p class="text-sm font-bold text-white truncate">${data.usuarios?.correo || 'No registrado'}</p>
+                        <p class="text-sm font-bold text-white truncate">${(Array.isArray(data.usuario) ? data.usuario[0] : data.usuario)?.correo || 'No registrado'}</p>
                     </div>
                     <div class="bg-card-dark p-5 rounded-xl border border-white/5">
                         <p class="text-[9px] font-black text-white/30 uppercase tracking-widest mb-2">Teléfono</p>
@@ -493,6 +500,7 @@ async function loadAcademicTab(container, data) {
                     id,
                     carga_academica:carga_academica_id (
                         materia:materia_id (nombre, año_materia),
+                        seccion:seccion_id (nombre, codigo),
                         docente:docente_id (nombres, apellidos)
                     ),
                     calificaciones (
@@ -510,38 +518,48 @@ async function loadAcademicTab(container, data) {
 
         if (error) throw error
 
+        // Helper to safely get the first (and usually only) grade record
+        const getGrades = (insc) => {
+            if (!insc.calificaciones) return null;
+            if (Array.isArray(insc.calificaciones)) {
+                return insc.calificaciones.length > 0 ? insc.calificaciones[0] : null;
+            }
+            return insc.calificaciones; // It's an object
+        };
+
         // Calculate global stats
-        const allGrades = student.inscripciones?.flatMap(i => i.calificaciones || []) || []
+        const allInscripciones = student.inscripciones || [];
+        const validGrades = allInscripciones
+            .map(i => getGrades(i))
+            .filter(g => g && (g.nota_final !== null || g.nota_reparacion !== null));
 
-        // Filter only those with final grades
-        const validGrades = allGrades.filter(g => g.nota_final !== null || g.nota_reparacion !== null)
-
-        let totalSum = 0
+        let totalSum = 0;
         if (validGrades.length > 0) {
             totalSum = validGrades.reduce((acc, curr) => {
-                const final = curr.nota_reparacion !== null ? Number(curr.nota_reparacion) : Number(curr.nota_final || 0)
-                return acc + final
-            }, 0)
+                const final = curr.nota_reparacion !== null ? Number(curr.nota_reparacion) : Number(curr.nota_final || 0);
+                return acc + final;
+            }, 0);
         }
 
         const avgGrade = validGrades.length > 0
             ? (totalSum / validGrades.length).toFixed(2)
-            : '0.00'
+            : '0.00';
 
-        // Asistencia placeholder (removed from db)
-        const avgAttendance = '0'
+        // Filter passed grades
+        const passedCount = validGrades.filter(g => {
+            const gradeVal = g.nota_reparacion !== null ? Number(g.nota_reparacion) : Number(g.nota_final || 0);
+            return gradeVal >= MIN_PASSING_GRADE;
+        }).length;
 
         // Group subjects by year
-        const subjectsByYear = {}
-        if (student.inscripciones) {
-            student.inscripciones.forEach(ins => {
-                const year = ins.carga_academica?.materia?.año_materia || 0
-                if (!subjectsByYear[year]) subjectsByYear[year] = []
-                subjectsByYear[year].push(ins)
-            })
-        }
+        const subjectsByYear = {};
+        allInscripciones.forEach(ins => {
+            const year = ins.carga_academica?.materia?.año_materia || 0;
+            if (!subjectsByYear[year]) subjectsByYear[year] = [];
+            subjectsByYear[year].push(ins);
+        });
 
-        const sortedYears = Object.keys(subjectsByYear).sort((a, b) => Number(a) - Number(b))
+        const sortedYears = Object.keys(subjectsByYear).sort((a, b) => Number(a) - Number(b));
 
         container.innerHTML = `
             <div class="p-8 space-y-8">
@@ -562,24 +580,26 @@ async function loadAcademicTab(container, data) {
                             <span class="material-symbols-outlined text-4xl text-blue-400">event_available</span>
                         </div>
                         <p class="text-[9px] font-black text-blue-400/60 uppercase tracking-[0.2em] mb-2">Materias Aprobadas</p>
-                        <p class="text-3xl font-black text-white">${validGrades.filter(g => (g.nota_reparacion ?? g.nota_final ?? 0) >= MIN_PASSING_GRADE).length} / ${validGrades.length}</p>
+                        <p class="text-3xl font-black text-white">${passedCount} / ${allInscripciones.length}</p>
                     </div>
                 </div>
 
                 <!-- Subjects Grouped by Year -->
                 <div class="space-y-10">
                     ${sortedYears.length > 0 ? sortedYears.map(year => {
-            const yearInsc = subjectsByYear[year]
+            const yearInsc = subjectsByYear[year];
 
             // Calculate year average
             const yearGrades = yearInsc.map(i => {
-                const cal = i.calificaciones?.[0]
-                return cal?.nota_reparacion ?? cal?.nota_final ?? null
-            }).filter(n => n !== null)
+                const cal = getGrades(i);
+                if (!cal) return null;
+                const grade = cal.nota_reparacion !== null ? cal.nota_reparacion : cal.nota_final;
+                return grade !== null ? Number(grade) : null;
+            }).filter(n => n !== null);
 
             const yearAvg = yearGrades.length > 0
                 ? (yearGrades.reduce((a, b) => a + Number(b), 0) / yearGrades.length).toFixed(2)
-                : '0.00'
+                : '0.00';
 
             return `
                             <div class="space-y-4">
@@ -605,19 +625,34 @@ async function loadAcademicTab(container, data) {
                                 
                                 <div class="grid grid-cols-1 gap-3">
                                     ${yearInsc.map(ins => {
-                const cal = ins.calificaciones?.[0]
-                const finalGrade = cal?.nota_reparacion ?? cal?.nota_final ?? 0
-                const isPassed = Number(finalGrade) >= MIN_PASSING_GRADE
+                const cal = getGrades(ins);
+                const hasGrade = cal && (cal.nota_final !== null || cal.nota_reparacion !== null);
+                const finalGradeVal = hasGrade ? (cal.nota_reparacion !== null ? cal.nota_reparacion : cal.nota_final) : null;
+                const isPassed = hasGrade && Number(finalGradeVal) >= MIN_PASSING_GRADE;
+
+                let statusText = 'Pendiente';
+                let statusClass = 'border-red-500/20 text-red-400 bg-red-500/5';
+
+                if (hasGrade) {
+                    if (isPassed) {
+                        statusText = 'Aprobada';
+                        statusClass = 'border-green-500/20 text-green-400 bg-green-500/5';
+                    } else {
+                        statusText = 'Reprobada';
+                        statusClass = 'border-red-500/20 text-red-400 bg-red-500/5';
+                    }
+                }
 
                 return `
                                         <div class="bg-card-dark p-5 rounded-2xl border border-white/5 hover:border-gold/30 transition-all group">
                                             <div class="flex justify-between items-start mb-4">
                                                 <div class="flex-1 pr-4">
                                                     <div class="flex items-center gap-2 mb-1">
-                                                        <span class="text-[8px] font-black px-1.5 py-0.5 rounded border ${isPassed ? 'border-green-500/20 text-green-400 bg-green-500/5' : 'border-red-500/20 text-red-400 bg-red-500/5'} uppercase">
-                                                            ${isPassed ? 'Aprobada' : 'Pendiente'}
+                                                        <span class="text-[8px] font-black px-1.5 py-0.5 rounded border ${statusClass} uppercase">
+                                                            ${statusText}
                                                         </span>
                                                         <p class="text-sm font-black text-white uppercase tracking-wide group-hover:text-gold transition-colors">${ins.carga_academica?.materia?.nombre || 'Materia'}</p>
+                                                        ${ins.carga_academica?.seccion ? `<span class="text-[9px] font-black text-gold/60 uppercase tracking-widest ml-auto">Sección: ${ins.carga_academica.seccion.nombre}</span>` : ''}
                                                     </div>
                                                     <div class="flex items-center gap-2">
                                                         <span class="material-symbols-outlined text-[14px] text-white/20">person</span>
@@ -625,7 +660,7 @@ async function loadAcademicTab(container, data) {
                                                     </div>
                                                 </div>
                                                 <div class="text-right">
-                                                    <p class="text-2xl font-black ${isPassed ? 'text-gold' : 'text-red-400'}">${finalGrade || 'N/A'}</p>
+                                                    <p class="text-2xl font-black ${isPassed ? 'text-gold' : (hasGrade ? 'text-red-400' : 'text-white/20')}">${finalGradeVal !== null ? Number(finalGradeVal).toFixed(1) : 'N/A'}</p>
                                                     <p class="text-[8px] font-black text-white/10 uppercase tracking-[0.2em]">Nota Final</p>
                                                 </div>
                                             </div>
@@ -633,7 +668,7 @@ async function loadAcademicTab(container, data) {
                                                 <div class="flex items-center gap-4">
                                                     <div class="flex items-center gap-2">
                                                         <span class="text-[9px] font-black text-white/20 uppercase tracking-widest">Corte:</span>
-                                                        <span class="text-xs font-black text-white">${cal?.nota_corte || '-'}</span>
+                                                        <span class="text-xs font-black text-white">${cal?.nota_corte !== null && cal?.nota_corte !== undefined ? cal.nota_corte : '-'}</span>
                                                     </div>
                                                     ${cal?.observaciones ? `
                                                         <div class="flex items-center gap-2 text-white/30" title="${cal.observaciones}">
@@ -643,9 +678,9 @@ async function loadAcademicTab(container, data) {
                                                     ` : ''}
                                                 </div>
                                                 <div class="flex gap-1">
-                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400/20' : 'bg-red-400/20'}"></div>
-                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400/40' : 'bg-red-400/40'}"></div>
-                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400' : 'bg-red-400'} shadow-[0_0_10px_rgba(74,222,128,0.3)]"></div>
+                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400/20' : (hasGrade ? 'bg-red-400/20' : 'bg-white/5')}"></div>
+                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400/40' : (hasGrade ? 'bg-red-400/40' : 'bg-white/10')}"></div>
+                                                    <div class="w-1 h-3 rounded-full ${isPassed ? 'bg-green-400' : (hasGrade ? 'bg-red-400' : 'bg-white/20')} ${isPassed ? 'shadow-[0_0_10px_rgba(74,222,128,0.3)]' : ''}"></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -790,11 +825,17 @@ async function openEditModal(encodedData) {
     if (!document.getElementById('editStudentModal')) {
         await window.loadModal('edit-student-modal');
 
+        // Setup listeners for the newly loaded modal
+        setupEditModalListeners();
+
         // Después de cargar, attach el event listener del form
         const form = document.querySelector('#editStudentModal form');
         if (form) {
             form.onsubmit = (e) => handleEditSubmit(e);
         }
+    } else {
+        // Modal already exists, just reset the input listener to be sure
+        setupEditModalListeners();
     }
 
     const data = JSON.parse(decodeURIComponent(encodedData))
@@ -808,7 +849,8 @@ async function openEditModal(encodedData) {
     setValue('edit_direccion', data.direccion)
     setValue('edit_lugar_nacimiento', data.lugar_nacimiento)
     setValue('edit_fecha_nacimiento', data.fecha_nacimiento)
-    setValue('edit_correo', data.usuarios?.correo)
+    const user = Array.isArray(data.usuario) ? data.usuario[0] : data.usuario
+    setValue('edit_correo', user?.correo)
     setValue('edit_anio', data.año_actual)
     setValue('edit_estado', data.estado_id)
 
@@ -822,9 +864,10 @@ async function openEditModal(encodedData) {
 
     // Priority: Documentos > Usuarios
     const photoDoc = data.documentos_estudiantes?.find(d => d.tipo_documento === 'foto_perfil')
-    let photoUrl = data.usuarios?.url_foto
+    const userForPhoto = Array.isArray(data.usuario) ? data.usuario[0] : data.usuario
+    let photoUrl = userForPhoto?.url_foto
     if (photoDoc && photoDoc.url_archivo.startsWith('http')) photoUrl = photoDoc.url_archivo
-    else if (photoDoc) photoUrl = `${supabase.storageUrl}/object/public/documentos/${photoDoc.url_archivo}`
+    else if (photoDoc) photoUrl = `${supabase.storageUrl}/object/public/avatars/profiles/${photoDoc.url_archivo}`
 
     if (photoUrl) {
         preview.src = photoUrl
@@ -889,7 +932,7 @@ async function handleEditSubmit(e) {
 
         // --- 2. Handle Document Uploads (Profile Photo + Expediente) ---
         const docUploads = [
-            { id: 'edit_photo_input', type: 'foto_perfil', bucket: 'profile-photos' },
+            { id: 'edit_photo_input', type: 'foto_perfil', bucket: 'avatars' },
             { name: 'doc_cedula', type: 'cedula', bucket: 'documentos' },
             { name: 'doc_titulo_bachiller', type: 'titulo_bachiller', bucket: 'documentos' },
             { name: 'doc_notas_certificadas', type: 'notas_certificadas', bucket: 'documentos' },
@@ -906,18 +949,19 @@ async function handleEditSubmit(e) {
                 const fileExt = file.name.split('.').pop()
                 const identifier = userId || `student-${studentId}`
                 const fileName = `${identifier}-${doc.type}-${Date.now()}.${fileExt}`
+                const filePath = doc.bucket === 'avatars' ? `profiles/${fileName}` : fileName
 
                 console.log(`Subiendo ${doc.type}...`)
 
                 const { error: uploadError } = await supabase.storage
                     .from(doc.bucket)
-                    .upload(fileName, file, { upsert: true })
+                    .upload(filePath, file, { upsert: true })
 
                 if (uploadError) throw new Error(`Error subiendo ${doc.type}: ` + uploadError.message)
 
                 const { data: { publicUrl } } = supabase.storage
                     .from(doc.bucket)
-                    .getPublicUrl(fileName)
+                    .getPublicUrl(filePath)
 
                 // Update database record for this document
                 const { data: existing } = await supabase
@@ -931,6 +975,7 @@ async function handleEditSubmit(e) {
                     tipo_documento: doc.type,
                     url_archivo: publicUrl,
                     nombre_original: file.name,
+                    verificado: true, // Auto-verify since Admin is uploading
                     estado_id: 1
                 }
 

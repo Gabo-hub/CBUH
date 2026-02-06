@@ -6,6 +6,7 @@ export default {
         "./shared/**/*.{html,js}",
         "./components/**/*.{html,js}",
         "./auth/**/*.{html,js}",
+        "./assets/js/**/*.js",
     ],
     theme: {
         extend: {

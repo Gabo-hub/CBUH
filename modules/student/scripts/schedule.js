@@ -100,6 +100,7 @@ async function loadStudentSchedules() {
                 carga:cargas_academicas (
                     id,
                     materia:materias (id, nombre, codigo, año_materia),
+                    seccion:seccion_id (nombre, codigo),
                     docente:docentes (nombres, apellidos)
                 )
             `)
@@ -171,6 +172,11 @@ function createScheduleBlock(schedule) {
                 <p class="text-[10px] font-black text-white uppercase tracking-wider leading-tight line-clamp-2">
                     ${schedule.carga?.materia?.nombre || 'Materia'}
                 </p>
+                ${schedule.carga?.seccion ? `
+                    <p class="text-[8px] font-black text-gold/80 uppercase tracking-widest mt-0.5">
+                        SEC: ${schedule.carga.seccion.nombre}
+                    </p>
+                ` : ''}
                 <p class="text-[9px] font-bold text-white/50 mt-1">${schedule.carga?.materia?.codigo}</p>
             </div>
             

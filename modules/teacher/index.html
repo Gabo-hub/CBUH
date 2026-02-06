@@ -137,16 +137,53 @@
             <div id="modal-attendance" class="fixed inset-0 z-50 hidden">
                 <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('modal-attendance')">
                 </div>
-                <!-- Simple placeholder for attendance -->
                 <div
-                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-primary-dark rounded-3xl border border-white/10 shadow-2xl p-8">
-                    <div class="text-center space-y-4">
-                        <span class="material-symbols-outlined text-4xl text-emerald-400">how_to_reg</span>
-                        <h3 class="text-lg font-black text-white uppercase">Control de Asistencia</h3>
-                        <p class="text-white/40 text-xs">Sistema de asistencia en desarrollo. Pronto disponible.</p>
+                    class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-sm bg-primary-dark rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+
+                    <div class="p-6 border-b border-white/10 bg-black/20 flex justify-between items-center">
+                        <h3 class="text-sm font-black text-white uppercase tracking-tight">Registro de <span
+                                class="text-gold">Asistencia</span></h3>
                         <button onclick="closeModal('modal-attendance')"
-                            class="w-full py-3 bg-white/5 hover:bg-white/10 rounded-xl text-white font-bold uppercase text-xs">Cerrar</button>
+                            class="size-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all">
+                            <span class="material-symbols-outlined text-lg">close</span>
+                        </button>
                     </div>
+
+                    <form id="form-attendance" class="p-6 space-y-6">
+                        <input type="hidden" id="attendance-inscription-id">
+
+                        <div class="text-center">
+                            <div
+                                class="size-16 rounded-full bg-card-dark border border-white/10 mx-auto mb-3 flex items-center justify-center overflow-hidden">
+                                <img id="attendance-student-img" class="w-full h-full object-cover hidden">
+                                <span id="attendance-student-initials" class="text-xl font-bold text-white/40">--</span>
+                            </div>
+                            <h4 id="attendance-student-name" class="text-white font-bold text-lg">Student Name</h4>
+                            <p class="text-[10px] text-white/40 uppercase tracking-widest mt-1">Porcentaje de Asistencia
+                            </p>
+                        </div>
+
+                        <div class="space-y-2">
+                            <div class="relative">
+                                <input type="number" id="attendance-input" min="0" max="100" step="1" required
+                                    class="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-4 text-center text-2xl font-black text-white focus:border-gold outline-none transition-all placeholder:text-white/10"
+                                    placeholder="0">
+                                <span class="absolute right-8 top-1/2 -translate-y-1/2 text-white/20 font-bold">%</span>
+                            </div>
+                            <p class="text-[10px] text-center text-white/40">
+                                <span class="text-red-400 font-bold">Nota:</span> Menos del 80% reprueba
+                                automáticamente.
+                            </p>
+                        </div>
+
+                        <div class="pt-2">
+                            <button type="submit"
+                                class="w-full bg-gold hover:bg-white text-primary-dark font-black py-3 rounded-xl uppercase tracking-widest text-xs transition-all flex items-center justify-center gap-2 shadow-lg shadow-gold/20">
+                                <span class="material-symbols-outlined text-lg">save</span>
+                                Guardar Asistencia
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 

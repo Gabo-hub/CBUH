@@ -422,7 +422,12 @@ function loadConfigData() {
 
 async function handleResetPassword() {
     try {
-        if (!confirm('¿Estás seguro de que deseas recibir un correo para restablecer tu contraseña?')) return;
+        const confirmed = await NotificationSystem.confirm(
+            'Restablecer Contraseña',
+            '¿Estás seguro de que deseas recibir un correo para restablecer tu contraseña?',
+            { confirmText: 'Enviar Correo' }
+        );
+        if (!confirmed) return;
 
         const { error } = await supabase.auth.resetPasswordForEmail(currentProfile.correo, {
             redirectTo: window.location.origin + '/auth/reset-password.html',
@@ -432,12 +437,11 @@ async function handleResetPassword() {
 
         if (window.NotificationSystem) {
             NotificationSystem.show('Se ha enviado un correo de recuperación a: ' + currentProfile.correo, 'success');
-        } else {
-            alert('Correo enviado');
         }
     } catch (e) {
         console.error('Reset error:', e);
-        alert('Error: ' + e.message);
+        if (window.NotificationSystem) NotificationSystem.show('Error: ' + e.message, 'error');
+        else console.error('Error: ' + e.message);
     }
 }
 

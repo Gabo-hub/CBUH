@@ -225,18 +225,24 @@ async function loadCargas() {
             .from('cargas_academicas')
             .select(`
                 id,
+                sede_id,
                 materia:materias (
                     id,
                     nombre,
                     codigo,
                     año_materia
                 ),
+                seccion:secciones (
+                    nombre,
+                    codigo
+                ),
                 docente:docentes (
                     id,
                     nombres,
                     apellidos
                 )
-            `);
+            `)
+            .eq('sede_id', window.adminContext?.sedeId);
 
         if (error) throw error;
 
@@ -271,7 +277,9 @@ function renderCargasDropdown() {
         if (!carga.materia) return;
         const option = document.createElement('option');
         option.value = carga.id;
-        option.textContent = `${carga.materia.codigo} - ${carga.materia.nombre} (${carga.materia.año_materia} Año)`;
+        // Format: Materia - Año - Sección (Código)
+        const secInfo = carga.seccion ? ` - ${carga.seccion.nombre} (${carga.seccion.codigo || 'S/C'})` : '';
+        option.textContent = `${carga.materia.nombre} - ${carga.materia.año_materia}º Año${secInfo}`;
         select.appendChild(option);
     });
 }
@@ -292,26 +300,33 @@ async function loadSchedules() {
         const { data, error } = await supabase
             .from('horarios')
             .select(`
-        id,
-            dia_semana,
-            hora_inicio,
-            hora_fin,
-            aula,
-            mes,
-            carga_academica_id,
-            carga: cargas_academicas(
-                materia: materias(
-                    nombre,
-                    codigo,
-                    año_materia
-                ),
-                docente: docentes(
-                    id,
-                    nombres,
-                    apellidos
+                id,
+                dia_semana,
+                hora_inicio,
+                hora_fin,
+                aula,
+                mes,
+                carga_academica_id,
+                sede_id,
+                carga: cargas_academicas(
+                    materia: materias(
+                        id,
+                        nombre,
+                        codigo,
+                        año_materia
+                    ),
+                    seccion: secciones(
+                        nombre,
+                        codigo
+                    ),
+                    docente: docentes(
+                        id,
+                        nombres,
+                        apellidos
+                    )
                 )
-            )
-            `);
+            `)
+            .eq('sede_id', window.adminContext?.sedeId);
 
         if (error) throw error;
 
@@ -423,7 +438,7 @@ function createScheduleBlock(schedule) {
 
     div.innerHTML = `
         <p class="text-[9px] font-black text-white uppercase tracking-wider truncate mb-0.5">
-            ${schedule.carga?.materia?.nombre || 'Materia'}
+            ${schedule.carga?.materia?.nombre || 'Materia'} <span class="text-gold opacity-80 text-[8px] ml-1">${schedule.carga?.seccion?.nombre || '(S/C)'}</span>
         </p>
         <div class="flex items-center justify-between">
              <p class="text-[9px] text-white/60 font-medium leading-tight truncate">
@@ -664,7 +679,7 @@ async function handleSaveSchedule(e) {
                         // Rule: Current Month MUST be GREATER than Prerequisite Month
                         if (newMes <= prereqMes) {
                             const prereqName = scheduledPrereq.carga?.materia?.nombre || 'Materia Previa';
-                            const mesName = document.querySelector(`#schedule - month option[value = "${prereqMes}"]`)?.text || prereqMes;
+                            const mesName = document.querySelector(`#schedule-month option[value="${prereqMes}"]`)?.text || prereqMes;
 
                             showNotification(`Error de Prelación: "${selectedCarga.materia.nombre}" requiere aprobar "${prereqName}". "${prereqName}" está programada en ${mesName}, por lo que esta materia debe ser en un mes posterior.`, 'error');
                             return;
@@ -713,7 +728,12 @@ async function handleDeleteSchedule() {
     const id = document.getElementById('schedule-id').value;
     if (!id) return;
 
-    if (!confirm('¿Estás seguro de eliminar esta clase?')) return;
+    const confirmed = await NotificationSystem.confirm(
+        'Eliminar Clase',
+        '¿Estás seguro de eliminar esta clase del horario? Esta acción no se puede deshacer.',
+        { confirmText: 'Eliminar Clase', type: 'danger' }
+    );
+    if (!confirmed) return;
 
     try {
         const { error } = await supabase
@@ -741,6 +761,25 @@ async function handlePrintSchedule() {
     }
 
     try {
+        const sedeId = window.adminContext?.sedeId;
+
+        // Fetch Configs
+        const { data: configs } = await supabase
+            .from('configuraciones')
+            .select('*')
+            .eq('sede_id', sedeId)
+            .in('clave', ['logo_url_sede', 'nombre_sede']);
+
+        let logoUrl = null;
+        let institutionName = 'COLEGIO BÍBLICO UNIVERSAL HOREB';
+
+        if (configs) {
+            const map = {};
+            configs.forEach(c => map[c.clave] = c.valor);
+            if (map['logo_url_sede']) logoUrl = map['logo_url_sede'];
+            if (map['nombre_sede']) institutionName = map['nombre_sede'].toUpperCase();
+        }
+
         const doc = new jsPDF({
             orientation: 'landscape',
             unit: 'mm',
@@ -756,15 +795,37 @@ async function handlePrintSchedule() {
         doc.setFillColor(20, 20, 20); // Dark background
         doc.rect(0, 0, 297, 40, 'F');
 
+        // Logo
+        if (logoUrl) {
+            try {
+                // Fetch image to get base64/blob
+                // jsPDF needs base64 or HTMLImageElement
+                // Simplest: Create hidden image element or fetch blob
+                /* NOTE: Fetching external image might fail if CORS is not set on Storage bucket.
+                   Assuming standard Supabase Storage setup allows GET. */
+                const img = new Image();
+                img.src = logoUrl;
+                // Sync wait for loading is tricky in pure JS without promise wrapper, but doc.addImage handles URLs if CORS allows, 
+                // however, standard jsPDF in browser often needs Base64.
+                // Let's try adding it via the addImage URL support (might require specific jsPDF plugins).
+                // Safest fallback: no logo if complex.
+                // Better: Use a simple fetch and convert to base64 helper.
+                // For now, let's try direct URL which modern jsPDF supports if CORS is OK.
+                doc.addImage(logoUrl, 'PNG', 15, 5, 30, 30);
+            } catch (e) {
+                console.warn('Could not add logo to PDF', e);
+            }
+        }
+
         doc.setTextColor(201, 169, 97); // Gold
         doc.setFontSize(22);
         doc.setFont('helvetica', 'bold');
-        doc.text('HORARIO ACADÉMICO', 15, 20);
+        doc.text('HORARIO ACADÉMICO', logoUrl ? 50 : 15, 20);
 
         doc.setTextColor(255, 255, 255);
         doc.setFontSize(10);
-        doc.text('CENTRO BÍBLICO UNIVERSITARIO DE HERRERA', 15, 28);
-        doc.text(`${yearText} | Mes: ${monthName} | Generado: ${new Date().toLocaleDateString()} `, 15, 33);
+        doc.text(institutionName, logoUrl ? 50 : 15, 28);
+        doc.text(`${yearText} | Mes: ${monthName} | Generado: ${new Date().toLocaleDateString()} `, logoUrl ? 50 : 15, 33);
 
         // -- Table Logic --
         const daysMap = {
@@ -825,9 +886,9 @@ async function handlePrintSchedule() {
 
 // Notification Helper
 function showNotification(msg, type) {
-    if (window.showNotification) {
-        window.showNotification(msg, type);
+    if (window.NotificationSystem) {
+        NotificationSystem.show(msg, type);
     } else {
-        alert(msg);
+        console.log(`[Notification] ${type}: ${msg}`);
     }
 }

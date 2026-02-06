@@ -126,6 +126,18 @@ function initFormSubmit(form) {
 
             if (!username || !email) throw new Error('Usuario y correo son obligatorios para el acceso al sistema')
 
+            // 0. Pre-check: Verify if student already exists GLOBALLY (to avoid creating Auth user if student exists)
+            const { data: existingStudent, error: checkError } = await supabase
+                .from('estudiantes')
+                .select('id, sede_id')
+                .eq('cedula', cedula)
+                .maybeSingle()
+
+            if (existingStudent) {
+                // If in same sede or different, we block to maintain 1:1 person-student mapping
+                throw new Error(`El estudiante ya está registrado (Sede ID: ${existingStudent.sede_id}). No se puede duplicar.`)
+            }
+
             // 1. Create Supabase Auth User
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email,
@@ -191,7 +203,7 @@ function initFormSubmit(form) {
 
             // 2. Upload Documents & Photo
             const filesToUpload = [
-                { inputId: 'reg_photo_input', type: 'foto_perfil', bucket: 'profile-photos' },
+                { inputId: 'reg_photo_input', type: 'foto_perfil', bucket: 'avatars' },
                 { inputId: 'reg_doc_cedula', type: 'cedula', bucket: 'documentos' },
                 { inputId: 'reg_doc_titulo', type: 'titulo_bachiller', bucket: 'documentos' },
                 { inputId: 'reg_doc_notas', type: 'notas_certificadas', bucket: 'documentos' },
@@ -221,6 +233,7 @@ function initFormSubmit(form) {
                         tipo_documento: doc.type,
                         url_archivo: publicUrl,
                         nombre_original: file.name,
+                        verificado: true, // Auto-verify (Admin Registration)
                         estado_id: 1
                     })
 
@@ -235,7 +248,7 @@ function initFormSubmit(form) {
             if (window.NotificationSystem) {
                 window.NotificationSystem.show('¡Estudiante inscrito con éxito!', 'success')
             } else {
-                alert('¡Estudiante inscrito con éxito!')
+                console.log('¡Estudiante inscrito con éxito!')
             }
 
             resetForm(form)
@@ -249,7 +262,7 @@ function initFormSubmit(form) {
             if (window.NotificationSystem) {
                 window.NotificationSystem.show(errorMsg, 'error')
             } else {
-                alert(errorMsg)
+                console.error(errorMsg)
             }
         } finally {
             btnSubmit.disabled = false
