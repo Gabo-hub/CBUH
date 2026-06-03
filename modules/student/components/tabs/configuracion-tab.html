@@ -1,0 +1,244 @@
+<div class="flex-1 flex flex-col h-full overflow-hidden bg-background-dark/50">
+    <!-- Main Scrollable Area -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar p-6 lg:p-12">
+        <div class="max-w-[1400px] mx-auto">
+
+            <!-- Header Section (Integrated, not a card) -->
+            <div class="mb-12">
+                <h1 class="text-4xl font-black text-white uppercase tracking-tighter italic mb-2">
+                    Centro de <span class="text-gold">Configuración</span>
+                </h1>
+                <p class="text-white/40 text-xs font-bold uppercase tracking-[0.3em]">Gestión de identidad, seguridad y
+                    preferencias del docente</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+                <!-- Left Column: Profile Card -->
+                <div class="lg:col-span-4 space-y-6">
+                    <div
+                        class="bg-primary-dark rounded-[2.5rem] border border-white/10 p-10 relative overflow-hidden group">
+                        <div
+                            class="absolute top-0 right-0 w-32 h-32 bg-gold/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-gold/10 transition-colors">
+                        </div>
+
+                        <div class="relative z-10 flex flex-col items-center">
+                            <!-- Avatar with sleek upload -->
+                            <div class="relative mb-8">
+                                <div
+                                    class="size-40 rounded-full border-4 border-gold/20 p-1 bg-gradient-to-tr from-gold/20 to-transparent">
+                                    <div
+                                        class="size-full rounded-full bg-slate-900 overflow-hidden flex items-center justify-center border-2 border-white/5 shadow-2xl relative">
+                                        <span id="config-profile-icon"
+                                            class="text-6xl grayscale opacity-30 select-none">👤</span>
+                                        <img id="config-profile-img" src="" class="w-full h-full object-cover hidden"
+                                            alt="Perfil">
+
+                                        <!-- Overlay on Hover -->
+                                        <label for="photo-upload"
+                                            class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-all duration-300">
+                                            <span
+                                                class="material-symbols-outlined text-gold text-3xl mb-1">photo_camera</span>
+                                            <span
+                                                class="text-[8px] font-black text-white uppercase tracking-widest">Cambiar
+                                                Foto</span>
+                                            <input type="file" id="photo-upload" class="hidden" accept="image/*">
+                                        </label>
+                                    </div>
+                                </div>
+                                <div
+                                    class="absolute -bottom-2 right-4 size-10 bg-gold text-primary-dark rounded-xl flex items-center justify-center shadow-xl border border-white/20 transform -rotate-12 group-hover:rotate-0 transition-transform">
+                                    <span class="material-symbols-outlined text-sm font-black">verified</span>
+                                </div>
+                            </div>
+
+                            <div class="text-center space-y-1">
+                                <h2 id="config-display-name"
+                                    class="text-xl font-black text-white uppercase tracking-tight">Docente CBUH</h2>
+                                <p id="config-display-email"
+                                    class="text-[10px] text-white/40 font-bold uppercase tracking-widest">---</p>
+                            </div>
+                        </div>
+
+                        <!-- Info Pills -->
+                        <div class="mt-10 space-y-3 relative z-10">
+                            <div
+                                class="flex items-center justify-between p-4 rounded-2xl bg-black/20 border border-white/5">
+                                <span
+                                    class="text-[9px] font-black text-white/40 uppercase tracking-widest">Estatus</span>
+                                <span
+                                    class="text-[9px] font-black text-emerald-400 bg-emerald-400/10 px-2 py-1 rounded-md border border-emerald-400/20 uppercase">Activo</span>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-4 rounded-2xl bg-black/20 border border-white/5">
+                                <span class="text-[9px] font-black text-white/40 uppercase tracking-widest">Rol</span>
+                                <span
+                                    class="text-[9px] font-black text-gold bg-gold/10 px-2 py-1 rounded-md border border-gold/20 uppercase">Profesor
+                                    Titular</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Storage/Other Info (Decorative/Functional) -->
+                    <div class="bg-primary-dark/40 rounded-3xl border border-white/10 p-8">
+                        <h4
+                            class="text-[10px] font-black text-white uppercase tracking-widest mb-4 flex items-center gap-2">
+                            <span class="material-symbols-outlined text-xs text-gold">info</span>
+                            Nota de Privacidad
+                        </h4>
+                        <p class="text-[10px] text-white/40 leading-relaxed font-medium">Su información personal está
+                            protegida bajo los lineamientos de la institución. Solo personal administrativo autorizado
+                            puede visualizar los datos sensibles.</p>
+                    </div>
+                </div>
+
+                <!-- Right Column: Form Sections -->
+                <div class="lg:col-span-8 space-y-8 pb-12">
+
+                    <!-- General Data Section -->
+                    <div class="bg-primary-dark rounded-[2.5rem] border border-white/10 overflow-hidden">
+                        <div
+                            class="px-10 py-8 border-b border-white/5 bg-gradient-to-r from-gold/5 to-transparent flex items-center justify-between">
+                            <div class="flex items-center gap-4">
+                                <div
+                                    class="size-12 rounded-2xl bg-gold/10 border border-gold/20 flex items-center justify-center text-gold">
+                                    <span class="material-symbols-outlined">person</span>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-extrabold text-white uppercase tracking-widest">Información
+                                        Personal</h3>
+                                    <p class="text-[10px] text-white/40 font-bold uppercase tracking-widest">Datos
+                                        básicos y de contacto</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div class="space-y-3">
+                                <label
+                                    class="text-[10px] font-black text-gold uppercase tracking-[0.2em] ml-1">Usuario</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-gold transition-colors text-lg">alternate_email</span>
+                                    <input type="text" id="config-username" readonly
+                                        class="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white/60 outline-none cursor-not-allowed italic" />
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-gold uppercase tracking-[0.2em] ml-1">Correo
+                                    Electrónico</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-gold transition-colors text-lg">mail</span>
+                                    <input type="email" id="config-email" readonly
+                                        class="w-full bg-black/40 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white/60 outline-none cursor-not-allowed italic" />
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-gold uppercase tracking-[0.2em] ml-1">Teléfono
+                                    de Contacto</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-gold transition-colors text-lg">call</span>
+                                    <input type="text" id="config-phone" placeholder="+58 4XX XXXXXXX"
+                                        class="w-full bg-black/60 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white focus:border-gold/50 focus:bg-black/80 outline-none transition-all shadow-inner" />
+                                </div>
+                            </div>
+                            <div class="space-y-3">
+                                <label class="text-[10px] font-black text-gold uppercase tracking-[0.2em] ml-1">Fecha de
+                                    Nacimiento</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-white/20 group-focus-within:text-gold transition-colors text-lg">calendar_today</span>
+                                    <input type="date" id="config-birthdate"
+                                        class="w-full bg-black/60 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white focus:border-gold/50 focus:bg-black/80 outline-none transition-all shadow-inner [color-scheme:dark]" />
+                                </div>
+                            </div>
+                            <div class="space-y-3 md:col-span-2">
+                                <label
+                                    class="text-[10px] font-black text-gold uppercase tracking-[0.2em] ml-1">Dirección
+                                    de Habitación</label>
+                                <div class="relative group">
+                                    <span
+                                        class="material-symbols-outlined absolute left-4 top-4 text-white/20 group-focus-within:text-gold transition-colors text-lg">location_on</span>
+                                    <textarea id="config-address" rows="3"
+                                        placeholder="Calle, Av, Nro de Casa/Apto, Ciudad..."
+                                        class="w-full bg-black/60 border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white focus:border-gold/50 focus:bg-black/80 outline-none transition-all shadow-inner resize-none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security & Privacy Card -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="bg-primary-dark rounded-[2.5rem] border border-white/10 p-10 space-y-6">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="size-10 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400">
+                                    <span class="material-symbols-outlined text-xl">security</span>
+                                </div>
+                                <h3 class="text-xs font-black text-white uppercase tracking-widest">Seguridad</h3>
+                            </div>
+                            <button id="btn-reset-password"
+                                class="w-full flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all group">
+                                <span
+                                    class="text-[10px] font-black text-white/60 uppercase group-hover:text-white">Cambiar
+                                    Contraseña</span>
+                                <span
+                                    class="material-symbols-outlined text-gold text-lg group-hover:translate-x-1 transition-transform">password</span>
+                            </button>
+                            <button id="btn-view-sessions"
+                                class="w-full flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all group">
+                                <span class="text-[10px] font-black text-white/60 uppercase group-hover:text-white">Ver
+                                    Sesiones</span>
+                                <span
+                                    class="material-symbols-outlined text-gold text-lg group-hover:translate-x-1 transition-transform">devices</span>
+                            </button>
+                        </div>
+
+                        <div class="bg-primary-dark rounded-[2.5rem] border border-white/10 p-10 space-y-6">
+                            <div class="flex items-center gap-4 mb-4">
+                                <div
+                                    class="size-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                                    <span class="material-symbols-outlined text-xl">notifications_active</span>
+                                </div>
+                                <h3 class="text-xs font-black text-white uppercase tracking-widest">Preferencias</h3>
+                            </div>
+                            <div
+                                class="flex items-center justify-between p-4 rounded-xl bg-black/20 border border-white/5 opacity-50">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black text-white/60 uppercase">Alertas Email</span>
+                                    <span
+                                        class="text-[8px] font-bold text-gold uppercase tracking-tighter">Próximamente</span>
+                                </div>
+                                <div class="relative inline-flex items-center cursor-not-allowed">
+                                    <input type="checkbox" disabled class="sr-only peer">
+                                    <div
+                                        class="w-9 h-5 bg-white/5 rounded-full peer-disabled:opacity-20 peer-checked:after:translate-x-4 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white/20 after:rounded-full after:h-4 after:w-4 after:transition-all">
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[9px] text-white/20 font-bold uppercase text-center mt-2 italic">Más opciones
+                                próximamente</p>
+                        </div>
+                    </div>
+
+                    <!-- Footer Action Buttons -->
+                    <div class="flex items-center justify-end gap-4 pt-4">
+                        <button id="btn-restore-config"
+                            class="px-8 py-4 rounded-2xl bg-white/5 border border-white/10 text-white/40 text-xs font-black uppercase hover:text-white hover:bg-white/10 transition-all">
+                            Restaurar
+                        </button>
+                        <button id="btn-save-config"
+                            class="px-10 py-4 rounded-2xl bg-gold text-primary-dark text-xs font-black uppercase hover:bg-white transition-all shadow-2xl shadow-gold/20 flex items-center gap-3 active:scale-95 group">
+                            <span>Guardar Cambios</span>
+                            <span
+                                class="material-symbols-outlined text-sm font-black group-hover:rotate-12 transition-transform">save</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

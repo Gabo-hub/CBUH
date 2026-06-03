@@ -1,0 +1,59 @@
+<div class="h-full flex flex-col p-6 lg:p-10">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-black text-white uppercase tracking-tighter italic"><span
+                    class="text-gold">Horario</span> de Clases</h1>
+            <p class="text-white/40 text-xs font-bold uppercase tracking-[0.3em]">Consulta tu carga académica semanal
+            </p>
+        </div>
+        <button onclick="window.print()"
+            class="p-3 bg-white/5 hover:bg-white/10 text-white rounded-xl border border-white/10 transition-all print:hidden">
+            <span class="material-symbols-outlined">print</span>
+        </button>
+    </div>
+
+    <div
+        class="flex-1 bg-card-dark border border-white/5 rounded-3xl overflow-hidden flex flex-col shadow-2xl relative group">
+        <!-- Header Row -->
+        <div
+            class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr] border-b border-white/10 bg-black/20 text-center py-4">
+            <!-- Time Column Header -->
+            <div class="text-[10px] font-black text-gold/40 uppercase tracking-widest border-r border-white/5">Hora
+            </div>
+            <!-- Days -->
+            <div class="text-[10px] font-black text-gold uppercase tracking-widest border-r border-white/5">Lunes</div>
+            <div class="text-[10px] font-black text-gold uppercase tracking-widest border-r border-white/5">Martes</div>
+            <div class="text-[10px] font-black text-gold uppercase tracking-widest border-r border-white/5">Miércoles
+            </div>
+            <div class="text-[10px] font-black text-gold uppercase tracking-widest border-r border-white/5">Jueves</div>
+            <div class="text-[10px] font-black text-gold uppercase tracking-widest border-r border-white/5">Viernes
+            </div>
+            <!-- Saturday -->
+            <div class="text-[10px] font-black text-gold/60 uppercase tracking-widest">Sábado</div>
+        </div>
+
+        <!-- Schedule Grid Container -->
+        <div id="schedule-container"
+            class="flex-1 overflow-y-auto custom-scrollbar relative bg-[url('/assets/patterns/grid.svg')] bg-repeat opacity-80">
+            <div class="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr_1fr] min-h-full">
+                <!-- Time Column -->
+                <div id="student-grid-time-column" class="border-r border-white/5 bg-black/10">
+                    <!-- Times injected via JS -->
+                </div>
+
+                <!-- Days Columns -->
+                <div id="student-schedule-day-1" class="relative border-r border-white/5 h-full"></div>
+                <div id="student-schedule-day-2" class="relative border-r border-white/5 h-full"></div>
+                <div id="student-schedule-day-3" class="relative border-r border-white/5 h-full"></div>
+                <div id="student-schedule-day-4" class="relative border-r border-white/5 h-full"></div>
+                <div id="student-schedule-day-5" class="relative border-r border-white/5 h-full"></div>
+                <div id="student-schedule-day-6" class="relative h-full"></div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="schedule-loading" class="absolute inset-0 flex items-center justify-center bg-black/50 z-20">
+                <span class="animate-spin material-symbols-outlined text-gold font-black text-4xl">sync</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,99 @@
+<!-- Component: Sections Tab -->
+<div class="p-8 space-y-8">
+    <!-- Header & Actions -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+            <h2 class="text-2xl font-black text-white uppercase tracking-tight">Gestión de Secciones</h2>
+            <p class="text-sm text-white/40 font-bold uppercase tracking-widest mt-1">Crea y administra las secciones
+                para tu sede</p>
+        </div>
+        <button id="btn-new-section"
+            class="bg-gold hover:bg-white text-primary-dark font-black px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all uppercase text-xs tracking-widest shadow-lg shadow-gold/10 hover:shadow-white/10 group">
+            <span class="material-symbols-outlined text-lg group-hover:scale-110 transition-transform">add_circle</span>
+            Nueva Sección
+        </button>
+    </div>
+
+    <!-- Sections Grid -->
+    <div id="sections-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Loading State -->
+        <div class="col-span-full py-12 flex justify-center">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-gold"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Nueva/Editar Sección -->
+<div id="sectionModal"
+    class="fixed inset-0 bg-black/80 flex items-center justify-center z-50 hidden backdrop-blur-sm p-4">
+    <div
+        class="bg-primary-dark rounded-2xl border border-white/10 p-8 max-w-md w-full mx-4 shadow-2xl transform transition-all scale-100">
+        <div class="flex items-center justify-between mb-8">
+            <div>
+                <h2 id="modal-title-section" class="text-xl font-black text-white uppercase tracking-tight">Nueva
+                    Sección</h2>
+                <p class="text-xs text-white/40 font-bold uppercase tracking-widest mt-1">Datos de la sección</p>
+            </div>
+            <button onclick="document.getElementById('sectionModal').classList.add('hidden')"
+                class="size-10 rounded-full hover:bg-white/5 text-white/40 hover:text-white transition-all flex items-center justify-center">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+
+        <form id="sectionForm" class="space-y-6">
+            <input type="hidden" id="section-id" name="id">
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Seleccionar
+                    Materia</label>
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-white/40">school</span>
+                    <select id="section-materia" name="materia_id"
+                        class="w-full bg-black/20 border border-white/10 rounded-xl pl-10 pr-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all appearance-none cursor-pointer">
+                        <option value="">Cargando materias...</option>
+                    </select>
+                    <span
+                        class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none">expand_more</span>
+                </div>
+
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Código
+                    Identificador</label>
+                <input type="text" id="section-codigo" name="codigo" required
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20 uppercase"
+                    placeholder="Ej: A-2024">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Nombre de
+                    Sección</label>
+                <input type="text" id="section-nombre" name="nombre" required
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                    placeholder="Ej: Sección A">
+            </div>
+
+            <div>
+                <label class="block text-[10px] font-bold text-gold uppercase tracking-widest mb-2">Capacidad Máxima
+                    (Cupos)</label>
+                <input type="number" id="section-capacidad" name="capacidad" min="1" value="40" required
+                    class="w-full bg-black/20 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:ring-1 focus:ring-gold/50 outline-none transition-all placeholder:text-white/20"
+                    placeholder="Ej: 40">
+            </div>
+
+            <div class="flex gap-4 pt-4 border-t border-white/5">
+                <button type="button" onclick="document.getElementById('sectionModal').classList.add('hidden')"
+                    class="flex-1 bg-white/5 hover:bg-white/10 text-white font-black px-6 py-3.5 rounded-xl uppercase text-xs tracking-widest transition-all">
+                    Cancelar
+                </button>
+                <button type="submit" id="btn-save-section"
+                    class="flex-1 bg-gold hover:bg-white text-primary-dark font-black px-6 py-3.5 rounded-xl uppercase text-xs tracking-widest transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-sm">save</span>
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

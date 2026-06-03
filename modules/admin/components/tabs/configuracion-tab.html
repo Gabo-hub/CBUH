@@ -1,0 +1,206 @@
+<div class="h-full flex flex-col items-center justify-start p-10 overflow-y-auto custom-scrollbar">
+
+    <div class="max-w-4xl w-full text-center mb-10">
+        <h2 class="text-3xl font-black text-white uppercase tracking-widest">
+            Configuración del <span class="text-gold">Sistema</span>
+        </h2>
+        <p class="text-white/40 text-sm mt-2">Controla los parámetros globales de la institución</p>
+    </div>
+
+    <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+
+        <!-- 1. Control Académico (Critical) -->
+        <div
+            class="md:col-span-2 bg-gradient-to-br from-white/5 to-transparent border border-white/10 rounded-2xl p-8 backdrop-blur-md relative overflow-hidden group">
+            <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                <span class="material-symbols-outlined text-9xl text-gold">shield_lock</span>
+            </div>
+
+            <h3 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                <span class="material-symbols-outlined text-gold">admin_panel_settings</span>
+                Control de Periodos
+            </h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Inscripciones -->
+                <div class="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Inscripciones</h4>
+                        <p class="text-xs text-white/40">Nuevos Ingresos</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle_inscripciones" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Carga de Notas -->
+                <div class="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Carga de Notas</h4>
+                        <p class="text-xs text-white/40">Acceso Docente</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle_notas" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold">
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Modificar Horarios -->
+                <div class="bg-black/20 rounded-xl p-4 border border-white/5 flex items-center justify-between">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">Edición de Horarios</h4>
+                        <p class="text-xs text-white/40">Gestión de Clases</p>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="toggle_horarios" class="sr-only peer">
+                        <div
+                            class="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gold">
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <p class="text-xs text-white/30 mt-4 italic">* Desactivar estos interruptores bloqueará las acciones
+                correspondientes para todos los usuarios.</p>
+        </div>
+
+        <!-- 2. Datos Institucionales -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+            <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-white/60">school</span>
+                Datos de la Sede
+            </h3>
+            <form id="form_institution" class="space-y-5">
+                <!-- Logo Upload -->
+                <div class="flex items-center gap-4 mb-4">
+                    <div
+                        class="size-20 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center overflow-hidden relative group">
+                        <img id="preview_sede_logo" src="" class="w-full h-full object-contain p-2 hidden">
+                        <span id="icon_sede_logo"
+                            class="material-symbols-outlined text-white/20 text-3xl">add_photo_alternate</span>
+                        <div class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                            onclick="document.getElementById('input_sede_logo').click()">
+                            <span class="material-symbols-outlined text-white">edit</span>
+                        </div>
+                    </div>
+                    <div class="flex-1">
+                        <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Logo Institucional</label>
+                        <p class="text-[10px] text-white/30 mb-2">Se mostrará en reportes y cabeceras. Formatos: PNG,
+                            JPG.</p>
+                        <input type="file" id="input_sede_logo" accept="image/*" class="hidden">
+                        <button type="button" onclick="document.getElementById('input_sede_logo').click()"
+                            class="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-[10px] font-bold text-gold border border-gold/20 transition-all">
+                            Seleccionar Archivo
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Nombre Sede</label>
+                        <input type="text" id="conf_nombre_sede" required
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none"
+                            placeholder="CBUH - Extensión Higuerote">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-white/60 mb-1 uppercase">País de la Sede</label>
+                        <input type="text" id="conf_pais_sede"
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none"
+                            placeholder="Ej: Venezuela">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Dirección Física</label>
+                    <textarea id="conf_direccion_sede" rows="2"
+                        class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none resize-none"
+                        placeholder="Av. Principal, Edif. CBUH..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Información Legal / Registro
+                        Fiscal</label>
+                    <textarea id="conf_registro_legal" rows="3"
+                        class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none resize-none"
+                        placeholder="Ej: Registrado en el Ministerio..."></textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Periodo Académico Actual</label>
+                    <input type="text" id="conf_periodo"
+                        class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none"
+                        placeholder="2025-2026">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-white/10 hover:bg-white/20 text-white text-xs font-bold uppercase py-3 rounded-xl transition-colors border border-white/5 shadow-lg">
+                        Guardar Información de Sede
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 3. Perfil de Administrador -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 backdrop-blur-md">
+            <h3 class="text-lg font-bold text-white mb-6 flex items-center gap-2">
+                <span class="material-symbols-outlined text-white/60">manage_accounts</span>
+                Perfil de Administrador
+            </h3>
+            <form id="form_profile" class="space-y-4">
+
+                <!-- Admin Avatar -->
+                <div class="flex justify-center mb-6">
+                    <div class="relative group">
+                        <div class="size-24 rounded-full bg-black/40 border-2 border-gold/20 overflow-hidden">
+                            <img id="preview_admin_avatar" src="" class="w-full h-full object-cover hidden">
+                            <span id="icon_admin_avatar"
+                                class="material-symbols-outlined text-white/20 text-4xl w-full h-full flex items-center justify-center">person</span>
+                        </div>
+                        <button type="button" onclick="document.getElementById('input_admin_avatar').click()"
+                            class="absolute bottom-0 right-0 size-8 rounded-full bg-gold text-primary-dark flex items-center justify-center border border-white/20 shadow-lg hover:bg-white transition-colors">
+                            <span class="material-symbols-outlined text-sm">camera_alt</span>
+                        </button>
+                        <input type="file" id="input_admin_avatar" accept="image/*" class="hidden">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Nombres</label>
+                        <input type="text" id="profile_nombres" required
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Apellidos</label>
+                        <input type="text" id="profile_apellidos" required
+                            class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-gold/50 outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-white/60 mb-1 uppercase">Correo Electrónico</label>
+                    <input type="email" id="profile_email" readonly
+                        class="w-full bg-black/20 border border-white/5 rounded-lg px-3 py-2 text-sm text-white/50 cursor-not-allowed">
+                </div>
+
+                <div class="pt-4 border-t border-white/5 mt-4">
+                    <label class="block text-xs font-bold text-gold/80 mb-2 uppercase">Cambiar Contraseña
+                        (Opcional)</label>
+                    <input type="password" id="profile_new_pass"
+                        class="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:border-red-400/50 outline-none placeholder-white/10"
+                        placeholder="Nueva contraseña">
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit"
+                        class="w-full bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 text-xs font-bold uppercase py-3 rounded-xl transition-colors shadow-lg">
+                        Actualizar Perfil
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>

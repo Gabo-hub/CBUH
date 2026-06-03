@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión - CBUH</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary': '#1a1625',
+                        'primary-dark': '#0f0b16',
+                        'card-dark': '#231d2e',
+                        'gold': '#d4af37',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-primary min-h-screen">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-card-dark border border-gold/20 rounded-2xl p-8 w-full max-w-md shadow-2xl">
+            <!-- Logo -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-black text-gold mb-2">CBUH</h1>
+                <p class="text-white/60 text-sm">Centro Bíblico Unido Hispano</p>
+            </div>
+
+            <!-- Formulario -->
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-sm font-bold text-white/80 mb-2">Correo Electrónico</label>
+                    <input type="email" id="email" required
+                        class="w-full px-4 py-3 bg-primary border border-white/10 rounded-lg text-white focus:border-gold focus:outline-none transition-colors"
+                        placeholder="correo@ejemplo.com">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-bold text-white/80 mb-2">Contraseña</label>
+                    <input type="password" id="password" required
+                        class="w-full px-4 py-3 bg-primary border border-white/10 rounded-lg text-white focus:border-gold focus:outline-none transition-colors"
+                        placeholder="••••••••">
+                </div>
+
+                <div id="error-message"
+                    class="hidden text-red-400 text-sm p-3 bg-red-500/10 border border-red-500/20 rounded-lg"></div>
+
+                <button type="submit" id="submit-btn"
+                    class="w-full bg-gold hover:bg-gold/90 text-primary-dark font-bold py-3 rounded-lg transition-colors">
+                    Iniciar Sesión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Configurar Supabase
+        const SUPABASE_URL = 'https://nxzwytaqqczgyeyjjhrz.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54end5dGFxcWN6Z3lleWpqaHJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjgyMDM5OTAsImV4cCI6MjA4Mzc3OTk5MH0.bMeSy6IHm1h3kklD2q7vHEPQ4madhb40GLjSH_mF_28'
+
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+        // Verificar si ya está autenticado
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            if (session) {
+                redirectByRole()
+            }
+        })
+
+        // Manejar submit del formulario
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault()
+
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            const errorDiv = document.getElementById('error-message')
+            const submitBtn = document.getElementById('submit-btn')
+
+            // Deshabilitar botón
+            submitBtn.disabled = true
+            submitBtn.textContent = 'Iniciando sesión...'
+            errorDiv.classList.add('hidden')
+
+            try {
+                // Intentar login con Supabase
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email,
+                    password
+                })
+
+                if (error) throw error
+
+                // Redirigir según rol
+                await redirectByRole()
+
+            } catch (error) {
+                console.error('Error:', error)
+                errorDiv.textContent = error.message === 'Invalid login credentials'
+                    ? 'Credenciales inválidas'
+                    : error.message
+                errorDiv.classList.remove('hidden')
+
+                // Rehabilitar botón
+                submitBtn.disabled = false
+                submitBtn.textContent = 'Iniciar Sesión'
+            }
+        })
+
+        // Función para redirigir según rol
+        async function redirectByRole() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser()
+
+                // Obtener perfil del usuario
+                const { data: profile, error } = await supabase
+                    .from('usuarios')
+                    .select('rol_id')
+                    .eq('auth_id', user.id)
+                    .single()
+
+                if (error) throw error
+
+                // Redirigir según rol
+                switch (profile.rol_id) {
+                    case 1: // Administrador
+                        window.location.href = '/modules/admin/index.php'
+                        break
+                    case 2: // Docente
+                        window.location.href = '/modules/teacher/index.php'
+                        break
+                    case 3: // Estudiante
+                        window.location.href = '/modules/student/index.php'
+                        break
+                    default:
+                        throw new Error('Rol no válido')
+                }
+            } catch (error) {
+                console.error('Error al obtener perfil:', error)
+                document.getElementById('error-message').textContent = 'Error al cargar perfil de usuario'
+                document.getElementById('error-message').classList.remove('hidden')
+            }
+        }
+    </script>
+</body>
+
+</html>
