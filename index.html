@@ -4,17 +4,90 @@
 <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Colegio Biblíco Universal Horeb</title>
-
-    <!-- Fonts -->
+    <title>Colegio Biblico Universal Horeb</title>
+    <link rel="icon" href="/assets/img/libro.png" type="image/png">
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
-        href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cabin:ital,wght@0,400..700;1,400..700&family=Manrope:wght@300;400;500;600&family=Noto+Serif:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet" />
-    <link rel="icon" type="image/png" href="/img/libro.png">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "vinotinto": "#4A0E1C",
+                        "vinotinto-dark": "#2a0810",
+                        "gold": "#C9A961",
+                        "beige": "#F5F2EA",
+                        "beige-dark": "#E9E2D5",
+                        "charcoal-gray": "#333333",
+                        "light-gray": "#F9F9F9",
+                    },
+                    fontFamily: {
+                        "display": ["Noto Serif", "serif"],
+                        "body": ["Manrope", "sans-serif"],
+                        "nav": ["Cabin", "sans-serif"],
+                    },
+                    animation: {
+                        'slide-down': 'slideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                        'fade-in': 'fadeIn 1s ease-out forwards',
+                        'scale-in': 'scaleIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards',
+                    },
+                    keyframes: {
+                        slideDown: {
+                            '0%': { opacity: '0', transform: 'translateY(-20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        scaleIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.9)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: white;
+            color: theme('colors.charcoal-gray');
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Noto Serif', serif;
+        }
+        .hero-overlay {
+            background: radial-gradient(circle, rgba(74, 14, 28, 0.85) 0%, rgba(74, 14, 28, 0.95) 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 20px -5px rgba(0,0,0,0.1);
+        }
+        .vertical-line {
+            width: 2px;
+            background: theme('colors.gold/20');
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+    </style>
 
     <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -24,214 +97,405 @@
 </head>
 
 <body class="bg-white text-charcoal-gray overflow-x-hidden selection:bg-vinotinto selection:text-white">
-    <!-- Top Bar -->
     <div
-        class="hidden md:flex bg-vinotinto text-white text-[10px] uppercase tracking-[0.2em] py-2 px-6 justify-end border-b border-accent-gold/20 relative z-50">
+        class="hidden md:flex bg-vinotinto text-white text-[10px] uppercase tracking-[0.2em] py-2 px-6 justify-end border-b border-gold/20 relative z-50">
         <div class="flex gap-6 max-w-[1200px] w-full mx-auto justify-end">
         </div>
     </div>
-
-    <!-- Header -->
     <header class="sticky top-0 left-0 right-0 z-40 bg-white border-b-4 border-vinotinto shadow-md">
-        <div class="max-w-[1200px] mx-auto px-6 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <img src="assets/img/libro.png" class="h-10" alt="Logo CBUH">
-                <div class="flex flex-col">
-                    <span class="font-display font-bold text-xl leading-none tracking-wide text-vinotinto">CBUH</span>
-                    <span class="text-[10px] text-charcoal-gray/60 uppercase tracking-[0.2em] mt-1">Excelencia
+        <div class="w-full px-16 xl:px-24 h-24 flex items-center justify-between relative">
+            <div class="flex items-center gap-5 z-20">
+                <a href="index.html" class="flex items-center justify-center animate-scale-in">
+                    <img src="/assets/img/libro.png" alt="CBUH Logo"
+                        class="w-16 h-16 object-contain drop-shadow-sm filter hover:scale-110 transition-transform duration-500 ease-in-out" />
+                </a>
+                <div class="flex flex-col justify-center animate-slide-down"
+                    style="animation-delay: 0.2s; opacity: 0; animation-fill-mode: forwards;">
+                    <span
+                        class="font-display font-bold text-3xl leading-none tracking-wide text-vinotinto uppercase">CBUH</span>
+                    <span
+                        class="text-[13px] font-nav font-medium text-charcoal-gray/80 uppercase tracking-[0.15em] mt-1.5">Excelencia
                         Teológica</span>
                 </div>
             </div>
 
-            <nav class="hidden md:flex items-center gap-10">
-                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
-                    href="#">Programas</a>
-                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
-                    href="#">Admisiones</a>
-                <a class="text-xs font-bold uppercase tracking-widest text-charcoal-gray hover:text-vinotinto transition-colors"
-                    href="#">Nosotros</a>
+            <nav class="hidden md:flex items-center gap-16 absolute left-0 right-0 justify-center z-10 animate-fade-in"
+                style="animation-delay: 0.4s; opacity: 0; animation-fill-mode: forwards;">
+                <a class="font-nav font-bold text-base tracking-widest text-vinotinto-dark hover:text-gold transition-colors uppercase hover:-translate-y-0.5 transform duration-300"
+                    href="Pensum.html">Programa Académico</a>
+                <a class="font-nav font-bold text-base tracking-widest text-vinotinto-dark hover:text-gold transition-colors uppercase hover:-translate-y-0.5 transform duration-300"
+                    href="Inscripcion.html">Inscripciones</a>
+                <a class="font-nav font-bold text-base tracking-widest text-vinotinto-dark hover:text-gold transition-colors uppercase hover:-translate-y-0.5 transform duration-300"
+                    href="Nosotros.html">Nosotros</a>
             </nav>
 
-            <div id="auth-buttons" class="flex items-center gap-4">
-                <!-- Buttons will be dynamically loaded -->
+            <div class="flex items-center gap-4 z-20 animate-slide-up"
+                style="animation-delay: 0.6s; opacity: 0; animation-fill-mode: forwards;">
+                <div id="auth-buttons" class="flex items-center gap-4">
+                    <!-- Botones cargados dinámicamente -->
+                </div>
+                <button class="md:hidden text-vinotinto">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
             </div>
         </div>
     </header>
-
-    <!-- Hero Section -->
-    <section class="relative min-h-[85vh] flex items-center overflow-hidden">
+    <section class="relative min-h-[90vh] flex items-center overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <div class="w-full h-full bg-cover bg-center"
-                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDzqFDyuejUIs46411syb9WlxLETxClEAVFG63YUZzvfQ8ZLZU6L-gW2PUx8NUxGIQNKC0JWLxAoARlzg9FGRW2zZHNPhYpamX4y-xY7r2Iy5xeqIBQX8LxpYoegsk3yC3b8Q2-9XHkC9rn7_1Av2yr0IElwR_jxkkbmrTfwZB3pNMdQajdfUKWGBMw3okKDkc5Tl4lZw4tc-g6a3S3NM0Pw8gCFcnx1fm0cTRvEjq3Xc0kaG8JsrrVA7vfjDNGzT2RfN0ANSX5448');">
+            <div class="w-full h-full bg-cover bg-center" style="background-image: url(/assets/img/Graduados.png);">
             </div>
             <div class="absolute inset-0 hero-overlay"></div>
         </div>
-        <div class="relative z-10 max-w-[1200px] mx-auto px-6 w-full py-20">
-            <div class="max-w-4xl border-l-4 border-accent-gold pl-8 md:pl-12">
+        <div class="relative z-10 max-w-[1200px] mx-auto px-6 w-full py-20 text-center">
+            <div class="max-w-4xl mx-auto flex flex-col items-center">
                 <span
-                    class="inline-block py-1 px-3 bg-white/10 backdrop-blur-sm text-accent-gold text-[10px] font-bold uppercase tracking-[0.3em] mb-6 border border-accent-gold/30">
-                    Educación Superior
+                    class="inline-block py-1.5 px-4 bg-white/10 backdrop-blur-sm text-gold text-[10px] font-bold uppercase tracking-[0.4em] mb-8 border border-gold/30">
+                    FORMACIÓN MINISTERIAL
                 </span>
                 <h1
-                    class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight tracking-tight text-white mb-8">
-                    Formación <br />
-                    <span class="text-accent-gold italic font-serif">Teológica</span>
+                    class="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight tracking-tight text-white mb-10">
+                    Colegio Bíblico <br />
+                    <span class="text-gold italic font-serif">Universal Horeb</span>
                 </h1>
                 <p
-                    class="text-lg md:text-xl text-beige/90 max-w-xl font-light leading-relaxed mb-12 border-t border-white/20 pt-8">
-                    Descubre el camino hacia una educación bíblica profunda y transformadora con nuestra metodología
-                    visual inmersiva y rigor académico.
+                    class="text-lg md:text-xl text-beige/90 max-w-2xl font-light leading-relaxed mb-12 border-t border-white/20 pt-8">
+                    Sabes que Dios te pide más. En el colegio Bíblico Universal Horeb, no solo buscamos la excelencia
+                    académica; anhelamos que la
+                    Palabra transforme tu vida para que puedas ministrar a un mundo quebrantado con la compasión y la
+                    verdad de Cristo.
                 </p>
-                <div class="flex flex-col sm:flex-row gap-5">
+                <div class="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
                     <button
-                        class="bg-accent-gold text-vinotinto-dark px-10 py-4 font-bold tracking-widest uppercase text-xs transition-all shadow-xl hover:bg-white flex items-center justify-center gap-3">
-                        Explorar Programas
+                        class="bg-gold text-vinotinto-dark px-12 py-5 font-bold tracking-widest uppercase text-xs transition-all shadow-xl hover:bg-white flex items-center justify-center gap-3">
+                        Conviértete en un Teólogo
                         <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </button>
+
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Year Cards Section -->
     <section class="py-24 px-6 bg-beige relative">
-        <div class="max-w-[1200px] mx-auto">
-            <div class="text-center mb-20">
-                <span class="text-vinotinto uppercase tracking-[0.3em] text-xs font-bold">Trayectoria</span>
+        <div class="max-w-[1000px] mx-auto">
+            <div class="text-center mb-24">
+                <span class="text-vinotinto uppercase tracking-[0.3em] text-xs font-bold">Ruta Formativa</span>
                 <h2 class="text-4xl md:text-5xl font-display font-bold text-vinotinto mt-4 mb-6">El Viaje Académico</h2>
-                <div class="w-16 h-1 bg-vinotinto mx-auto"></div>
+                <div class="w-20 h-1 bg-vinotinto mx-auto"></div>
                 <p class="mt-8 text-charcoal-gray/70 max-w-2xl mx-auto text-lg font-light">
-                    Tres años diseñados meticulosamente para transformar la mente y el espíritu a través de un currículo
-                    progresivo y fundacional.
+                    Nuestro programa de tres años ha sido diseñado para guiar al estudiante a través de un proceso de
+                    crecimiento intelectual y espiritual ascendente.
                 </p>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Year 1 -->
-                <div
-                    class="group bg-white card-shadow relative top-0 transition-all duration-500 hover:-top-2 border-b-4 border-vinotinto">
-                    <div class="h-60 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD-n_qHQRImkr3OusNwXd-jpPTJsDE3rL02E63VM1V4pLJvi9Eyp4EIK9Bo2I5MCZTrn19HAOnYWqFJRkJJ_P6HkbTzOv2ixOXM7vWxen1ZLylOnPRVHK-7iv3rAyICci3Z0ZMZVDQt2flq7Z6MmizNetI6yKo0R41uWIx-wYMbbk9gZbVBnEjMpPLkEaXJKrc9U3Sg9foSuMTONaIZ9U2ksJpUyxP_vmyAWOrQ_KQd2Pn-YXcAq0DBMejEwWHrdyv8zCsGD7ScMto');">
+            <div class="relative space-y-20">
+                <div class="hidden md:block vertical-line"></div>
+                <div class="relative flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                    <div class="w-full md:w-1/2 flex justify-center md:justify-end order-2 md:order-1">
+                        <div class="max-w-md bg-white p-10 card-shadow border-l-4 border-vinotinto relative">
+                            <span
+                                class="absolute -top-6 -left-4 bg-vinotinto text-white w-12 h-12 flex items-center justify-center font-display text-2xl font-bold">01</span>
+                            <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Año 1: Construyendo tu Base
+                            </h3>
+                            <p class="text-charcoal-gray/70 text-sm leading-relaxed">
+                                En el primer año, el estudiante establece las bases exegéticas y hermenéuticas
+                                esenciales. Nos enfocamos en las herramientas de estudio que permitirán una
+                                interpretación fiel y profunda de las Escrituras.
+                            </p>
+                            <div class="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
+
+                            </div>
                         </div>
-                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
-                            01</div>
                     </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Fundamentos</h3>
-                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
-                            Estableciendo las bases doctrinales y exegéticas necesarias para todo estudiante de la
-                            palabra.
-                        </p>
-                    </div>
-                </div>
-                <!-- Year 2 -->
-                <div
-                    class="group bg-white card-shadow relative top-0 md:-top-8 transition-all duration-500 hover:md:-top-10 border-b-4 border-vinotinto z-10">
-                    <div class="h-60 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBhYsz7oAfsrfIj5Vk0ueuS1awpi9TNp0pTIeJEq1Ah-BoDdilJ87UmJWUEz2L5NZDEtYJwLARtoPbI-_u1YgdVooeG0xlkexGIwFbN19rb47XoR4AeIHu4KlRWzM9xbKIJcSVZcza0ez6m_99KqNjoFFCVbf-9mW94Dl-rkyBTHga0t3zIdGAYQ5B2eaYCd9fGK6smqXHVX_bw5aDS2cA4tolPuSEKJvU8YjtQSL3d6r6tkkFs-akGYONw_ZufsgA46f_iDmjTkd4');">
+                    <div class="w-full md:w-1/2 order-1 md:order-2">
+                        <div class="h-64 rounded-sm overflow-hidden shadow-2xl">
+                            <img alt="Clase de Fundamentos" class="w-full h-full object-cover"
+                                src="/assets/img/imagenindex.jpg" />
                         </div>
-                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
-                            02</div>
-                    </div>
-                    <div class="p-8 bg-white">
-                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Profundización</h3>
-                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
-                            Un análisis detallado de los textos originales y la historia que formó nuestra teología
-                            actual.
-                        </p>
                     </div>
                 </div>
-                <!-- Year 3 -->
-                <div
-                    class="group bg-white card-shadow relative top-0 transition-all duration-500 hover:-top-2 border-b-4 border-vinotinto">
-                    <div class="h-60 relative overflow-hidden">
-                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDYS1FMNixAYPoQPxk4gBE3jSlO22PAsuiNheRCT61ZxckgnCBi7v4TT744uzxWc2euX9HpYYisUCPjPvTUp6Zk9CSoEKRjCY2K1b-mkcajAzs5vKLxyf8bauaceWuh9IwLb7psg_2RVZrvKyaHUlcQ5FK3xH8n-BxdU-8inTuBwS5RT8jHez0NXPp_bVp7dTSskCHpXqR-e54X0GDRg6nuI17H55Oy8UC9AAbrtbu0Q4r07QIxaYFP16-vQh5jKnF0qQlnTLMt7KM');">
+                <div class="relative flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                    <div class="w-full md:w-1/2 order-1">
+                        <div class="h-64 rounded-sm overflow-hidden shadow-2xl">
+                            <img alt="Profundización" class="w-full h-full object-cover" src="/assets/img/materiasbiblia.jpg" />
                         </div>
-                        <div class="absolute inset-0 bg-vinotinto/30 group-hover:bg-vinotinto/10 transition-colors">
-                        </div>
-                        <div
-                            class="absolute bottom-0 left-0 bg-vinotinto text-white px-4 py-2 font-display text-xl font-bold">
-                            03</div>
                     </div>
-                    <div class="p-8">
-                        <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Ministerio</h3>
-                        <p class="text-charcoal-gray/70 text-sm leading-relaxed mb-6">
-                            Aplicación práctica y pastoral de los conocimientos adquiridos para el servicio a la
-                            iglesia.
-                        </p>
+                    <div class="w-full md:w-1/2 flex justify-center md:justify-start order-2">
+                        <div class="max-w-md bg-white p-10 card-shadow border-r-4 border-gold relative">
+                            <span
+                                class="absolute -top-6 -right-4 bg-gold text-vinotinto w-12 h-12 flex items-center justify-center font-display text-2xl font-bold">02</span>
+                            <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Año 2: Profundización
+                                Ministerial
+                            </h3>
+                            <p class="text-charcoal-gray/70 text-sm leading-relaxed">
+                                El segundo año profundiza en la doctrina teológica y la interpretación bíblica, mientras
+                                capacita al estudiante en áreas prácticas del ministerio como la predicación, la
+                                liturgia y la administración eclesiástica.
+                            </p>
+                            <div class="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative flex flex-col md:flex-row items-center gap-10 md:gap-20">
+                    <div class="w-full md:w-1/2 flex justify-center md:justify-end order-2 md:order-1">
+                        <div class="max-w-md bg-white p-10 card-shadow border-l-4 border-vinotinto relative">
+                            <span
+                                class="absolute -top-6 -left-4 bg-vinotinto text-white w-12 h-12 flex items-center justify-center font-display text-2xl font-bold">03</span>
+                            <h3 class="text-2xl font-bold font-display text-vinotinto mb-4">Año 3: Praxis y Liderazgo
+                            </h3>
+                            <p class="text-charcoal-gray/70 text-sm leading-relaxed">
+                                El tercer año se enfoca en la aplicación práctica del conocimiento adquirido, preparando
+                                al estudiante para el liderazgo a través de la consejería, la capellanía, el evangelismo
+                                y la realización de una tesis.
+                            </p>
+                            <div class="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2 order-1 md:order-2">
+                        <div class="h-64 rounded-sm overflow-hidden shadow-2xl">
+                            <img alt="Ministerio Práctico" class="w-full h-full object-cover"
+                                src="/assets/img/materiassermon.jpg" />
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="bg-vinotinto-dark py-20 px-6 border-t-4 border-accent-gold">
-        <div class="max-w-[1200px] mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-                <div class="md:col-span-1">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="w-10 h-10 bg-white/10 flex items-center justify-center rounded-sm">
-                            <span class="material-symbols-outlined text-accent-gold text-xl">school</span>
+    <section class="py-24 bg-white">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="text-center mb-16">
+                <span class="text-gold uppercase tracking-[0.3em] text-xs font-bold">Excelencia Académica</span>
+                <h2 class="text-4xl font-display font-bold text-vinotinto mt-4 mb-4">Currículo de Alto Nivel</h2>
+                <div class="w-12 h-1 bg-gold mx-auto mb-10"></div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-0 border border-gray-100">
+                <div
+                    class="group border-r border-b border-gray-100 bg-white transition-all duration-300 hover:bg-vinotinto hover:text-white">
+                    <div class="p-10">
+                        <span
+                            class="text-[10px] font-bold tracking-widest uppercase text-gold block mb-4">Materia
+                            01</span>
+                        <h3 class="font-display text-2xl font-bold leading-tight mb-6">Hermenéutica II</h3>
+                        <p class="text-sm opacity-70 leading-relaxed mb-8">Es esencial para adquirir las herramientas
+                            avanzadas necesarias para interpretar correctamente las Escrituras.</p>
+                        <div
+                            class="flex items-center justify-between pt-6 border-t border-gray-100 group-hover:border-white/20">
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Segundo Año</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
                         </div>
-                        <span class="font-display text-xl font-bold tracking-wider text-white">CBUH</span>
                     </div>
-                    <p class="text-white/40 text-xs leading-relaxed">
-                        Formando líderes teológicos con excelencia académica y compromiso espiritual desde 1985.
-                    </p>
                 </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Academia</h4>
-                    <ul class="space-y-4">
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Programas
-                                de Grado</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Educación
-                                Continua</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
-                                href="#">Admisiones</a></li>
-                    </ul>
+                <div
+                    class="group border-r border-b border-gray-100 bg-white transition-all duration-300 hover:bg-vinotinto hover:text-white">
+                    <div class="p-10">
+                        <span
+                            class="text-[10px] font-bold tracking-widest uppercase text-gold block mb-4">Materia
+                            02</span>
+                        <h3 class="font-display text-2xl font-bold leading-tight mb-6">Técnicas de Análisis</h3>
+                        <p class="text-sm opacity-70 leading-relaxed mb-8">Proporciona las herramientas metodológicas
+                            esenciales para realizar una exégesis rigurosa y profunda de las Escrituras.</p>
+                        <div
+                            class="flex items-center justify-between pt-6 border-t border-gray-100 group-hover:border-white/20">
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Primer Año</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Institución</h4>
-                    <ul class="space-y-4">
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Sobre
-                                Nosotros</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
-                                href="#">Declaración de Fe</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Cuerpo
-                                Docente</a></li>
-                    </ul>
+                <div
+                    class="group border-r border-b border-gray-100 bg-white transition-all duration-300 hover:bg-vinotinto hover:text-white">
+                    <div class="p-10">
+                        <span
+                            class="text-[10px] font-bold tracking-widest uppercase text-gold block mb-4">Materia
+                            03</span>
+                        <h3 class="font-display text-2xl font-bold leading-tight mb-6">Tesis</h3>
+                        <p class="text-sm opacity-70 leading-relaxed mb-8">
+                            Constituye el proyecto final de investigación y demuestra su capacidad para integrar los
+                            conocimientos adquiridos y desarrollar un pensamiento teológico.</p>
+                        <div
+                            class="flex items-center justify-between pt-6 border-t border-gray-100 group-hover:border-white/20">
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Tercer Año </span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <h4 class="text-white font-bold uppercase tracking-widest text-xs mb-6">Recursos</h4>
-                    <ul class="space-y-4">
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
-                                href="#">Biblioteca Digital</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors" href="#">Blog
-                                Académico</a></li>
-                        <li><a class="text-white/60 hover:text-accent-gold text-sm transition-colors"
-                                href="#">Eventos</a></li>
-                    </ul>
+                <div
+                    class="group border-b border-gray-100 bg-white transition-all duration-300 hover:bg-vinotinto hover:text-white">
+                    <div class="p-10">
+                        <span
+                            class="text-[10px] font-bold tracking-widest uppercase text-gold block mb-4">Materia
+                            04</span>
+                        <h3 class="font-display text-2xl font-bold leading-tight mb-6">Teología Bíblica y Sistemática
+                        </h3>
+                        <p class="text-sm opacity-70 leading-relaxed mb-8">Estructura y articula de manera ordenada las
+                            grandes doctrinas de la fe cristiana</p>
+                        <div
+                            class="flex items-center justify-between pt-6 border-t border-gray-100 group-hover:border-white/20">
+                            <span class="text-[10px] font-bold uppercase tracking-widest">Tercer Ciclo</span>
+                            <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="w-full h-px bg-white/10 mb-8"></div>
+            <div class="mt-12 text-center">
+                <a class="inline-flex items-center gap-3 text-vinotinto font-bold text-xs uppercase tracking-[0.2em] border-b border-vinotinto/20 pb-2 hover:border-vinotinto transition-all"
+                    href="Pensum.html">
+                    Consultar Pensum Completo <span class="material-symbols-outlined text-sm">arrow_outward</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <section class="py-24 px-6 bg-light-gray">
+        <div class="max-w-[1200px] mx-auto">
+            <div class="flex flex-col lg:flex-row gap-16 items-stretch">
+                <div class="lg:w-1/3">
+                    <div class="bg-vinotinto p-12 text-white h-full shadow-2xl flex flex-col justify-center">
+                        <span class="text-gold text-xs font-bold uppercase tracking-[0.3em] mb-6 block">Sobre
+                            CBUH</span>
+                        <h2 class="text-4xl font-display font-bold mb-8 leading-tight">Su vocación merece excelencia.
+                        </h2>
+                        <p class="text-white/70 mb-10 leading-relaxed font-light">Nuestra institución provee un entorno
+                            donde la fe se encuentra con la razón, formando líderes íntegros para un mundo en constante
+                            cambio.</p>
+                        <ul class="space-y-6 mb-12">
+                            <li class="flex items-center gap-4 text-sm">
+                                <span class="material-symbols-outlined text-gold">verified_user</span>
+                                <span class="font-medium tracking-wide">Acreditación Académica Superior</span>
+                            </li>
+                            <li class="flex items-center gap-4 text-sm">
+                                <span class="material-symbols-outlined text-gold">groups</span>
+                                <span class="font-medium tracking-wide">Cuerpo Docente con Doctorados</span>
+                            </li>
+                            <li class="flex items-center gap-4 text-sm">
+                                <span class="material-symbols-outlined text-gold">auto_stories</span>
+                                <span class="font-medium tracking-wide">Biblioteca Teológica Especializada</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200 border border-gray-200">
+                    <div class="bg-white p-12 hover:bg-beige/30 transition-colors">
+                        <div class="w-14 h-14 bg-vinotinto/5 flex items-center justify-center mb-8">
+                            <span class="material-symbols-outlined text-vinotinto text-3xl">school</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-vinotinto mb-4">Rigor Intelectual</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed">Fomentamos el pensamiento crítico y el
+                            análisis profundo para una fe razonada y fundamentada.</p>
+                    </div>
+                    <div class="bg-white p-12 hover:bg-beige/30 transition-colors">
+                        <div class="w-14 h-14 bg-vinotinto/5 flex items-center justify-center mb-8">
+                            <span class="material-symbols-outlined text-vinotinto text-3xl">public</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-vinotinto mb-4">Impacto Global</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed">Preparamos a nuestros estudiantes para
+                            servir en diversos contextos culturales con relevancia bíblica.</p>
+                    </div>
+                    <div class="bg-white p-12 hover:bg-beige/30 transition-colors">
+                        <div class="w-14 h-14 bg-vinotinto/5 flex items-center justify-center mb-8">
+                            <span class="material-symbols-outlined text-vinotinto text-3xl">psychology</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-vinotinto mb-4">Transformación Espiritual</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed">Buscamos el desarrollo integral del
+                            carácter cristiano como base de todo ministerio exitoso.</p>
+                    </div>
+                    <div class="bg-white p-12 hover:bg-beige/30 transition-colors">
+                        <div class="w-14 h-14 bg-vinotinto/5 flex items-center justify-center mb-8">
+                            <span class="material-symbols-outlined text-vinotinto text-3xl">library_add</span>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-vinotinto mb-4">Recursos de Inmersión</h3>
+                        <p class="text-charcoal-gray/70 text-sm leading-relaxed">Acceso a plataformas digitales de
+                            vanguardia y recursos exclusivos de investigación internacional.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="py-24 bg-vinotinto-dark text-white">
+        <div class="max-w-[1200px] mx-auto px-6">
+            <div class="flex flex-col lg:flex-row gap-20 items-center">
+                <div class="lg:w-1/2">
+                    <span class="text-gold uppercase tracking-[0.3em] text-xs font-bold mb-6 block">Contacto
+                        Directo</span>
+                    <h2 class="text-4xl md:text-5xl font-display font-bold mb-8">Inicie su trayectoria académica hoy
+                        mismo</h2>
+                    <p class="text-white/60 mb-12 text-lg font-light leading-relaxed">Nuestro equipo de control de
+                        estudio está
+                        disponible para resolver sus dudas y guiarle en cada paso del proceso de inscripción.</p>
+                    <div class="space-y-8">
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-12 h-12 bg-white/5 flex items-center justify-center rounded-full border border-white/10">
+                                <span class="material-symbols-outlined text-gold">mail</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase tracking-widest text-white/40">Correo
+                                    Electrónico</span>
+                                <span class="font-medium">ColegioBiblicoHoreb@gmail.com</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6">
+                            <div
+                                class="w-12 h-12 bg-white/5 flex items-center justify-center rounded-full border border-white/10">
+                                <span class="material-symbols-outlined text-gold">call</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-[10px] uppercase tracking-widest text-white/40">Teléfono</span>
+                                <span class="font-medium">+58 (412) 753-7986</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:w-1/2 w-full bg-white p-10 md:p-14 shadow-2xl">
+                    <h3 class="text-2xl font-display font-bold text-vinotinto mb-8">Solicitud de Información</h3>
+                    <form class="space-y-6">
+                        <div>
+                            <input
+                                class="w-full bg-light-gray border-none text-charcoal-gray px-4 py-4 focus:ring-2 focus:ring-gold transition-all"
+                                placeholder="Nombre completo" type="text" />
+                        </div>
+                        <div>
+                            <input
+                                class="w-full bg-light-gray border-none text-charcoal-gray px-4 py-4 focus:ring-2 focus:ring-gold transition-all"
+                                placeholder="Correo institucional o personal" type="email" />
+                        </div>
+                        <div>
+                            <textarea
+                                class="w-full bg-light-gray border-none text-charcoal-gray px-4 py-4 focus:ring-2 focus:ring-gold transition-all resize-none"
+                                placeholder="Envía un mensaje" rows="4"></textarea>
+                        </div>
+                        <button
+                            class="w-full bg-vinotinto text-white py-5 px-8 font-bold tracking-[0.3em] uppercase text-xs hover:bg-vinotinto-dark transition-all flex justify-center items-center gap-3"
+                            type="button">
+                            Enviar mensaje
+                            <span class="material-symbols-outlined text-sm">send</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="bg-white py-12 px-6 border-t border-gray-100">
+        <div class="max-w-[1200px] mx-auto flex flex-col items-center text-center gap-8">
+            <div class="flex items-center gap-3">
+                <img src="/assets/img/libro.png" alt="CBUH Logo"
+                    class="w-8 h-8 object-contain filter brightness-0 sepia saturate-100 hue-rotate-[320deg] contrast-100" />
+                <span class="font-display text-lg font-bold tracking-[0.2em] text-vinotinto uppercase">CBUH</span>
+            </div>
             <div
-                class="flex flex-col md:flex-row justify-between items-center text-[10px] text-white/40 gap-6 uppercase tracking-[0.1em]">
-                <p>© 2026 Colegio Bíblico Universal CBUH</p>
-                <div class="flex gap-8">
-                    <a class="hover:text-white transition-colors" href="#">Privacidad</a>
-                    <a class="hover:text-white transition-colors" href="#">Términos</a>
-                    <a class="hover:text-white transition-colors" href="#">Contacto</a>
-                </div>
+                class="flex flex-wrap justify-center gap-x-8 gap-y-4 text-[11px] font-bold uppercase tracking-[0.15em] text-charcoal-gray/60">
+                <a class="hover:text-vinotinto transition-colors" href="Privacidad.html">Privacidad</a>
+                <a class="hover:text-vinotinto transition-colors" href="TerminosYCondiciones.html">Términos de
+                    Servicio</a>
+                <a class="hover:text-vinotinto transition-colors" href="inscripciones.html">Inscripciones</a>
+                <a class="hover:text-vinotinto transition-colors" href="Nosotros.html">Nosotros</a>
+                <a class="hover:text-vinotinto transition-colors" href="Pensum.html">Programa Academico</a>
             </div>
+            <div class="w-16 h-px bg-gold/30"></div>
+            <p class="text-[10px] text-charcoal-gray/40 uppercase tracking-widest">
+                © 2024 Colegio Bíblico Universitario Horeb. Todos los derechos reservados.
+            </p>
         </div>
     </footer>
 
