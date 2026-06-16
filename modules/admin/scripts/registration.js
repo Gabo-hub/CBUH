@@ -139,39 +139,33 @@ function initFormSubmit(form) {
                 throw new Error(`El estudiante ya está registrado (Sede ID: ${existingStudent.sede_id}). No se puede duplicar.`)
             }
 
-            // 1. Create Supabase Auth User
+            // 1. Create Supabase Auth User with metadata for trigger
             const { data: authData, error: authError } = await supabase.auth.signUp({
                 email: email,
                 password: password,
                 options: {
                     data: {
-                        full_name: `${nombres} ${apellidos}`,
-                        cedula: cedula
+                        nombres: nombres,
+                        apellidos: apellidos,
+                        cedula: cedula,
+                        rol_id: 4, // 4 = Estudiante
+                        sede_id: store.get().adminContext?.sedeId || window.adminContext?.sedeId || 1
                     }
                 }
             })
 
             if (authError) throw new Error(`Error creando usuario: ${authError.message}`)
 
-            // 2. Create 'usuarios' record
+            // 2. Fetch the auto-created 'usuarios' record from trigger
             const { data: userData, error: userError } = await supabase
                 .from('usuarios')
-                .insert({
-                    auth_id: authData.user.id,
-                    usuario: username,
-                    correo: email,
-                    clave_hash: password, // Legacy/Backup
-                    nombres: nombres,
-                    apellidos: apellidos,
-                    cedula: cedula,
-                    rol_id: 3, // Estudiante
-                    estado_id: 1,
-                    sede_id: store.get().adminContext?.sedeId || window.adminContext?.sedeId
-                })
-                .select()
+                .select('id')
+                .eq('auth_id', authData.user.id)
                 .single()
 
-            if (userError) throw new Error(`Error registrando usuario en base de datos: ${userError.message}`)
+            if (userError || !userData) {
+                throw new Error(`El perfil del usuario no fue creado correctamente por el trigger`)
+            }
 
             // 3. Create the student record (linked to user)
             const studentData = {
